@@ -97,7 +97,9 @@ def _build_index(embs: np.ndarray, metric: str = "ip") -> faiss.Index:
 
 def _save_index(idx: faiss.Index, art_dir: str, metric: str, n: int, d: int):
     p = _paths(art_dir)
-    faiss.write_index(idx, str(p["index"]))
+    # Serialize in Python: the FAISS C library never sees the path, so non-ASCII
+    # directories work on Windows without os.chdir/relpath tricks.
+    p["index"].write_bytes(faiss.serialize_index(idx).tobytes())
     p["meta"].write_text(
         json.dumps({"metric": metric, "n": n, "d": d}, indent=2),
         encoding="utf-8",
@@ -109,12 +111,7 @@ def load_index(art_dir: str) -> tuple[faiss.Index, str]:
     p = _paths(art_dir)
     if not p["index"].exists():
         raise FileNotFoundError(f"Index not found: {p['index']} — run 'build' first.")
-    # Use relpath to avoid FAISS C-library failures on non-ASCII absolute paths (Windows).
-    try:
-        index_path = os.path.relpath(str(p["index"]))
-    except ValueError:
-        index_path = str(p["index"])
-    idx = faiss.read_index(index_path)
+    idx = faiss.deserialize_index(np.frombuffer(p["index"].read_bytes(), dtype=np.uint8))
     meta = json.loads(p["meta"].read_text(encoding="utf-8"))
     return idx, meta["metric"]
 
