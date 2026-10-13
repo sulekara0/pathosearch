@@ -1,7 +1,6 @@
 # app.py — Histopatoloji Multimodal Arama Demo (Streamlit)
 from __future__ import annotations
 
-import os
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -10,34 +9,19 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 
-# ---------------------------------------------------------------------------
-# Paths & constants
-# ---------------------------------------------------------------------------
-ROOT = Path(__file__).parent
-ART_ROOT = ROOT / "artifacts"
-
-def _find_img_dir() -> Path:
-    for name in ("data/images", "data/images_test"):
-        p = ROOT / name
-        if p.exists() and any(p.iterdir()):
-            return p
-    return ROOT / "data" / "images"
-
-def _find_captions() -> Path:
-    for name in ("captions_quilt.jsonl", "captions_quilt_test.jsonl"):
-        p = ART_ROOT / name
-        if p.exists():
-            return p
-    return ART_ROOT / "captions_quilt.jsonl"
-
-IMG_DIR = _find_img_dir()
-CAPTIONS_PATH = _find_captions()
-
-os.chdir(ROOT)  # guarantee CWD = project root so FAISS relpath avoids non-ASCII path issues (removed in a later commit)
-
-from pathosearch.domain_gate import DomainGate         # CLIP text-anchor domain gate
-from pathosearch.reranker import rerank_results        # V5b caption-based weighted Jaccard
+from pathosearch.config import load_settings, require_dir, require_file
+from pathosearch.domain_gate import DomainGate  # CLIP text-anchor domain gate
+from pathosearch.errors import DataNotFoundError
+from pathosearch.reranker import rerank_results  # V5b caption-based weighted Jaccard
 from pathosearch.thresholds import apply_domain_gate  # status packaging, no streamlit dependency
+
+# ---------------------------------------------------------------------------
+# Paths & constants (from env/.env via pathosearch.config; no silent fallbacks)
+# ---------------------------------------------------------------------------
+SETTINGS = load_settings()
+ART_ROOT = SETTINGS.artifacts_dir
+IMG_DIR = SETTINGS.images_dir
+CAPTIONS_PATH = SETTINGS.captions_path
 
 ENCODERS = ["clip", "quilt"]
 ENCODER_LABELS = {
@@ -55,7 +39,7 @@ def check_artifacts(encoder_name: str) -> Tuple[bool, str]:
     missing = [f for f in required if not (art_dir / f).exists()]
     if not missing:
         return True, ""
-    cmd1 = f"python scripts/01_build_embeddings.py --encoder {encoder_name} --out_dir artifacts/{encoder_name}"
+    cmd1 = f"python scripts/build_embeddings.py --encoder {encoder_name} --out_dir artifacts/{encoder_name}"
     cmd2 = f"python scripts/faiss_search.py build --art_dir artifacts/{encoder_name}"
     msg = (
         f"**{encoder_name}** için eksik dosyalar: `{', '.join(missing)}`\n\n"
@@ -81,9 +65,7 @@ def load_index_data(art_dir: str) -> Tuple:
     from pathosearch.faiss_search import load_index, load_embeddings, load_captions
     index, metric = load_index(art_dir)
     _, ids = load_embeddings(art_dir)
-    cap_map: Dict[str, dict] = {}
-    if CAPTIONS_PATH.exists():
-        cap_map = load_captions(CAPTIONS_PATH)
+    cap_map: Dict[str, dict] = load_captions(CAPTIONS_PATH)
     return index, metric, ids, cap_map
 
 # ---------------------------------------------------------------------------
@@ -195,6 +177,25 @@ st.set_page_config(
 )
 st.title("🔬 Histopatoloji Multimodal Arama")
 st.caption("Generic CLIP vs QuiltNet — Alan adaptasyonu karşılaştırması | Quilt-1M + FAISS")
+
+
+def require_data() -> None:
+    """Stop the app with an explicit message if the corpus/artifacts are missing."""
+    hint = (
+        "Yolları `PATHOSEARCH_DATA_DIR`, `PATHOSEARCH_ARTIFACTS_DIR`, "
+        "`PATHOSEARCH_IMAGES_DIR`, `PATHOSEARCH_CAPTIONS_PATH` ortam değişkenleriyle "
+        "(veya `.env` dosyasıyla) verin; ayrıntı için `.env.example`."
+    )
+    try:
+        require_dir(ART_ROOT, hint)
+        require_dir(IMG_DIR, hint)
+        require_file(CAPTIONS_PATH, hint)
+    except DataNotFoundError as exc:
+        st.error(f"Veri bulunamadı.\n\n```\n{exc}\n```")
+        st.stop()
+
+
+require_data()
 
 # ---------------------------------------------------------------------------
 # Session state

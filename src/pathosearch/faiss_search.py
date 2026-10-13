@@ -31,6 +31,8 @@ from pathlib import Path
 
 import numpy as np
 
+from pathosearch.config import load_settings, require_file
+
 np.set_printoptions(suppress=True, precision=4)
 
 try:
@@ -141,18 +143,14 @@ def load_captions(jsonl_path: Path) -> dict[str, dict]:
 
 
 def _resolve_captions(art_dir: str, captions_arg: str | None) -> dict[str, dict]:
-    if captions_arg:
-        cap_path = Path(captions_arg)
-    else:
-        cap_path = Path(art_dir).parent / "captions_quilt.jsonl"
-
-    if cap_path.exists():
-        cap_map = load_captions(cap_path)
-        print(f"[INFO] Captions loaded: {len(cap_map)} entries from {cap_path}")
-        return cap_map
-
-    # Silently skip — captions are optional
-    return {}
+    cap_path = Path(captions_arg) if captions_arg else load_settings().captions_path
+    require_file(
+        cap_path,
+        "Run the data preparation step or set PATHOSEARCH_CAPTIONS_PATH / pass --captions.",
+    )
+    cap_map = load_captions(cap_path)
+    print(f"[INFO] Captions loaded: {len(cap_map)} entries from {cap_path}")
+    return cap_map
 
 
 # ---------------------------------------------------------------------------
@@ -321,14 +319,16 @@ def main():
     # --- build ---
     p_build = sub.add_parser("build", help="Build FAISS index from embeddings.npy")
     p_build.add_argument(
-        "--art_dir", default="artifacts", help="Artifacts directory (contains embeddings.npy)"
+        "--art_dir",
+        default=str(load_settings().artifacts_dir),
+        help="Artifacts directory (contains embeddings.npy)",
     )
     p_build.add_argument("--metric", choices=["l2", "ip"], default="ip")
     p_build.set_defaults(func=cmd_build)
 
     # --- search ---
     p_search = sub.add_parser("search", help="Encode text query and retrieve images")
-    p_search.add_argument("--art_dir", default="artifacts")
+    p_search.add_argument("--art_dir", default=str(load_settings().artifacts_dir))
     p_search.add_argument(
         "--encoder",
         default=os.environ.get("ENCODER", "clip"),
@@ -346,7 +346,7 @@ def main():
 
     # --- bench ---
     p_bench = sub.add_parser("bench", help="Latency benchmark")
-    p_bench.add_argument("--art_dir", default="artifacts")
+    p_bench.add_argument("--art_dir", default=str(load_settings().artifacts_dir))
     p_bench.add_argument(
         "--n_queries", type=int, default=100, help="Number of random query vectors to benchmark"
     )

@@ -1,10 +1,17 @@
-import os, sys, json, time, argparse
-import numpy as np
-from pathlib import Path
-from PIL import Image
+import argparse
+import json
+import os
+import sys
+import time
 from datetime import datetime
-from tqdm import tqdm
+from pathlib import Path
+
+import numpy as np
 import torch
+from PIL import Image
+from tqdm import tqdm
+
+from pathosearch.config import load_settings
 
 IMG_EXTS = {".jpg", ".jpeg", ".png", ".webp"}
 
@@ -19,7 +26,7 @@ def iter_images(img_dir, allowed=None):
 
 def load_allowed_filenames(jsonl_path):
     allowed = set()
-    with open(jsonl_path, "r", encoding="utf-8") as fh:
+    with open(jsonl_path, encoding="utf-8") as fh:
         for line in fh:
             line = line.strip()
             if not line:
@@ -44,7 +51,7 @@ def process_batch(encoder, batch_pils, batch_paths, all_embs, all_ids):
             "  → Çıkış yapılıyor."
         )
     except Exception:
-        for img, path in zip(batch_pils, batch_paths):
+        for img, path in zip(batch_pils, batch_paths, strict=False):
             try:
                 emb = encoder.encode_images([img])
                 all_embs.append(emb)
@@ -55,8 +62,8 @@ def process_batch(encoder, batch_pils, batch_paths, all_embs, all_ids):
 
 def main():
     parser = argparse.ArgumentParser(description="Quilt-1M görsel embedding üretici")
-    parser.add_argument("--img_dir", default="data/images")
-    parser.add_argument("--out_dir", default="artifacts")
+    parser.add_argument("--img_dir", default=str(load_settings().images_dir))
+    parser.add_argument("--out_dir", default=str(load_settings().artifacts_dir))
     parser.add_argument(
         "--encoder",
         default=os.environ.get("ENCODER", "clip"),

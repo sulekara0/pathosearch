@@ -28,6 +28,7 @@ from pathlib import Path
 import numpy as np
 import torch
 
+from pathosearch.config import load_settings
 from pathosearch.cross_encoder_reranker import cross_encoder_rerank, load_cross_encoder
 from pathosearch.encoders import get_encoder
 from pathosearch.faiss_search import load_captions, load_embeddings, load_index, search
@@ -982,10 +983,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Benchmark CLIP vs QuiltNet")
     parser.add_argument("--queries", default="artifacts/eval_queries.json")
     parser.add_argument("--topk", type=int, default=10)
-    parser.add_argument("--captions", default="artifacts/captions_quilt.jsonl")
-    parser.add_argument("--clip_dir", default="artifacts/clip")
-    parser.add_argument("--quilt_dir", default="artifacts/quilt")
-    parser.add_argument("--image_dir", default="data/images")
+    parser.add_argument("--captions", default=str(load_settings().captions_path))
+    parser.add_argument("--clip_dir", default=str(load_settings().encoder_dir("clip")))
+    parser.add_argument("--quilt_dir", default=str(load_settings().encoder_dir("quilt")))
+    parser.add_argument("--image_dir", default=str(load_settings().images_dir))
     parser.add_argument(
         "--out", default=None, help="HTML output path (e.g. reports/comparison_64k.html)"
     )

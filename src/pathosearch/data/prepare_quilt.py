@@ -13,13 +13,13 @@ Adımlar:
   4. Görselleri hedefe yaz
        ZIP modu   : ZipFile.read + write (lazy handle cache + ExitStack)
        Klasör modu: os.link (hard link) → başarısız olursa shutil.copy2 fallback
-  5. E:\Multisearch_data\ altına captions_quilt.jsonl ve subset_stats.json yaz
+  5. captions_quilt.jsonl ve subset_stats.json yaz (yollar pathosearch.config ile belirlenir)
 
 Kullanım:
-  python scripts/00_prepare_quilt.py --zip_dir data/zips --n 100
-  python scripts/00_prepare_quilt.py \
-      --csv "C:\\data\\quilt_1M_lookup.csv" \
-      --img_source_dir "C:\\path1,E:\\path2,E:\\path3" \
+  python scripts/prepare_quilt.py --zip_dir data/zips --n 100
+  python scripts/prepare_quilt.py \
+      --csv path/to/quilt_1M_lookup.csv \
+      --img_source_dir "path/part1,path/part2" \
       --sampling_mode balanced --clean
 """
 
@@ -35,50 +35,54 @@ from pathlib import Path
 import pandas as pd
 from tqdm import tqdm
 
+from pathosearch.config import load_settings
+
 # ---------------------------------------------------------------------------
-# Defaults
+# Defaults (paths come from env/.env via pathosearch.config)
 # ---------------------------------------------------------------------------
-DEFAULT_CSV     = "data/quilt_1M_lookup.csv"
-DEFAULT_ZIP_DIR = "data/zips"
-DEFAULT_OUT_DIR = r"E:\Multisearch_data\images"
-DEFAULT_JSONL   = r"E:\Multisearch_data\captions_quilt.jsonl"
-DEFAULT_STATS   = r"E:\Multisearch_data\subset_stats.json"
-DEFAULT_N       = 10_000
-DEFAULT_SEED    = 42
-DEFAULT_SPLIT   = "train"
-CHUNK_SIZE      = 50_000
-NEEDED_COLS     = ["image_path", "caption", "pathology", "not_histology", "split"]
+_SETTINGS = load_settings()
+DEFAULT_CSV = str(_SETTINGS.data_dir / "quilt_1M_lookup.csv")
+DEFAULT_ZIP_DIR = str(_SETTINGS.data_dir / "zips")
+DEFAULT_OUT_DIR = str(_SETTINGS.images_dir)
+DEFAULT_JSONL = str(_SETTINGS.captions_path)
+DEFAULT_STATS = str(_SETTINGS.artifacts_dir / "subset_stats.json")
+DEFAULT_N = 10_000
+DEFAULT_SEED = 42
+DEFAULT_SPLIT = "train"
+CHUNK_SIZE = 50_000
+NEEDED_COLS = ["image_path", "caption", "pathology", "not_histology", "split"]
 
 # ---------------------------------------------------------------------------
 # Balanced sampling hedefleri
 # ---------------------------------------------------------------------------
 BALANCED_TARGETS = {
     "Dermatopathology": 20000,
-    "unknown":          25000,
+    "unknown": 25000,
     "Gastrointestinal": 18000,
-    "Pulmonary":        14000,
-    "Gynecologic":      14000,
-    "Soft tissue":      12000,
-    "Breast":           12000,
-    "Renal":            10000,
-    "Hematopathology":  10000,
-    "Genitourinary":     8000,
-    "Bone":              7000,
-    "Neuropathology":    6000,
-    "Cardiac":           5000,
-    "Hepatopathology":   5000,
-    "Endocrine":         5000,
-    "Head and Neck":     5000,
-    "Cytopathology":     4000,
-    "Ophthalmic":        3000,
-    "Pediatric":         3000,
-    "Unknown":           4000,
+    "Pulmonary": 14000,
+    "Gynecologic": 14000,
+    "Soft tissue": 12000,
+    "Breast": 12000,
+    "Renal": 10000,
+    "Hematopathology": 10000,
+    "Genitourinary": 8000,
+    "Bone": 7000,
+    "Neuropathology": 6000,
+    "Cardiac": 5000,
+    "Hepatopathology": 5000,
+    "Endocrine": 5000,
+    "Head and Neck": 5000,
+    "Cytopathology": 4000,
+    "Ophthalmic": 3000,
+    "Pediatric": 3000,
+    "Unknown": 4000,
 }
 
 
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
+
 
 def parse_pathology(raw) -> str:
     """Stringified liste -> birincil etiket. NaN / boş -> 'unknown'."""
@@ -97,6 +101,7 @@ def parse_pathology(raw) -> str:
 # Adım 1 — Kaynak index (ZIP veya klasör)
 # ---------------------------------------------------------------------------
 
+
 def build_zip_index(zip_dir: str) -> dict:
     """
     zip_dir içindeki tüm images_part_*.zip dosyalarını tara.
@@ -104,9 +109,7 @@ def build_zip_index(zip_dir: str) -> dict:
     """
     zip_paths = sorted(Path(zip_dir).glob("images_part_*.zip"))
     if not zip_paths:
-        raise FileNotFoundError(
-            f"'{zip_dir}' içinde images_part_*.zip bulunamadı."
-        )
+        raise FileNotFoundError(f"'{zip_dir}' içinde images_part_*.zip bulunamadı.")
 
     print(f"[1/4] ZIP indexleniyor — {len(zip_paths)} dosya bulundu:")
     index: dict[str, str] = {}
@@ -166,6 +169,7 @@ def build_folder_index(img_source_dirs: list[str]) -> dict:
 # Adım 2 — CSV tarama
 # ---------------------------------------------------------------------------
 
+
 def collect_candidates(csv_path: str, zip_index: dict, split: str) -> pd.DataFrame:
     """
     CSV'yi chunk'larla tara:
@@ -205,6 +209,7 @@ def collect_candidates(csv_path: str, zip_index: dict, split: str) -> pd.DataFra
 # Adım 3a — Stratified sampling
 # ---------------------------------------------------------------------------
 
+
 def stratified_sample(df: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
     """primary_pathology'ye göre orantılı örnekleme."""
     print(f"\n[3/4] Stratified sampling: n={n:,}, seed={seed}")
@@ -213,15 +218,15 @@ def stratified_sample(df: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
     df["primary_pathology"] = df["pathology"].apply(parse_pathology)
 
     counts = df["primary_pathology"].value_counts()
-    total  = len(df)
+    total = len(df)
     n_cats = counts.shape[0]
     print(f"      Kategoriler: {n_cats} adet  |  Kaynak havuz: {total:,}")
 
     sampled_parts = []
     for label, count in counts.items():
         quota = max(1, round(n * count / total))
-        part  = df[df["primary_pathology"] == label]
-        take  = min(quota, len(part))
+        part = df[df["primary_pathology"] == label]
+        take = min(quota, len(part))
         sampled_parts.append(part.sample(take, random_state=seed))
 
     result = pd.concat(sampled_parts, ignore_index=True)
@@ -238,7 +243,9 @@ def stratified_sample(df: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
             )
 
     result = result.sample(frac=1, random_state=seed).reset_index(drop=True)
-    print(f"      Seçilen: {len(result):,} görsel, {result['primary_pathology'].nunique()} kategori")
+    print(
+        f"      Seçilen: {len(result):,} görsel, {result['primary_pathology'].nunique()} kategori"
+    )
     return result
 
 
@@ -246,14 +253,17 @@ def stratified_sample(df: pd.DataFrame, n: int, seed: int) -> pd.DataFrame:
 # Adım 3b — Balanced sampling
 # ---------------------------------------------------------------------------
 
+
 def balanced_sample(df: pd.DataFrame, seed: int) -> pd.DataFrame:
     """
     BALANCED_TARGETS dict'e göre az temsil edilen kategorilere ağırlıklı örnekleme.
     --n ignore edilir; toplam ~sum(BALANCED_TARGETS) civarı olur.
     """
     print(f"\n[3/4] Balanced sampling: seed={seed}")
-    print(f"      Hedef toplam: {sum(BALANCED_TARGETS.values()):,} görsel, "
-          f"{len(BALANCED_TARGETS)} kategori")
+    print(
+        f"      Hedef toplam: {sum(BALANCED_TARGETS.values()):,} görsel, "
+        f"{len(BALANCED_TARGETS)} kategori"
+    )
 
     df = df.copy()
     df["primary_pathology"] = df["pathology"].apply(parse_pathology)
@@ -284,21 +294,22 @@ def balanced_sample(df: pd.DataFrame, seed: int) -> pd.DataFrame:
     covered = set(BALANCED_TARGETS.keys())
     uncovered = {str(k) for k in available_counts.keys()} - covered
     if uncovered:
-        print(f"  [INFO] {len(uncovered)} kategori BALANCED_TARGETS'ta yok, atlandı: "
-              f"{', '.join(sorted(uncovered)[:5])}{'...' if len(uncovered) > 5 else ''}")
+        print(
+            f"  [INFO] {len(uncovered)} kategori BALANCED_TARGETS'ta yok, atlandı: "
+            f"{', '.join(sorted(uncovered)[:5])}{'...' if len(uncovered) > 5 else ''}"
+        )
 
     result = pd.concat(sampled_parts, ignore_index=True)
     result = result.sample(frac=1, random_state=seed).reset_index(drop=True)
 
     # --- Özet tablosu ---
     print(f"\n  {'Kategori':<22} {'Hedef':>8} {'Havuz':>8} {'Alınan':>8}  Durum")
-    print(f"  {'-'*22} {'-'*8} {'-'*8} {'-'*8}  {'-'*12}")
+    print(f"  {'-' * 22} {'-' * 8} {'-' * 8} {'-' * 8}  {'-' * 12}")
     for label, target, taken, status in sorted(summary_rows, key=lambda x: -x[1]):
         pool_size = available_counts.get(label, 0)
         flag = "" if status == "OK" else f"  <- {status}"
         print(f"  {label:<22} {target:>8,} {pool_size:>8,} {taken:>8,}{flag}")
-    print(f"  {'TOPLAM':<22} {sum(BALANCED_TARGETS.values()):>8,} "
-          f"{'':>8} {len(result):>8,}")
+    print(f"  {'TOPLAM':<22} {sum(BALANCED_TARGETS.values()):>8,} {'':>8} {len(result):>8,}")
 
     return result
 
@@ -306,6 +317,7 @@ def balanced_sample(df: pd.DataFrame, seed: int) -> pd.DataFrame:
 # ---------------------------------------------------------------------------
 # Adım 4 — Extract + JSONL
 # ---------------------------------------------------------------------------
+
 
 def extract_and_write(
     df: pd.DataFrame,
@@ -341,8 +353,8 @@ def extract_and_write(
         with open(jsonl_path, "w", encoding="utf-8") as meta:
             for _, row in tqdm(df.iterrows(), total=len(df), desc="  link/copy", unit="img"):
                 fname = row["image_path"]
-                src   = image_index.get(fname)
-                dst   = out_dir / fname
+                src = image_index.get(fname)
+                dst = out_dir / fname
 
                 try:
                     already_exists = dst.exists()
@@ -371,30 +383,33 @@ def extract_and_write(
                             fail += 1
                             continue
 
-                meta.write(json.dumps(
-                    {
-                        "path":      str(dst),
-                        "caption":   row["caption"].strip(),
-                        "pathology": row["primary_pathology"],
-                        "split":     split,
-                    },
-                    ensure_ascii=False,
-                ) + "\n")
+                meta.write(
+                    json.dumps(
+                        {
+                            "path": str(dst),
+                            "caption": row["caption"].strip(),
+                            "pathology": row["primary_pathology"],
+                            "split": split,
+                        },
+                        ensure_ascii=False,
+                    )
+                    + "\n"
+                )
 
-        print(f"      Hard link: {hardlinked:,}  Kopya: {copied:,}  "
-              f"Skip(zaten_var): {skip:,}  Fail: {fail:,}")
+        print(
+            f"      Hard link: {hardlinked:,}  Kopya: {copied:,}  "
+            f"Skip(zaten_var): {skip:,}  Fail: {fail:,}"
+        )
 
     else:
         # ZIP modu — orijinal lazy cache + ExitStack mantığı
         zip_cache: dict[str, dict] = {}
 
-        with contextlib.ExitStack() as stack, \
-             open(jsonl_path, "w", encoding="utf-8") as meta:
-
+        with contextlib.ExitStack() as stack, open(jsonl_path, "w", encoding="utf-8") as meta:
             for _, row in tqdm(df.iterrows(), total=len(df), desc="  extract", unit="img"):
-                fname    = row["image_path"]
+                fname = row["image_path"]
                 zip_path = image_index.get(fname)
-                dst      = out_dir / fname
+                dst = out_dir / fname
 
                 if dst.exists():
                     skip += 1
@@ -413,7 +428,7 @@ def extract_and_write(
                         }
                         zip_cache[zip_path] = {"handle": handle, "members": members}
 
-                    entry  = zip_cache[zip_path]
+                    entry = zip_cache[zip_path]
                     member = entry["members"].get(fname)
 
                     if member is None:
@@ -430,15 +445,18 @@ def extract_and_write(
                         fail += 1
                         continue
 
-                meta.write(json.dumps(
-                    {
-                        "path":      str(dst),
-                        "caption":   row["caption"].strip(),
-                        "pathology": row["primary_pathology"],
-                        "split":     split,
-                    },
-                    ensure_ascii=False,
-                ) + "\n")
+                meta.write(
+                    json.dumps(
+                        {
+                            "path": str(dst),
+                            "caption": row["caption"].strip(),
+                            "pathology": row["primary_pathology"],
+                            "split": split,
+                        },
+                        ensure_ascii=False,
+                    )
+                    + "\n"
+                )
 
         print(f"      OK={ok:,}  Skip(zaten_var)={skip:,}  Fail={fail:,}")
 
@@ -447,24 +465,23 @@ def extract_and_write(
 # Adım 5 — Stats JSON + JSONL doğrulama
 # ---------------------------------------------------------------------------
 
+
 def write_stats(df: pd.DataFrame, stats_path: Path, n: int, split: str) -> None:
     stats_path.parent.mkdir(parents=True, exist_ok=True)
     dist = df["primary_pathology"].value_counts().to_dict()
     payload = {
-        "subset_size":           len(df),
-        "requested_n":           n,
-        "split":                 split,
-        "n_categories":          len(dist),
+        "subset_size": len(df),
+        "requested_n": n,
+        "split": split,
+        "n_categories": len(dist),
         "category_distribution": dist,
     }
-    stats_path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
+    stats_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"      Stats  -> {stats_path}")
 
 
 def validate_jsonl(jsonl_path: Path) -> int:
-    with open(jsonl_path, "r", encoding="utf-8") as f:
+    with open(jsonl_path, encoding="utf-8") as f:
         count = sum(1 for line in f if line.strip())
     print(f"      JSONL doğrulandı: {count:,} satır — {jsonl_path}")
     return count
@@ -474,34 +491,52 @@ def validate_jsonl(jsonl_path: Path) -> int:
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def parse_args():
     p = argparse.ArgumentParser(description="Quilt-1M subset hazırla")
-    p.add_argument("--csv",            default=DEFAULT_CSV,     help="quilt_1M_lookup.csv yolu")
-    p.add_argument("--zip_dir",        default=DEFAULT_ZIP_DIR, help="images_part_*.zip klasörü (ZIP modu)")
-    p.add_argument("--img_source_dir", default=None,
-                   help="Extract edilmiş görsel klasörü/klasörleri — virgülle ayrılmış birden fazla "
-                        "kabul edilir (klasör modu; verilirse ZIP'e göre öncelikli). "
-                        r'Örnek: "C:\part1,E:\part2,E:\part3"')
+    p.add_argument("--csv", default=DEFAULT_CSV, help="quilt_1M_lookup.csv yolu")
+    p.add_argument(
+        "--zip_dir", default=DEFAULT_ZIP_DIR, help="images_part_*.zip klasörü (ZIP modu)"
+    )
+    p.add_argument(
+        "--img_source_dir",
+        default=None,
+        help="Extract edilmiş görsel klasörü/klasörleri — virgülle ayrılmış birden fazla "
+        "kabul edilir (klasör modu; verilirse ZIP'e göre öncelikli). "
+        'Örnek: "path/part1,path/part2"',
+    )
     p.add_argument("--out_dir", default=DEFAULT_OUT_DIR, help="Görsel çıktı klasörü")
-    p.add_argument("--jsonl",   default=DEFAULT_JSONL,   help="Çıktı JSONL yolu")
-    p.add_argument("--stats",   default=DEFAULT_STATS,   help="İstatistik JSON yolu")
-    p.add_argument("--n",    type=int, default=DEFAULT_N,
-                   help="Subset boyutu (sadece --sampling_mode stratified için kullanılır)")
+    p.add_argument("--jsonl", default=DEFAULT_JSONL, help="Çıktı JSONL yolu")
+    p.add_argument("--stats", default=DEFAULT_STATS, help="İstatistik JSON yolu")
+    p.add_argument(
+        "--n",
+        type=int,
+        default=DEFAULT_N,
+        help="Subset boyutu (sadece --sampling_mode stratified için kullanılır)",
+    )
     p.add_argument("--seed", type=int, default=DEFAULT_SEED, help="Random seed")
-    p.add_argument("--split",   default=DEFAULT_SPLIT,
-                   choices=["train", "val", "test"], help="Kullanılacak split")
-    p.add_argument("--sampling_mode", default="stratified",
-                   choices=["stratified", "balanced"],
-                   help="stratified: orantılı örnekleme (--n gerekli); "
-                        "balanced: BALANCED_TARGETS dict ile dengeli örnekleme (--n ignore edilir)")
-    p.add_argument("--clean", action="store_true",
-                   help="Extract öncesi out_dir'i sil ve yeniden oluştur")
+    p.add_argument(
+        "--split",
+        default=DEFAULT_SPLIT,
+        choices=["train", "val", "test"],
+        help="Kullanılacak split",
+    )
+    p.add_argument(
+        "--sampling_mode",
+        default="stratified",
+        choices=["stratified", "balanced"],
+        help="stratified: orantılı örnekleme (--n gerekli); "
+        "balanced: BALANCED_TARGETS dict ile dengeli örnekleme (--n ignore edilir)",
+    )
+    p.add_argument(
+        "--clean", action="store_true", help="Extract öncesi out_dir'i sil ve yeniden oluştur"
+    )
     return p.parse_args()
 
 
 def main():
     args = parse_args()
-    out_dir    = Path(args.out_dir)
+    out_dir = Path(args.out_dir)
     jsonl_path = Path(args.jsonl)
     stats_path = Path(args.stats)
 
@@ -526,8 +561,13 @@ def main():
         subset = stratified_sample(candidates, n=args.n, seed=args.seed)
 
     extract_and_write(
-        subset, image_index, out_dir, jsonl_path,
-        split=args.split, clean=args.clean, source_mode=source_mode,
+        subset,
+        image_index,
+        out_dir,
+        jsonl_path,
+        split=args.split,
+        clean=args.clean,
+        source_mode=source_mode,
     )
     write_stats(subset, stats_path, n=len(subset), split=args.split)
     validate_jsonl(jsonl_path)
@@ -538,7 +578,7 @@ def main():
     print(f"  Stats JSON      : {stats_path}")
     print(f"  Sampling modu   : {args.sampling_mode}")
     print(f"  Toplam işlenen  : {len(subset):,} görsel")
-    print(f"\n  Kategori dağılımı (top-10):")
+    print("\n  Kategori dağılımı (top-10):")
     print(subset["primary_pathology"].value_counts().head(10).to_string())
 
 

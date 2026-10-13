@@ -5,7 +5,7 @@ Usage
 -----
 python scripts/visualize_search.py --query "lung tissue with cancer cells"
 python scripts/visualize_search.py --query "lymph node" --topk 5
-python scripts/visualize_search.py --query "invasive ductal carcinoma" --topk 10 --captions artifacts/captions_quilt_test.jsonl
+python scripts/visualize_search.py --query "invasive ductal carcinoma" --topk 10 --captions path/to/captions.jsonl
 """
 
 from __future__ import annotations
@@ -19,6 +19,8 @@ from io import BytesIO
 from pathlib import Path
 
 from PIL import Image
+
+from pathosearch.config import load_settings, require_file
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -50,13 +52,11 @@ def _to_base64(img_path: Path, size: int = 200) -> str:
 
 
 def _load_captions(art_dir: str, captions_arg: str | None) -> dict[str, dict]:
-    if captions_arg:
-        cap_path = Path(captions_arg)
-    else:
-        cap_path = Path(art_dir).parent / "captions_quilt.jsonl"
-
-    if not cap_path.exists():
-        return {}
+    cap_path = Path(captions_arg) if captions_arg else load_settings().captions_path
+    require_file(
+        cap_path,
+        "Run the data preparation step or set PATHOSEARCH_CAPTIONS_PATH / pass --captions.",
+    )
 
     cap_map: dict[str, dict] = {}
     with open(cap_path, encoding="utf-8") as fh:
@@ -201,9 +201,11 @@ def main():
     )
     parser.add_argument("--query", required=True, help="Text query")
     parser.add_argument("--topk", type=int, default=5)
-    parser.add_argument("--img_dir", default="data/images_test", help="Directory containing images")
-    parser.add_argument("--clip_dir", default="artifacts/clip")
-    parser.add_argument("--quilt_dir", default="artifacts/quilt")
+    parser.add_argument(
+        "--img_dir", default=str(load_settings().images_dir), help="Directory containing images"
+    )
+    parser.add_argument("--clip_dir", default=str(load_settings().encoder_dir("clip")))
+    parser.add_argument("--quilt_dir", default=str(load_settings().encoder_dir("quilt")))
     parser.add_argument(
         "--captions", default=None, help="Path to captions JSONL (default: auto-detect)"
     )

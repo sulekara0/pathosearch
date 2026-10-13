@@ -14,12 +14,12 @@ __pycache__/
 Thumbs.db
 
 # Data & artifacts (repoya girmesin)
-data/
-artifacts/
-datasets/
-checkpoints/
-outputs/
-runs/
+/data/
+/artifacts/
+/datasets/
+/checkpoints/
+/outputs/
+/runs/
 *.pt
 *.pth
 *.bin
@@ -41,3 +41,7 @@ runs/
 node_modules/
 dist/
 build/
+
+# Secrets / local config
+.env
+CLAUDE.local.md
