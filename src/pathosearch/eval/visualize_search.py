@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import argparse
 import base64
-import json
 import re
 from datetime import datetime
 from io import BytesIO
@@ -20,7 +19,7 @@ from pathlib import Path
 
 from PIL import Image
 
-from pathosearch.config import load_settings, require_file
+from pathosearch.config import load_settings, require_dir, require_file
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -49,30 +48,6 @@ def _to_base64(img_path: Path, size: int = 200) -> str:
     buf = BytesIO()
     img.save(buf, format="JPEG", quality=75)
     return base64.b64encode(buf.getvalue()).decode("ascii")
-
-
-def _load_captions(art_dir: str, captions_arg: str | None) -> dict[str, dict]:
-    cap_path = Path(captions_arg) if captions_arg else load_settings().captions_path
-    require_file(
-        cap_path,
-        "Run the data preparation step or set PATHOSEARCH_CAPTIONS_PATH / pass --captions.",
-    )
-
-    cap_map: dict[str, dict] = {}
-    with open(cap_path, encoding="utf-8") as fh:
-        for line in fh:
-            line = line.strip()
-            if not line:
-                continue
-            rec = json.loads(line)
-            fname = Path(rec.get("path", "")).name
-            if fname:
-                cap_map[fname] = {
-                    "caption": rec.get("caption", ""),
-                    "pathology": rec.get("pathology", ""),
-                }
-    print(f"[INFO] Captions loaded: {len(cap_map)} entries from {cap_path}")
-    return cap_map
 
 
 # ---------------------------------------------------------------------------
@@ -215,25 +190,31 @@ def main():
     # Lazy imports — keep --help fast
     from pathosearch.encoders import get_encoder  # noqa: PLC0415
     from pathosearch.faiss_search import (  # noqa: PLC0415
-        _load_embeddings,
-        _load_index,
+        load_captions,
+        load_embeddings,
+        load_index,
         search,
     )
 
-    img_dir = Path(args.img_dir)
+    img_dir = require_dir(Path(args.img_dir), "Set --img_dir or PATHOSEARCH_IMAGES_DIR.")
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     # --- Load both indexes ---
-    clip_index, clip_metric = _load_index(args.clip_dir)
-    quilt_index, quilt_metric = _load_index(args.quilt_dir)
+    clip_index, clip_metric = load_index(args.clip_dir)
+    quilt_index, quilt_metric = load_index(args.quilt_dir)
 
-    _, clip_ids = _load_embeddings(args.clip_dir)
-    _, quilt_ids = _load_embeddings(args.quilt_dir)
+    _, clip_ids = load_embeddings(args.clip_dir)
+    _, quilt_ids = load_embeddings(args.quilt_dir)
 
     # --- Caption maps ---
-    clip_cap_map = _load_captions(args.clip_dir, args.captions)
-    quilt_cap_map = _load_captions(args.quilt_dir, args.captions)
+    cap_path = Path(args.captions) if args.captions else load_settings().captions_path
+    require_file(
+        cap_path,
+        "Run the data preparation step or set PATHOSEARCH_CAPTIONS_PATH / pass --captions.",
+    )
+    cap_map = load_captions(cap_path)
+    clip_cap_map = quilt_cap_map = cap_map
 
     # --- Encoders ---
     print("[INFO] Loading encoders...")
