@@ -40,8 +40,6 @@ pythonpath = ["src"]
 [tool.ruff]
 line-length = 100
 src = ["src", "tests"]
-# TEMP (R1): legacy files are excluded until moved into src/ and cleaned; list shrinks per commit
-extend-exclude = ["app.py", "scripts/test_pipeline.py", "scripts/test_thresholds.py", "scripts/test_domain_anchors.py", "scripts/shot.py"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "W", "UP", "B"]

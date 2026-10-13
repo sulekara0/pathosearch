@@ -35,7 +35,7 @@ Histopatoloji görsel/metin arama sistemi (Quilt-1M, CLIP/QuiltNet, FAISS). Hede
 - Plan dışı özellik ekleme. Fikirler `docs/ideas.md`'ye.
 - Çıktılarda klinik teşhis iması yok: sistem eğitim/araştırma amaçlıdır.
 
-## Komutlar (R1 sonrası doldurulacak)
+## Komutlar
 - Kurulum: `uv sync`
-- Test/lint/tip: `uv run pytest` · `uv run ruff check .` · `uv run mypy src`
+- Test/lint/tip: `uv run pytest` · `uv run ruff check .` · `uv run ruff format --check .` · `uv run mypy src`
 - Uygulama: `uv run streamlit run app.py`

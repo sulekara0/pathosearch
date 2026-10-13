@@ -25,6 +25,7 @@ except Exception:
     pass
 
 import numpy as np
+
 from pathosearch.encoders import get_encoder
 
 ENCODERS = ["clip", "quilt"]
@@ -48,16 +49,16 @@ ANCHORS = [
 
 # (query, in_domain?)
 QUERIES = [
-    ("lung cancer biopsy",          True),
-    ("invasive ductal carcinoma",   True),
+    ("lung cancer biopsy", True),
+    ("invasive ductal carcinoma", True),
     ("lymph node biopsy histology", True),
-    ("araba motoru",                False),
-    ("yemek tarifi tarihi",         False),
-    ("chocolate cake recipe",       False),
-    ("random gibberish xkcd",       False),
-    ("the quick brown fox",         False),
-    ("computer screen",             False),
-    ("medical image",               None),   # borderline
+    ("araba motoru", False),
+    ("yemek tarifi tarihi", False),
+    ("chocolate cake recipe", False),
+    ("random gibberish xkcd", False),
+    ("the quick brown fox", False),
+    ("computer screen", False),
+    ("medical image", None),  # borderline
 ]
 
 
@@ -70,12 +71,12 @@ def run_for_encoder(enc_name: str):
     print(f"\n{bar}\n DOMAIN-ANCHOR PROBE — {ENCODER_LABELS[enc_name]}\n{bar}")
 
     enc = get_encoder(enc_name)
-    A = _norm(enc.encode_texts(ANCHORS))          # (n_anchor, D)
+    A = _norm(enc.encode_texts(ANCHORS))  # (n_anchor, D)
 
     rows = []
     for query, in_domain in QUERIES:
-        q = _norm(enc.encode_texts([query]))[0]    # (D,)
-        sims = A @ q                                # (n_anchor,)
+        q = _norm(enc.encode_texts([query]))[0]  # (D,)
+        sims = A @ q  # (n_anchor,)
         sims_sorted = np.sort(sims)[::-1]
         d_max = float(sims_sorted[0])
         d_top3 = float(sims_sorted[:3].mean())
@@ -90,7 +91,9 @@ def run_for_encoder(enc_name: str):
     print(f"  out-domain d_top3: min={min(outs):.2f}  max={max(outs):.2f}")
     gap = min(ins) - max(outs)
     midpoint = (min(ins) + max(outs)) / 2
-    verdict = f"SEPARABLE — suggest threshold ~{midpoint:.2f}" if gap > 0 else "OVERLAP — no clean split"
+    verdict = (
+        f"SEPARABLE — suggest threshold ~{midpoint:.2f}" if gap > 0 else "OVERLAP — no clean split"
+    )
     print(f"  gap (min_in - max_out) = {gap:+.2f}  →  {verdict}")
     return rows
 
@@ -98,5 +101,7 @@ def run_for_encoder(enc_name: str):
 if __name__ == "__main__":
     for enc in ENCODERS:
         run_for_encoder(enc)
-    print("\n[done] If d_top3 separates in vs out, the text-anchor gate replaces "
-          "the broken absolute-cosine domain check.")
+    print(
+        "\n[done] If d_top3 separates in vs out, the text-anchor gate replaces "
+        "the broken absolute-cosine domain check."
+    )

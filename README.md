@@ -31,4 +31,29 @@ Quilt-1M images and captions are **not** included in this repository. Check the 
 
 ## Setup
 
-Installation and usage instructions will be added after the packaging step.
+Requires Python 3.10+ and [uv](https://docs.astral.sh/uv/).
+
+```bash
+uv sync                       # create .venv from uv.lock
+cp .env.example .env          # optional: point to your data/artifact folders
+uv run pytest                 # tests (no model downloads, no data needed)
+uv run ruff check . && uv run ruff format --check . && uv run mypy src
+uv run streamlit run app.py   # needs embeddings + FAISS indexes (see below)
+```
+
+Paths come from `PATHOSEARCH_*` environment variables (see `.env.example`); defaults are
+`data/` and `artifacts/` relative to the working directory. If the data is missing, the
+app and scripts stop with an explicit error instead of falling back to another folder.
+
+Building artifacts (per encoder, `clip` and `quilt`):
+
+```bash
+uv run python scripts/prepare_quilt.py --help
+uv run python scripts/build_embeddings.py --encoder quilt --out_dir artifacts/quilt
+uv run python scripts/faiss_search.py build --art_dir artifacts/quilt
+```
+
+Layout: core logic in `src/pathosearch/`, `app.py` is UI only, `scripts/` are thin CLI wrappers.
+
+The git hooks in `.githooks/` (enabled with `git config core.hooksPath .githooks`) run
+ruff and mypy before each commit.

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 import streamlit as st
 from PIL import Image
@@ -23,15 +22,16 @@ CAPTIONS_PATH = SETTINGS.captions_path
 
 ENCODERS = ["clip", "quilt"]
 ENCODER_LABELS = {
-    "clip":  "Generic CLIP (ViT-B/32)",
+    "clip": "Generic CLIP (ViT-B/32)",
     "quilt": "QuiltNet (ViT-B/32)",
 }
 MODES = ["Tek Model", "Karşılaştırma", "Görsel→Görsel"]
 
+
 # ---------------------------------------------------------------------------
 # Artifact validation
 # ---------------------------------------------------------------------------
-def check_artifacts(encoder_name: str) -> Tuple[bool, str]:
+def check_artifacts(encoder_name: str) -> tuple[bool, str]:
     art_dir = ART_ROOT / encoder_name
     required = ["embeddings.npy", "ids.json", "faiss_index.bin"]
     missing = [f for f in required if not (art_dir / f).exists()]
@@ -45,26 +45,32 @@ def check_artifacts(encoder_name: str) -> Tuple[bool, str]:
     )
     return False, msg
 
+
 # ---------------------------------------------------------------------------
 # Cached resources (one entry per (name) or (art_dir) key)
 # ---------------------------------------------------------------------------
 @st.cache_resource(show_spinner="Model yükleniyor…")
 def load_encoder(name: str):
     from pathosearch.encoders import get_encoder
+
     return get_encoder(name)
+
 
 @st.cache_resource(show_spinner="Domain gate hazırlanıyor…")
 def load_domain_gate() -> DomainGate:
     # Always CLIP text tower — encoder-independent domain detection.
     return DomainGate(load_encoder("clip"))
 
+
 @st.cache_resource(show_spinner="Index yükleniyor…")
-def load_index_data(art_dir: str) -> Tuple:
-    from pathosearch.faiss_search import load_index, load_embeddings, load_captions
+def load_index_data(art_dir: str) -> tuple:
+    from pathosearch.faiss_search import load_captions, load_embeddings, load_index
+
     index, metric = load_index(art_dir)
     _, ids = load_embeddings(art_dir)
-    cap_map: Dict[str, dict] = load_captions(CAPTIONS_PATH)
+    cap_map: dict[str, dict] = load_captions(CAPTIONS_PATH)
     return index, metric, ids, cap_map
+
 
 # ---------------------------------------------------------------------------
 # Search wrappers: bind Streamlit-cached resources to the shared pipeline
@@ -74,14 +80,17 @@ def get_search_index(encoder_name: str) -> SearchIndex:
     return SearchIndex(index, metric, ids, cap_map)
 
 
-def run_image_search(encoder_name: str, img: Image.Image, topk: int) -> Tuple[List[dict], float, float]:
+def run_image_search(
+    encoder_name: str, img: Image.Image, topk: int
+) -> tuple[list[dict], float, float]:
     return pipeline.run_image_search(
         load_encoder(encoder_name), get_search_index(encoder_name), img, topk
     )
 
 
-def search_pipeline(query: str, encoder_name: str, topk: int,
-                    enable_rerank: bool, domain_threshold: float) -> dict:
+def search_pipeline(
+    query: str, encoder_name: str, topk: int, enable_rerank: bool, domain_threshold: float
+) -> dict:
     """Domain gate -> retrieval -> optional rerank (logic lives in pathosearch.pipeline).
 
     The retrieval encoder/index are loaded lazily, only for in-domain queries.
@@ -94,6 +103,7 @@ def search_pipeline(query: str, encoder_name: str, topk: int,
         enable_rerank,
         domain_threshold,
     )
+
 
 # ---------------------------------------------------------------------------
 # Card renderer
@@ -116,10 +126,12 @@ def draw_card(col, result: dict, is_overlap: bool = False) -> None:
             with st.expander("Tam caption"):
                 st.write(result["caption"])
 
-def display_results(results: List[dict], ncols: int = 4) -> None:
+
+def display_results(results: list[dict], ncols: int = 4) -> None:
     cols = st.columns(ncols)
     for i, r in enumerate(results):
         draw_card(cols[i % ncols], r)
+
 
 # ---------------------------------------------------------------------------
 # Page setup
@@ -184,7 +196,7 @@ with st.sidebar:
         "Akıllı Sıralama (V5b — Weighted Jaccard)",
         value=True,
         help="Caption tabanlı ağırlıklı Jaccard re-ranking. Kalite ölçümü R2'de yapılacak. "
-             "Sadece Tek Model modunda aktif (ham model karşılaştırmasını bozmamak için).",
+        "Sadece Tek Model modunda aktif (ham model karşılaştırmasını bozmamak için).",
         disabled=(mode != "Tek Model"),
     )
     if mode != "Tek Model":
@@ -192,10 +204,13 @@ with st.sidebar:
 
     domain_threshold = st.slider(
         "Domain Eşiği (anchor benzerliği)",
-        min_value=0.65, max_value=0.88, value=0.80, step=0.01,
+        min_value=0.65,
+        max_value=0.88,
+        value=0.80,
+        step=0.01,
         help="Sorgunun histopatoloji domain'inde olup olmadığını CLIP text-anchor "
-             "benzerliğiyle ölçer (text↔text, modality gap yok). "
-             "Düşük = gevşek, yüksek = sıkı. Tüm modlarda aktif.",
+        "benzerliğiyle ölçer (text↔text, modality gap yok). "
+        "Düşük = gevşek, yüksek = sıkı. Tüm modlarda aktif.",
     )
 
     st.divider()
@@ -270,7 +285,7 @@ elif mode == "Karşılaştırma":
     if query.strip() and checks_ok:
         # Rerank disabled in compare mode — keep raw model behaviour honest.
         # Domain gate is encoder-independent (CLIP text tower) → both share the verdict.
-        res_clip  = search_pipeline(query.strip(), "clip",  topk, False, domain_threshold)
+        res_clip = search_pipeline(query.strip(), "clip", topk, False, domain_threshold)
         res_quilt = search_pipeline(query.strip(), "quilt", topk, False, domain_threshold)
 
         # history
@@ -281,17 +296,17 @@ elif mode == "Karşılaştırma":
         if res_clip["status"] == "domain_out":
             st.warning(f"⚠️ {res_clip['message']}")
         else:
-            clip_results  = res_clip["results"]
+            clip_results = res_clip["results"]
             quilt_results = res_quilt["results"]
 
             # Overlap counter
-            clip_ids  = {r["id"] for r in clip_results}
+            clip_ids = {r["id"] for r in clip_results}
             quilt_ids = {r["id"] for r in quilt_results}
-            overlap   = clip_ids & quilt_ids
+            overlap = clip_ids & quilt_ids
             overlap_count = len(overlap)
-            overlap_pct   = (overlap_count / topk) * 100
-            clip_only     = len(clip_ids - quilt_ids)
-            quilt_only    = len(quilt_ids - clip_ids)
+            overlap_pct = (overlap_count / topk) * 100
+            clip_only = len(clip_ids - quilt_ids)
+            quilt_only = len(quilt_ids - clip_ids)
 
             st.info(
                 f"🟢 Top-{topk}'te **{overlap_count}** ortak görsel (%{overlap_pct:.1f}) "
@@ -302,9 +317,13 @@ elif mode == "Karşılaştırma":
             # Latency row
             lat_l, lat_r = st.columns(2)
             with lat_l:
-                st.caption(f"⏱ CLIP — encode: {res_clip['enc_ms']:.1f}ms, search: {res_clip['srch_ms']:.1f}ms")
+                st.caption(
+                    f"⏱ CLIP — encode: {res_clip['enc_ms']:.1f}ms, search: {res_clip['srch_ms']:.1f}ms"
+                )
             with lat_r:
-                st.caption(f"⏱ QuiltNet — encode: {res_quilt['enc_ms']:.1f}ms, search: {res_quilt['srch_ms']:.1f}ms")
+                st.caption(
+                    f"⏱ QuiltNet — encode: {res_quilt['enc_ms']:.1f}ms, search: {res_quilt['srch_ms']:.1f}ms"
+                )
 
             # Column headers
             hdr_l, hdr_r = st.columns(2)
