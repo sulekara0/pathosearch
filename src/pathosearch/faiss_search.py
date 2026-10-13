@@ -150,6 +150,42 @@ def _resolve_captions(art_dir: str, captions_arg: str | None) -> dict[str, dict]
     return cap_map
 
 
+def raw_search(
+    index: faiss.Index,
+    metric: str,
+    ids: list[str],
+    caption_map: dict[str, dict],
+    q_vec: np.ndarray,
+    topk: int,
+) -> list[dict]:
+    """Search ``index`` with an already-encoded query vector of shape (1, D).
+
+    Returns [{"id", "score", "caption", "pathology"}, ...]. Captions are looked up
+    by file basename first, then by the full id (ids may be paths or bare names).
+    For "ip" the query is L2-normalized (a no-op for the project's encoders).
+    """
+    if metric == "ip":
+        scores, nn = index.search(_l2_normalize(q_vec), topk)
+        raw_scores = scores[0].tolist()
+    else:
+        dists, nn = index.search(q_vec, topk)
+        raw_scores = (-dists[0]).tolist()  # negate for display
+
+    results = []
+    for rank_i, idx in enumerate(nn[0].tolist()):
+        img_id = ids[idx]
+        cap_rec = caption_map.get(Path(img_id).name, caption_map.get(img_id, {}))
+        results.append(
+            {
+                "id": img_id,
+                "score": float(raw_scores[rank_i]),
+                "caption": cap_rec.get("caption", ""),
+                "pathology": cap_rec.get("pathology", ""),
+            }
+        )
+    return results
+
+
 # ---------------------------------------------------------------------------
 # Core search function (programmatic API)
 # ---------------------------------------------------------------------------
@@ -173,27 +209,7 @@ def search(
     Importable by compare_models.py: from faiss_search import search
     """
     q = encoder.encode_texts([query])  # (1, D) float32, L2-normalized
-    if metric == "ip":
-        q = _l2_normalize(q)
-        scores, nn = index.search(q, topk)
-        raw_scores = scores[0].tolist()
-    else:
-        dists, nn = index.search(q, topk)
-        raw_scores = (-dists[0]).tolist()  # negate for display
-
-    results = []
-    for rank_i, idx in enumerate(nn[0].tolist()):
-        img_id = ids[idx]
-        cap_rec = caption_map.get(img_id, {})
-        results.append(
-            {
-                "id": img_id,
-                "score": float(raw_scores[rank_i]),
-                "caption": cap_rec.get("caption", ""),
-                "pathology": cap_rec.get("pathology", ""),
-            }
-        )
-    return results
+    return raw_search(index, metric, ids, caption_map, q, topk)
 
 
 # ---------------------------------------------------------------------------

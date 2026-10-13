@@ -1,19 +1,17 @@
 # app.py — Histopatoloji Multimodal Arama Demo (Streamlit)
 from __future__ import annotations
 
-import time
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-import numpy as np
 import streamlit as st
 from PIL import Image
 
+from pathosearch import pipeline
 from pathosearch.config import load_settings, require_dir, require_file
 from pathosearch.domain_gate import DomainGate  # CLIP text-anchor domain gate
 from pathosearch.errors import DataNotFoundError
-from pathosearch.reranker import rerank_results  # V5b caption-based weighted Jaccard
-from pathosearch.thresholds import apply_domain_gate  # status packaging, no streamlit dependency
+from pathosearch.pipeline import SearchIndex
 
 # ---------------------------------------------------------------------------
 # Paths & constants (from env/.env via pathosearch.config; no silent fallbacks)
@@ -69,77 +67,33 @@ def load_index_data(art_dir: str) -> Tuple:
     return index, metric, ids, cap_map
 
 # ---------------------------------------------------------------------------
-# Search helpers
+# Search wrappers: bind Streamlit-cached resources to the shared pipeline
 # ---------------------------------------------------------------------------
-def _raw_faiss(index, metric: str, ids: List[str], cap_map: Dict[str, dict],
-               q_vec: np.ndarray, topk: int) -> List[dict]:
-    if metric == "ip":
-        scores, I = index.search(q_vec, topk)
-        raw_scores = scores[0].tolist()
-    else:
-        dists, I = index.search(q_vec, topk)
-        raw_scores = (-dists[0]).tolist()
-    results = []
-    for rank_i, idx in enumerate(I[0].tolist()):
-        img_id = ids[idx]
-        cap_rec = cap_map.get(Path(img_id).name, cap_map.get(img_id, {}))
-        results.append({
-            "id":        img_id,
-            "score":     float(raw_scores[rank_i]),
-            "caption":   cap_rec.get("caption", ""),
-            "pathology": cap_rec.get("pathology", ""),
-        })
-    return results
-
-def run_text_search(encoder_name: str, query: str, topk: int) -> Tuple[List[dict], float, float]:
-    encoder = load_encoder(encoder_name)
+def get_search_index(encoder_name: str) -> SearchIndex:
     index, metric, ids, cap_map = load_index_data(str(ART_ROOT / encoder_name))
-    t0 = time.perf_counter()
-    q_vec = encoder.encode_texts([query])
-    t1 = time.perf_counter()
-    results = _raw_faiss(index, metric, ids, cap_map, q_vec, topk)
-    t2 = time.perf_counter()
-    return results, (t1 - t0) * 1000, (t2 - t1) * 1000
+    return SearchIndex(index, metric, ids, cap_map)
+
 
 def run_image_search(encoder_name: str, img: Image.Image, topk: int) -> Tuple[List[dict], float, float]:
-    encoder = load_encoder(encoder_name)
-    index, metric, ids, cap_map = load_index_data(str(ART_ROOT / encoder_name))
-    t0 = time.perf_counter()
-    q_vec = encoder.encode_images([img])
-    t1 = time.perf_counter()
-    results = _raw_faiss(index, metric, ids, cap_map, q_vec, topk)
-    t2 = time.perf_counter()
-    return results, (t1 - t0) * 1000, (t2 - t1) * 1000
+    return pipeline.run_image_search(
+        load_encoder(encoder_name), get_search_index(encoder_name), img, topk
+    )
 
-# ---------------------------------------------------------------------------
-# Search pipeline: domain-gate → retrieval → optional rerank → status
-# (text queries only; image→image search skips the text-anchor gate)
-# ---------------------------------------------------------------------------
+
 def search_pipeline(query: str, encoder_name: str, topk: int,
                     enable_rerank: bool, domain_threshold: float) -> dict:
-    gate = load_domain_gate()
-    domain_score = gate.score(query)
+    """Domain gate -> retrieval -> optional rerank (logic lives in pathosearch.pipeline).
 
-    # Early exit: out-of-domain → no FAISS work needed
-    if domain_score < domain_threshold:
-        out = apply_domain_gate([], domain_score, domain_threshold)
-        out.update(domain_score=domain_score, enc_ms=0.0, srch_ms=0.0, reranked=False)
-        return out
-
-    # Retrieval — fetch a larger pool when reranking
-    fetch_k = topk * 5 if enable_rerank else topk
-    results, enc_ms, srch_ms = run_text_search(encoder_name, query, fetch_k)
-
-    # Optional caption-based rerank (V5b weighted Jaccard)
-    if enable_rerank:
-        results = rerank_results(query, results, topk=topk, alpha=0.75, beta=0.25)
-    else:
-        results = results[:topk]
-
-    out = apply_domain_gate(results, domain_score, domain_threshold)
-    out.update(domain_score=domain_score, enc_ms=enc_ms, srch_ms=srch_ms,
-               reranked=enable_rerank)
-    return out
+    The retrieval encoder/index are loaded lazily, only for in-domain queries.
+    """
+    return pipeline.search_pipeline(
+        query,
+        load_domain_gate(),
+        lambda: (load_encoder(encoder_name), get_search_index(encoder_name)),
+        topk,
+        enable_rerank,
+        domain_threshold,
+    )
 
 # ---------------------------------------------------------------------------
 # Card renderer
