@@ -31,6 +31,12 @@ import torch
 from pathosearch.config import load_settings
 from pathosearch.cross_encoder_reranker import cross_encoder_rerank, load_cross_encoder
 from pathosearch.encoders import get_encoder
+from pathosearch.eval.metrics import (
+    average_precision_at_k,
+    is_relevant,
+    ndcg_at_k,
+    precision_at_k,
+)
 from pathosearch.faiss_search import load_captions, load_embeddings, load_index, search
 from pathosearch.reranker import rerank_results
 
@@ -99,45 +105,6 @@ def search_rrf(
 
     sorted_ids = sorted(doc_scores, key=lambda d: -doc_scores[d])
     return [doc_cache[did] for did in sorted_ids[:topk]]
-
-
-# ---------------------------------------------------------------------------
-# Metric functions  (binary relevance)
-# ---------------------------------------------------------------------------
-
-
-def _relevant(result: dict, expected: list[str]) -> bool:
-    return bool(expected) and result["pathology"] in expected
-
-
-def precision_at_k(results: list[dict], expected: list[str], k: int) -> float:
-    if not expected:
-        return math.nan
-    hits = sum(1 for r in results[:k] if _relevant(r, expected))
-    return hits / k
-
-
-def average_precision_at_k(results: list[dict], expected: list[str], k: int) -> float:
-    if not expected:
-        return math.nan
-    n_hits, ap = 0, 0.0
-    for i, r in enumerate(results[:k], start=1):
-        if _relevant(r, expected):
-            n_hits += 1
-            ap += n_hits / i
-    return (ap / n_hits) if n_hits > 0 else 0.0
-
-
-def ndcg_at_k(results: list[dict], expected: list[str], k: int) -> float:
-    if not expected:
-        return math.nan
-    dcg = sum(
-        1.0 / math.log2(i + 1)
-        for i in range(1, min(k, len(results)) + 1)
-        if _relevant(results[i - 1], expected)
-    )
-    idcg = sum(1.0 / math.log2(i + 1) for i in range(1, k + 1))
-    return dcg / idcg if idcg > 0 else 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -675,7 +642,7 @@ def _to_b64(img_path: Path, size: int = 130) -> str | None:
 
 
 def _img_card_html(rank: int, result: dict, img_dir: Path, expected: list[str]) -> str:
-    is_hit = _relevant(result, expected)
+    is_hit = is_relevant(result, expected)
     hit_cls = " hit" if is_hit else ""
     img_path = _find_image(result["id"], img_dir)
     b64 = _to_b64(img_path) if img_path else None
