@@ -17,17 +17,17 @@ Status values: "ok" | "domain_out" | "empty".
 
 from __future__ import annotations
 
-from typing import List, Optional, TypedDict
+from typing import TypedDict
 
 
 class GateResult(TypedDict):
-    status: str            # "ok" | "domain_out" | "empty"
-    results: List[dict]
-    message: Optional[str]
+    status: str  # "ok" | "domain_out" | "empty"
+    results: list[dict]
+    message: str | None
 
 
 def apply_domain_gate(
-    results: List[dict],
+    results: list[dict],
     domain_score: float,
     domain_threshold: float = 0.80,
 ) -> GateResult:

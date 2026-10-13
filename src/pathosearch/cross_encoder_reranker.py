@@ -9,15 +9,13 @@ Model seçimi:
     ms-marco    — sentence-transformers CrossEncoder, BiomedCLIP yüklenemezse fallback
 
 Kullanım:
-    from cross_encoder_reranker import load_cross_encoder, cross_encoder_rerank
+    from pathosearch.cross_encoder_reranker import load_cross_encoder, cross_encoder_rerank
 
     model, tokenizer, model_name = load_cross_encoder(device="cpu")
     reranked = cross_encoder_rerank(query, candidates, model, tokenizer, model_name)
 """
 
 from __future__ import annotations
-
-from typing import List, Optional, Tuple
 
 import numpy as np
 import torch
@@ -28,7 +26,7 @@ import torch
 
 _MODEL = None
 _TOKENIZER = None
-_MODEL_NAME: Optional[str] = None
+_MODEL_NAME: str | None = None
 
 _BIOMEDCLIP_HUB = "hf-hub:microsoft/BiomedCLIP-PubMedBERT_256-vit_base_patch16_224"
 _MIN_CAPTION_LEN = 5  # bu uzunluktan kısa caption'lar güvenilmez
@@ -38,10 +36,11 @@ _MIN_CAPTION_LEN = 5  # bu uzunluktan kısa caption'lar güvenilmez
 # Loader
 # ---------------------------------------------------------------------------
 
+
 def load_cross_encoder(
     device: str = "cpu",
     model_name: str = "biomedclip",
-) -> Tuple[object, Optional[object], str]:
+) -> tuple[object, object | None, str]:
     """Model singleton'ı döndürür. İlk çağrıda yükler, sonraki çağrılarda cache.
 
     Returns
@@ -60,9 +59,7 @@ def load_cross_encoder(
             import open_clip
 
             print(f"[INFO] BiomedCLIP yükleniyor: {_BIOMEDCLIP_HUB}")
-            model, _, _ = open_clip.create_model_and_transforms(
-                _BIOMEDCLIP_HUB, device=device
-            )
+            model, _, _ = open_clip.create_model_and_transforms(_BIOMEDCLIP_HUB, device=device)
             tokenizer = open_clip.get_tokenizer(_BIOMEDCLIP_HUB)
             model = model.to(device).eval()
 
@@ -91,16 +88,17 @@ def load_cross_encoder(
 # Core re-ranking function
 # ---------------------------------------------------------------------------
 
+
 def cross_encoder_rerank(
     query: str,
-    candidates: List[dict],
+    candidates: list[dict],
     model,
     tokenizer,
     model_name: str = "biomedclip",
     device: str = "cpu",
     batch_size: int = 32,
     topk: int = 10,
-) -> List[dict]:
+) -> list[dict]:
     """Cross-encoder ile candidate listesini yeniden skorla, top-K döndür.
 
     Parameters
@@ -135,22 +133,20 @@ def cross_encoder_rerank(
             scores[i] = candidates[i].get("score", 0.0) * 0.5
 
     scored = sorted(
-        zip(scores, candidates),
+        zip(scores, candidates, strict=False),
         key=lambda x: -x[0],
     )
-    return [
-        {**cand, "ce_score": round(float(sc), 5)}
-        for sc, cand in scored[:topk]
-    ]
+    return [{**cand, "ce_score": round(float(sc), 5)} for sc, cand in scored[:topk]]
 
 
 # ---------------------------------------------------------------------------
 # BiomedCLIP scoring (bi-encoder cosine)
 # ---------------------------------------------------------------------------
 
+
 def _score_biomedclip(
     query: str,
-    captions: List[str],
+    captions: list[str],
     model,
     tokenizer,
     device: str,
@@ -185,9 +181,10 @@ def _score_biomedclip(
 # ms-marco scoring (CrossEncoder)
 # ---------------------------------------------------------------------------
 
+
 def _score_msmarco(
     query: str,
-    captions: List[str],
+    captions: list[str],
     model,
     batch_size: int,
 ) -> np.ndarray:
@@ -202,7 +199,7 @@ def _score_msmarco(
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    _FAKE_CANDIDATES = [
+    _FAKE_CANDIDATES: list[dict] = [
         {
             "id": "img_001.jpg",
             "score": 0.82,
@@ -246,13 +243,21 @@ if __name__ == "__main__":
     print(f"\n[Aktif model: {model_name}]\n")
 
     reranked = cross_encoder_rerank(
-        QUERY, _FAKE_CANDIDATES, model, tokenizer,
-        model_name=model_name, device="cpu", batch_size=32, topk=5,
+        QUERY,
+        _FAKE_CANDIDATES,
+        model,
+        tokenizer,
+        model_name=model_name,
+        device="cpu",
+        batch_size=32,
+        topk=5,
     )
 
     print("--- CE Rerank sonrası (ce_score sırası) ---")
     for i, c in enumerate(reranked, 1):
-        cap_preview = (c.get("caption", "")[:55] or "(bos)") + ("..." if len(c.get("caption", "")) > 55 else "")
+        cap_preview = (c.get("caption", "")[:55] or "(bos)") + (
+            "..." if len(c.get("caption", "")) > 55 else ""
+        )
         print(
             f"  #{i}  ce_score={c['ce_score']:.4f}  "
             f"faiss={c['score']:.3f}  "

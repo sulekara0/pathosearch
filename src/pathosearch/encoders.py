@@ -6,7 +6,7 @@ open_clip ile yüklenir) için ortak bir arayüz sağlar. Pipeline'ın geri kala
 hangi modeli kullandığını bilmek zorunda değildir.
 
 Kullanım:
-    from encoders import get_encoder
+    from pathosearch.encoders import get_encoder
 
     encoder = get_encoder("quilt")           # veya "clip"
     img_embeds = encoder.encode_images(pil_images)   # (N, D) float32, L2-normalized
@@ -18,9 +18,8 @@ Yeni model eklemek için:
 """
 
 from __future__ import annotations
+
 from abc import ABC, abstractmethod
-from typing import List, Union
-from pathlib import Path
 
 import numpy as np
 import torch
@@ -47,6 +46,7 @@ def _l2_normalize(x: torch.Tensor) -> torch.Tensor:
 # Abstract Base Class
 # =============================================================================
 
+
 class BaseEncoder(ABC):
     """Tüm encoder'ların implement etmesi gereken arayüz."""
 
@@ -54,12 +54,12 @@ class BaseEncoder(ABC):
     embed_dim: int = 0  # Subclass'lar set eder
 
     @abstractmethod
-    def encode_images(self, images: List[Image.Image]) -> np.ndarray:
+    def encode_images(self, images: list[Image.Image]) -> np.ndarray:
         """PIL görsel listesini (N, D) float32 normalized embedding'e çevirir."""
         ...
 
     @abstractmethod
-    def encode_texts(self, texts: List[str]) -> np.ndarray:
+    def encode_texts(self, texts: list[str]) -> np.ndarray:
         """Metin listesini (N, D) float32 normalized embedding'e çevirir."""
         ...
 
@@ -76,23 +76,23 @@ class BaseEncoder(ABC):
 # Generic CLIP (HuggingFace transformers)
 # =============================================================================
 
+
 class CLIPEncoder(BaseEncoder):
     """OpenAI CLIP veya HuggingFace üzerinde transformers API'siyle yüklenebilen
     her CLIP modeli için. Mevcut projedeki davranışla uyumlu."""
 
-    def __init__(self, model_id: str = "openai/clip-vit-base-patch32",
-                 device: str | None = None):
+    def __init__(self, model_id: str = "openai/clip-vit-base-patch32", device: str | None = None):
         from transformers import CLIPModel, CLIPProcessor
 
         self.name = f"clip:{model_id}"
         self.device = _pick_device(device)
-        self.model = CLIPModel.from_pretrained(model_id).to(self.device).eval()
+        self.model = CLIPModel.from_pretrained(model_id).to(self.device).eval()  # type: ignore[arg-type]
         self.processor = CLIPProcessor.from_pretrained(model_id)
         self.embed_dim = self.model.config.projection_dim
         print(f"[INFO] Loaded {self.name} on {self.device} (dim={self.embed_dim})")
 
     @torch.inference_mode()
-    def encode_images(self, images: List[Image.Image]) -> np.ndarray:
+    def encode_images(self, images: list[Image.Image]) -> np.ndarray:
         inputs = self.processor(images=images, return_tensors="pt", padding=True)
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         feats = self.model.get_image_features(**inputs)
@@ -103,9 +103,8 @@ class CLIPEncoder(BaseEncoder):
         return feats.cpu().numpy().astype(np.float32)
 
     @torch.inference_mode()
-    def encode_texts(self, texts: List[str]) -> np.ndarray:
-        inputs = self.processor(text=texts, return_tensors="pt",
-                                padding=True, truncation=True)
+    def encode_texts(self, texts: list[str]) -> np.ndarray:
+        inputs = self.processor(text=texts, return_tensors="pt", padding=True, truncation=True)
         inputs = {k: v.to(self.device) for k, v in inputs.items()}
         feats = self.model.get_text_features(**inputs)
         if not isinstance(feats, torch.Tensor):
@@ -118,12 +117,14 @@ class CLIPEncoder(BaseEncoder):
 # OpenCLIP (QuiltNet, BiomedCLIP, PLIP, vs.)
 # =============================================================================
 
+
 class OpenCLIPEncoder(BaseEncoder):
     """open_clip kütüphanesi ile yüklenen modeller için.
     QuiltNet ve birçok domain-specific medical CLIP modeli bu kategoride."""
 
-    def __init__(self, model_name: str = "hf-hub:wisdomik/QuiltNet-B-32",
-                 device: str | None = None):
+    def __init__(
+        self, model_name: str = "hf-hub:wisdomik/QuiltNet-B-32", device: str | None = None
+    ):
         import open_clip
 
         self.name = f"openclip:{model_name}"
@@ -146,7 +147,7 @@ class OpenCLIPEncoder(BaseEncoder):
         print(f"[INFO] Loaded {self.name} on {self.device} (dim={self.embed_dim})")
 
     @torch.inference_mode()
-    def encode_images(self, images: List[Image.Image]) -> np.ndarray:
+    def encode_images(self, images: list[Image.Image]) -> np.ndarray:
         # open_clip preprocess tek görsel alıyor, batch için manuel stack
         batch = torch.stack([self.preprocess(img) for img in images]).to(self.device)
         feats = self.model.encode_image(batch)
@@ -154,7 +155,7 @@ class OpenCLIPEncoder(BaseEncoder):
         return feats.cpu().numpy().astype(np.float32)
 
     @torch.inference_mode()
-    def encode_texts(self, texts: List[str]) -> np.ndarray:
+    def encode_texts(self, texts: list[str]) -> np.ndarray:
         tokens = self.tokenizer(texts).to(self.device)
         feats = self.model.encode_text(tokens)
         feats = _l2_normalize(feats)
@@ -167,16 +168,15 @@ class OpenCLIPEncoder(BaseEncoder):
 
 ENCODER_REGISTRY = {
     # Generic CLIP varyantları (HuggingFace transformers ile)
-    "clip":       lambda **kw: CLIPEncoder("openai/clip-vit-base-patch32", **kw),
-    "clip-b32":   lambda **kw: CLIPEncoder("openai/clip-vit-base-patch32", **kw),
-    "clip-b16":   lambda **kw: CLIPEncoder("openai/clip-vit-base-patch16", **kw),
-    "clip-l14":   lambda **kw: CLIPEncoder("openai/clip-vit-large-patch14", **kw),
-
+    "clip": lambda **kw: CLIPEncoder("openai/clip-vit-base-patch32", **kw),
+    "clip-b32": lambda **kw: CLIPEncoder("openai/clip-vit-base-patch32", **kw),
+    "clip-b16": lambda **kw: CLIPEncoder("openai/clip-vit-base-patch16", **kw),
+    "clip-l14": lambda **kw: CLIPEncoder("openai/clip-vit-large-patch14", **kw),
     # Histopatoloji modelleri (open_clip ile)
-    "quilt":      lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-32", **kw),
-    "quilt-b32":  lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-32", **kw),
-    "quilt-b16":  lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-16", **kw),
-    "quilt-pmb":  lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-16-PMB", **kw),
+    "quilt": lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-32", **kw),
+    "quilt-b32": lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-32", **kw),
+    "quilt-b16": lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-16", **kw),
+    "quilt-pmb": lambda **kw: OpenCLIPEncoder("hf-hub:wisdomik/QuiltNet-B-16-PMB", **kw),
 }
 
 
@@ -206,7 +206,7 @@ def get_encoder(name: str = "clip", device: str | None = None) -> BaseEncoder:
     return CLIPEncoder(name, device=device)
 
 
-def list_encoders() -> List[str]:
+def list_encoders() -> list[str]:
     """Mevcut encoder isimlerini listeler."""
     return list(ENCODER_REGISTRY.keys())
 
@@ -227,12 +227,10 @@ if __name__ == "__main__":
     # Dummy beyaz görsel ile test
     dummy_img = Image.new("RGB", (224, 224), color="white")
     img_emb = enc.encode_images([dummy_img])
-    print(f"Image embedding shape: {img_emb.shape}, "
-          f"norm: {np.linalg.norm(img_emb[0]):.4f}")
+    print(f"Image embedding shape: {img_emb.shape}, norm: {np.linalg.norm(img_emb[0]):.4f}")
 
     txt_emb = enc.encode_texts(["a histopathology slide"])
-    print(f"Text embedding shape: {txt_emb.shape}, "
-          f"norm: {np.linalg.norm(txt_emb[0]):.4f}")
+    print(f"Text embedding shape: {txt_emb.shape}, norm: {np.linalg.norm(txt_emb[0]):.4f}")
 
     # Cosine similarity (normalized vektörler için dot product)
     sim = float(img_emb[0] @ txt_emb[0])

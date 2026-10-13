@@ -70,8 +70,7 @@ def main():
     )
     args = parser.parse_args()
 
-    sys.path.insert(0, str(Path(__file__).parent))
-    from encoders import get_encoder  # noqa: PLC0415
+    from pathosearch.encoders import get_encoder  # noqa: PLC0415
 
     os.makedirs(args.out_dir, exist_ok=True)
 

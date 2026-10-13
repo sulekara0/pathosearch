@@ -282,7 +282,7 @@ def balanced_sample(df: pd.DataFrame, seed: int) -> pd.DataFrame:
 
     # BALANCED_TARGETS'ta olmayan ama havuzda olan kategoriler (istatistik için)
     covered = set(BALANCED_TARGETS.keys())
-    uncovered = set(available_counts.keys()) - covered
+    uncovered = {str(k) for k in available_counts.keys()} - covered
     if uncovered:
         print(f"  [INFO] {len(uncovered)} kategori BALANCED_TARGETS'ta yok, atlandı: "
               f"{', '.join(sorted(uncovered)[:5])}{'...' if len(uncovered) > 5 else ''}")

@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import os
-import sys
 import time
 from pathlib import Path
 from typing import Dict, List, Tuple
@@ -33,16 +32,12 @@ def _find_captions() -> Path:
 
 IMG_DIR = _find_img_dir()
 CAPTIONS_PATH = _find_captions()
-SCRIPTS_DIR = ROOT / "scripts"
 
-os.chdir(ROOT)  # guarantee CWD = project root so FAISS relpath avoids non-ASCII path issues
+os.chdir(ROOT)  # guarantee CWD = project root so FAISS relpath avoids non-ASCII path issues (removed in a later commit)
 
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
-
-from thresholds import apply_domain_gate  # status packaging, no streamlit dependency
-from domain_gate import DomainGate         # CLIP text-anchor domain gate
-from reranker import rerank_results        # V5b caption-based weighted Jaccard
+from pathosearch.domain_gate import DomainGate         # CLIP text-anchor domain gate
+from pathosearch.reranker import rerank_results        # V5b caption-based weighted Jaccard
+from pathosearch.thresholds import apply_domain_gate  # status packaging, no streamlit dependency
 
 ENCODERS = ["clip", "quilt"]
 ENCODER_LABELS = {
@@ -73,7 +68,7 @@ def check_artifacts(encoder_name: str) -> Tuple[bool, str]:
 # ---------------------------------------------------------------------------
 @st.cache_resource(show_spinner="Model yükleniyor…")
 def load_encoder(name: str):
-    from encoders import get_encoder
+    from pathosearch.encoders import get_encoder
     return get_encoder(name)
 
 @st.cache_resource(show_spinner="Domain gate hazırlanıyor…")
@@ -83,7 +78,7 @@ def load_domain_gate() -> DomainGate:
 
 @st.cache_resource(show_spinner="Index yükleniyor…")
 def load_index_data(art_dir: str) -> Tuple:
-    from faiss_search import load_index, load_embeddings, load_captions
+    from pathosearch.faiss_search import load_index, load_embeddings, load_captions
     index, metric = load_index(art_dir)
     _, ids = load_embeddings(art_dir)
     cap_map: Dict[str, dict] = {}

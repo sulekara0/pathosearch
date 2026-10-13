@@ -24,30 +24,113 @@ Usage (standalone test):
 from __future__ import annotations
 
 import re
-from typing import List, Optional
 
 # ---------------------------------------------------------------------------
 # Hard stopwords — removed entirely from tokenisation
 # ---------------------------------------------------------------------------
 
 _EN_STOPWORDS = {
-    "a", "an", "the", "of", "in", "with", "and", "or", "is", "are",
-    "was", "were", "to", "from", "at", "by", "for", "on", "this", "that",
-    "these", "those", "it", "its", "be", "has", "have", "had", "as", "not",
-    "but", "so", "if", "up", "do", "no", "we", "he", "she", "they", "our",
-    "also", "which", "within", "between", "into", "than", "more", "such",
-    "can", "may", "show", "showing", "shows", "seen", "note", "present",
-    "consistent", "well", "large", "small", "high", "low", "number",
-    "area", "areas", "region", "regions",
+    "a",
+    "an",
+    "the",
+    "of",
+    "in",
+    "with",
+    "and",
+    "or",
+    "is",
+    "are",
+    "was",
+    "were",
+    "to",
+    "from",
+    "at",
+    "by",
+    "for",
+    "on",
+    "this",
+    "that",
+    "these",
+    "those",
+    "it",
+    "its",
+    "be",
+    "has",
+    "have",
+    "had",
+    "as",
+    "not",
+    "but",
+    "so",
+    "if",
+    "up",
+    "do",
+    "no",
+    "we",
+    "he",
+    "she",
+    "they",
+    "our",
+    "also",
+    "which",
+    "within",
+    "between",
+    "into",
+    "than",
+    "more",
+    "such",
+    "can",
+    "may",
+    "show",
+    "showing",
+    "shows",
+    "seen",
+    "note",
+    "present",
+    "consistent",
+    "well",
+    "large",
+    "small",
+    "high",
+    "low",
+    "number",
+    "area",
+    "areas",
+    "region",
+    "regions",
 }
 
 _MEDICAL_STOPWORDS = {
-    "image", "images", "histology", "histological", "histopathology",
-    "histopathological", "stain", "staining", "stained", "he", "hande",
-    "section", "sections", "tissue", "tissues", "specimen", "specimens",
-    "slide", "slides", "microscopy", "microscopic", "photomicrograph",
-    "pathology", "pathological", "biopsy", "biopsies",
-    "magnification", "objective", "field", "view",
+    "image",
+    "images",
+    "histology",
+    "histological",
+    "histopathology",
+    "histopathological",
+    "stain",
+    "staining",
+    "stained",
+    "he",
+    "hande",
+    "section",
+    "sections",
+    "tissue",
+    "tissues",
+    "specimen",
+    "specimens",
+    "slide",
+    "slides",
+    "microscopy",
+    "microscopic",
+    "photomicrograph",
+    "pathology",
+    "pathological",
+    "biopsy",
+    "biopsies",
+    "magnification",
+    "objective",
+    "field",
+    "view",
 }
 
 _STOPWORDS = _EN_STOPWORDS | _MEDICAL_STOPWORDS
@@ -58,12 +141,37 @@ _STOPWORDS = _EN_STOPWORDS | _MEDICAL_STOPWORDS
 # ---------------------------------------------------------------------------
 
 _LOW_SIGNAL_TOKENS = {
-    "cells", "cell", "year", "years", "old", "male", "female",
-    "case", "cases", "patient", "patients",
-    "normal", "abnormal", "chronic", "acute",
-    "type", "grade", "stage", "level",
-    "right", "left", "bilateral", "adjacent", "surrounding",
-    "one", "two", "three", "multiple", "several", "many", "few",
+    "cells",
+    "cell",
+    "year",
+    "years",
+    "old",
+    "male",
+    "female",
+    "case",
+    "cases",
+    "patient",
+    "patients",
+    "normal",
+    "abnormal",
+    "chronic",
+    "acute",
+    "type",
+    "grade",
+    "stage",
+    "level",
+    "right",
+    "left",
+    "bilateral",
+    "adjacent",
+    "surrounding",
+    "one",
+    "two",
+    "three",
+    "multiple",
+    "several",
+    "many",
+    "few",
 }
 
 _LOW_SIGNAL_WEIGHT = 0.3
@@ -72,6 +180,7 @@ _LOW_SIGNAL_WEIGHT = 0.3
 # ---------------------------------------------------------------------------
 # Tokenisation
 # ---------------------------------------------------------------------------
+
 
 def _tokenize(text: str) -> list[str]:
     """Lowercase, split on non-alpha chars, remove hard stopwords, min length 2.
@@ -85,6 +194,7 @@ def _tokenize(text: str) -> list[str]:
 # ---------------------------------------------------------------------------
 # Weighted overlap metric
 # ---------------------------------------------------------------------------
+
 
 def _weighted_caption_overlap(query_tokens: list[str], caption_tokens: list[str]) -> float:
     """Weighted Jaccard: low-signal tokens count 0.3x, others count 1.0x.
@@ -105,7 +215,7 @@ def _weighted_caption_overlap(query_tokens: list[str], caption_tokens: list[str]
         return _LOW_SIGNAL_WEIGHT if token in _LOW_SIGNAL_TOKENS else 1.0
 
     weighted_intersection = sum(_w(t) for t in intersection)
-    weighted_union        = sum(_w(t) for t in union)
+    weighted_union = sum(_w(t) for t in union)
 
     return weighted_intersection / weighted_union if weighted_union > 0 else 0.0
 
@@ -114,15 +224,16 @@ def _weighted_caption_overlap(query_tokens: list[str], caption_tokens: list[str]
 # Core re-ranking function
 # ---------------------------------------------------------------------------
 
+
 def rerank_results(
     query: str,
-    candidates: List[dict],
-    expected_categories: Optional[List[str]] = None,
+    candidates: list[dict],
+    expected_categories: list[str] | None = None,
     alpha: float = 0.75,
     beta: float = 0.25,
     gamma: float = 0.0,
     topk: int = 10,
-) -> List[dict]:
+) -> list[dict]:
     """Re-rank candidate list and return top-K.
 
     Parameters
@@ -161,11 +272,11 @@ def rerank_results(
     expected_set: set[str] = set(expected_categories) if expected_categories else set()
 
     # --- Score each candidate ---
-    scored: List[tuple[float, dict]] = []
+    scored: list[tuple[float, dict]] = []
     for c in candidates:
-        cosine = c["score"]                                          # raw, no min-max
-        cap    = _weighted_caption_overlap(q_tokens, _tokenize(c.get("caption", "")))
-        bonus  = 1.0 if (expected_set and c.get("pathology", "") in expected_set) else 0.0
+        cosine = c["score"]  # raw, no min-max
+        cap = _weighted_caption_overlap(q_tokens, _tokenize(c.get("caption", "")))
+        bonus = 1.0 if (expected_set and c.get("pathology", "") in expected_set) else 0.0
 
         rerank_score = alpha * cosine + beta * cap + gamma * bonus
         scored.append((rerank_score, {**c, "rerank_score": round(rerank_score, 5)}))
@@ -179,17 +290,37 @@ def rerank_results(
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    _FAKE_CANDIDATES = [
-        {"id": "img_001.jpg", "score": 0.82, "pathology": "lung carcinoma",
-         "caption": "H&E section showing invasive lung carcinoma with squamous differentiation"},
-        {"id": "img_002.jpg", "score": 0.81, "pathology": "breast carcinoma",
-         "caption": "Breast tissue section with ductal carcinoma in situ"},
-        {"id": "img_003.jpg", "score": 0.79, "pathology": "lung carcinoma",
-         "caption": "Lung adenocarcinoma with lepidic growth pattern"},
-        {"id": "img_004.jpg", "score": 0.77, "pathology": "unknown",
-         "caption": "Tissue section stained with hematoxylin and eosin"},
-        {"id": "img_005.jpg", "score": 0.76, "pathology": "lung carcinoma",
-         "caption": "Small cell lung carcinoma with necrosis and high mitotic rate"},
+    _FAKE_CANDIDATES: list[dict] = [
+        {
+            "id": "img_001.jpg",
+            "score": 0.82,
+            "pathology": "lung carcinoma",
+            "caption": "H&E section showing invasive lung carcinoma with squamous differentiation",
+        },
+        {
+            "id": "img_002.jpg",
+            "score": 0.81,
+            "pathology": "breast carcinoma",
+            "caption": "Breast tissue section with ductal carcinoma in situ",
+        },
+        {
+            "id": "img_003.jpg",
+            "score": 0.79,
+            "pathology": "lung carcinoma",
+            "caption": "Lung adenocarcinoma with lepidic growth pattern",
+        },
+        {
+            "id": "img_004.jpg",
+            "score": 0.77,
+            "pathology": "unknown",
+            "caption": "Tissue section stained with hematoxylin and eosin",
+        },
+        {
+            "id": "img_005.jpg",
+            "score": 0.76,
+            "pathology": "lung carcinoma",
+            "caption": "Small cell lung carcinoma with necrosis and high mitotic rate",
+        },
     ]
 
     QUERY = "invasive lung carcinoma squamous"
@@ -201,8 +332,10 @@ if __name__ == "__main__":
     for i, c in enumerate(_FAKE_CANDIDATES, 1):
         cap_tok = _tokenize(c["caption"])
         overlap = _weighted_caption_overlap(q_tok, cap_tok)
-        print(f"  #{i}  cos={c['score']:.3f}  overlap={overlap:.3f}  "
-              f"{c['pathology']:<22}  {c['caption'][:55]}")
+        print(
+            f"  #{i}  cos={c['score']:.3f}  overlap={overlap:.3f}  "
+            f"{c['pathology']:<22}  {c['caption'][:55]}"
+        )
 
     reranked = rerank_results(QUERY, _FAKE_CANDIDATES, topk=5)
     print("\n--- After re-ranking (alpha=0.75, beta=0.25, gamma=0.0) ---")

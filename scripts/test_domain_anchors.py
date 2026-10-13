@@ -17,23 +17,15 @@ Usage:
 
 from __future__ import annotations
 
-import os
 import sys
-from pathlib import Path
 
 try:
     sys.stdout.reconfigure(encoding="utf-8")
 except Exception:
     pass
 
-ROOT = Path(__file__).parent.parent
-SCRIPTS_DIR = ROOT / "scripts"
-os.chdir(ROOT)
-if str(SCRIPTS_DIR) not in sys.path:
-    sys.path.insert(0, str(SCRIPTS_DIR))
-
 import numpy as np
-from encoders import get_encoder
+from pathosearch.encoders import get_encoder
 
 ENCODERS = ["clip", "quilt"]
 ENCODER_LABELS = {"clip": "Generic CLIP", "quilt": "QuiltNet"}
