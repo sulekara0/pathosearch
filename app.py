@@ -131,6 +131,7 @@ st.set_page_config(
 )
 st.title("🔬 Histopatoloji Multimodal Arama")
 st.caption("Generic CLIP vs QuiltNet — Alan adaptasyonu karşılaştırması | Quilt-1M + FAISS")
+st.warning("Eğitim/araştırma amaçlıdır, teşhis aracı değildir.")
 
 
 def require_data() -> None:
@@ -182,7 +183,7 @@ with st.sidebar:
     enable_rerank = st.checkbox(
         "Akıllı Sıralama (V5b — Weighted Jaccard)",
         value=True,
-        help="Caption tabanlı ağırlıklı Jaccard re-ranking — Precision@10 0.539 → 0.609. "
+        help="Caption tabanlı ağırlıklı Jaccard re-ranking. Kalite ölçümü R2'de yapılacak. "
              "Sadece Tek Model modunda aktif (ham model karşılaştırmasını bozmamak için).",
         disabled=(mode != "Tek Model"),
     )

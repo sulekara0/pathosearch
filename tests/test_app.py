@@ -25,3 +25,4 @@ def test_app_stops_with_clear_error_when_data_missing(
     assert "Veri bulunamadı" in at.error[0].value
     assert "artifacts" in at.error[0].value
     assert len(at.text_input) == 0  # script stopped before the search UI
+    assert any("teşhis aracı değildir" in w.value for w in at.warning)  # disclaimer is always shown
