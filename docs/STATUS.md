@@ -16,7 +16,7 @@ Tarih: 2026-10-14 · Kapsam: `v0-prototype` etiketli kod (commit `d123df5` + `5e
 |---|---|
 | `app.py` (408 satır) | Streamlit UI + `search_pipeline` + artifact kontrolü (mantık UI'ya gömülü) |
 | `scripts/` | 18 dosya, ayrıntı §2 |
-| `inspect_quilt.py` | Tek seferlik keşif; sabit yollar `C:\Users\Çağrı\Downloads\...` (kullanıcı adı içeriyor) |
+| `inspect_quilt.py` | Tek seferlik keşif; sabit yollar `C:\Users\user\Downloads\...` (kullanıcı adı içeriyor) |
 | `reports/` | 6 statik HTML (üçü karşılaştırma, üçü tek sorgu görseli) |
 | `requirements.txt` | Sürümler `>=` ile açık, lock yok |
 | `.githooks/commit-msg`, `.claude/settings.json` | Atıf satırlarını temizleme |
@@ -43,7 +43,7 @@ Tarih: 2026-10-14 · Kapsam: `v0-prototype` etiketli kod (commit `d123df5` + `5e
 | `visualize_search.py` | Tek sorgu için CLIP vs QuiltNet HTML | → `reports/search_*.html` | **Kırık**: `faiss_search._load_index/_load_embeddings` yok (adlar `load_index/load_embeddings`). Raporlar eski kodla üretilmiş |
 | `shot.py` | Playwright ile ekran görüntüsü | çalışan :8501 → `artifacts/shots` | Yok. `playwright` requirements'ta yok |
 
-Hardcode/hack özeti: `os.chdir` (app, `domain_gate`, `test_*`), `sys.path.insert` (app, 6+ script), mutlak `E:\` ve `C:\Users\Çağrı\...` yolları, `data/images` → `data/images_test` ve `captions_quilt` → `captions_quilt_test` **sessiz fallback**'i (`app.py:20-32`).
+Hardcode/hack özeti: `os.chdir` (app, `domain_gate`, `test_*`), `sys.path.insert` (app, 6+ script), mutlak `E:\` ve `C:\Users\user\...` yolları, `data/images` → `data/images_test` ve `captions_quilt` → `captions_quilt_test` **sessiz fallback**'i (`app.py:20-32`).
 
 ## 3. Raporların iddiaları
 
