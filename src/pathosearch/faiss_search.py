@@ -32,6 +32,7 @@ from pathlib import Path
 import numpy as np
 
 from pathosearch.config import load_settings, require_file
+from pathosearch.labels import normalize_pathology
 
 np.set_printoptions(suppress=True, precision=4)
 
@@ -134,7 +135,7 @@ def load_captions(jsonl_path: Path) -> dict[str, dict]:
             if fname:
                 cap_map[fname] = {
                     "caption": rec.get("caption", ""),
-                    "pathology": rec.get("pathology", ""),
+                    "pathology": normalize_pathology(rec.get("pathology", "")),
                 }
     return cap_map
 

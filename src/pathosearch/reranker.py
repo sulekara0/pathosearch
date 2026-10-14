@@ -25,6 +25,8 @@ from __future__ import annotations
 
 import re
 
+from pathosearch.labels import normalize_labels, normalize_pathology
+
 # ---------------------------------------------------------------------------
 # Hard stopwords — removed entirely from tokenisation
 # ---------------------------------------------------------------------------
@@ -269,14 +271,15 @@ def rerank_results(
     q_tokens = _tokenize(query)
 
     # --- Expected categories as a set for O(1) lookup ---
-    expected_set: set[str] = set(expected_categories) if expected_categories else set()
+    expected_set = normalize_labels(expected_categories) if expected_categories else set()
 
     # --- Score each candidate ---
     scored: list[tuple[float, dict]] = []
     for c in candidates:
         cosine = c["score"]  # raw, no min-max
         cap = _weighted_caption_overlap(q_tokens, _tokenize(c.get("caption", "")))
-        bonus = 1.0 if (expected_set and c.get("pathology", "") in expected_set) else 0.0
+        in_expected = normalize_pathology(c.get("pathology", "")) in expected_set
+        bonus = 1.0 if (expected_set and in_expected) else 0.0
 
         rerank_score = alpha * cosine + beta * cap + gamma * bonus
         scored.append((rerank_score, {**c, "rerank_score": round(rerank_score, 5)}))

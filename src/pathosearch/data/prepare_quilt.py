@@ -36,6 +36,7 @@ import pandas as pd
 from tqdm import tqdm
 
 from pathosearch.config import load_settings
+from pathosearch.labels import normalize_pathology
 
 # ---------------------------------------------------------------------------
 # Defaults (paths come from env/.env via pathosearch.config)
@@ -55,27 +56,28 @@ NEEDED_COLS = ["image_path", "caption", "pathology", "not_histology", "split"]
 # ---------------------------------------------------------------------------
 # Balanced sampling hedefleri
 # ---------------------------------------------------------------------------
+# Keys are normalized (lower-case). The former separate "Unknown": 4000 entry is
+# dropped: labels are now normalized, so it would collide with "unknown".
 BALANCED_TARGETS = {
-    "Dermatopathology": 20000,
+    "dermatopathology": 20000,
     "unknown": 25000,
-    "Gastrointestinal": 18000,
-    "Pulmonary": 14000,
-    "Gynecologic": 14000,
-    "Soft tissue": 12000,
-    "Breast": 12000,
-    "Renal": 10000,
-    "Hematopathology": 10000,
-    "Genitourinary": 8000,
-    "Bone": 7000,
-    "Neuropathology": 6000,
-    "Cardiac": 5000,
-    "Hepatopathology": 5000,
-    "Endocrine": 5000,
-    "Head and Neck": 5000,
-    "Cytopathology": 4000,
-    "Ophthalmic": 3000,
-    "Pediatric": 3000,
-    "Unknown": 4000,
+    "gastrointestinal": 18000,
+    "pulmonary": 14000,
+    "gynecologic": 14000,
+    "soft tissue": 12000,
+    "breast": 12000,
+    "renal": 10000,
+    "hematopathology": 10000,
+    "genitourinary": 8000,
+    "bone": 7000,
+    "neuropathology": 6000,
+    "cardiac": 5000,
+    "hepatopathology": 5000,
+    "endocrine": 5000,
+    "head and neck": 5000,
+    "cytopathology": 4000,
+    "ophthalmic": 3000,
+    "pediatric": 3000,
 }
 
 
@@ -91,10 +93,10 @@ def parse_pathology(raw) -> str:
     try:
         parsed = ast.literal_eval(str(raw))
         if isinstance(parsed, list) and parsed:
-            return str(parsed[0]).strip()
+            return normalize_pathology(parsed[0])
     except Exception:
         pass
-    return str(raw).strip()
+    return normalize_pathology(raw)
 
 
 # ---------------------------------------------------------------------------

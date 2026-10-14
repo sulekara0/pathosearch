@@ -14,9 +14,11 @@ from __future__ import annotations
 
 import math
 
+from pathosearch.labels import normalize_labels, normalize_pathology
+
 
 def is_relevant(result: dict, expected: list[str]) -> bool:
-    return bool(expected) and result["pathology"] in expected
+    return bool(expected) and normalize_pathology(result["pathology"]) in normalize_labels(expected)
 
 
 def precision_at_k(results: list[dict], expected: list[str], k: int) -> float:
