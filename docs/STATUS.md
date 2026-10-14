@@ -271,6 +271,41 @@ Diskte olup `ids.json`'da olmayan 27,226 görselin split'i: yalnız `train` 26,2
 - `ids.json`'daki `val` bağlantılı görsel: 36 (hepsi `train` ile de eşleşen, bkz. 7.7.2).
 - Gözlem (yorum, doğrulanmadı): diskteki 928 yalnız-`val` görsel, indeksin dışında kaldıkları için R2'de held-out değerlendirme adayı olabilir; ama bunların QuiltNet eğitiminde kullanılıp kullanılmadığı ve sayının golden set için yeterliliği **bulunamadı/kontrol edilmedi**.
 
+#### 7.7.5 Mevcut JSONL `balanced` mı `stratified` mı?
+
+**Sonuç: `balanced` ile üretilmiş (yüksek güven, komut kaydı yok).** JSONL: 168,739 satır, 114,222 tekil görsel. Satır sayıları `BALANCED_TARGETS` ile karşılaştırıldı (kategori adları normalize edilmiş, küçük harf; `BALANCED_TARGETS` şu anki hâli):
+
+| kategori | hedef | JSONL satır | JSONL tekil görsel | durum |
+|---|---|---|---|---|
+| unknown | 25,000 | 25,003 | 25,003 | hedefe ulaştı (+3, aşağıya bak) |
+| dermatopathology | 20,000 | 20,000 | 17,248 | birebir |
+| gastrointestinal | 18,000 | 18,000 | 11,669 | birebir |
+| pulmonary | 14,000 | 14,000 | 8,312 | birebir |
+| gynecologic | 14,000 | 14,000 | 7,578 | birebir |
+| soft tissue | 12,000 | 12,000 | 7,454 | birebir |
+| hematopathology | 10,000 | 10,000 | 5,370 | birebir |
+| genitourinary | 8,000 | 8,000 | 5,093 | birebir |
+| bone | 7,000 | 7,000 | 4,015 | birebir |
+| neuropathology | 6,000 | 6,000 | 3,492 | birebir |
+| endocrine | 5,000 | 5,000 | 3,046 | birebir |
+| head and neck | 5,000 | 5,000 | 2,874 | birebir |
+| breast | 12,000 | 6,500 | 3,502 | hedefin altında |
+| renal | 10,000 | 8,504 | 4,371 | hedefin altında |
+| cardiac | 5,000 | 3,194 | 1,759 | hedefin altında |
+| hepatopathology | 5,000 | 1,934 | 998 | hedefin altında |
+| cytopathology | 4,000 | 1,687 | 975 | hedefin altında |
+| ophthalmic | 3,000 | 2,286 | 1,152 | hedefin altında |
+| pediatric | 3,000 | 631 | 311 | hedefin altında |
+| **toplam** | **186,000** | **168,739** | 114,222 | |
+
+Gerekçe:
+- 11 kategori hedef değerle **tam yuvarlak** satır sayısına sahip. `stratified` kotaları `round(n·count/total)` olduğu için böyle yuvarlak sayılar üretmez, ayrıca `--n` varsayılanı 10,000 iken burada 168,739 satır var.
+- Hedefin altındaki 7 kategori `take = min(hedef, havuz)` davranışıyla (`balanced_sample`) uyumlu: havuz yetmemiş. Tam CSV'de bu kategorilerin havuzu hedefleri aşıyor (örn. breast 21,495 satır; cardiac 11,088), yani yetersizlik CSV'den değil **o günkü görsel kaynağından** (zip/klasör filtresi) geliyor. O günkü kaynak kümesi bu makinede yok, bu yüzden havuz boyutları doğrulanamadı.
+- `unknown` 25,003 = 25,000 + 3: eski kodda ayrı `"Unknown": 4000` hedefi vardı ve büyük-U etiketli 3 satır oraya düşmüş; normalizasyonla `unknown`'a birleşti (7.4'teki 3 görsellik `Unknown` ile tutarlı).
+- Stratified olsaydı kategori payları havuzla orantılı olurdu; burada `dermatopathology` JSONL'da %11.9, CSV `train` havuzunda ~%31, yani dağılım orantılı değil.
+
+Sınırlar: bunu doğrudan kanıtlayan komut/`subset_stats.json` bulunamadı (çıkarım). Tekil görsel sayısı satırdan düşük, çünkü örnekleme **satır** bazlı ve aynı görselin birden çok satırı aynı kategoriye gidiyor (görsel başına en çok 9 satır). Korpus oranları Quilt-1M'in doğal dağılımı değil, hedef tablosunun ürünüdür (7.6 c ile aynı sonuç, artık veriyle destekli).
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
