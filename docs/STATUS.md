@@ -50,7 +50,7 @@ Hardcode/hack özeti: `os.chdir` (app, `domain_gate`, `test_*`), `sys.path.inser
 | Rapor | Ne iddia ediyor | Notlar |
 |---|---|---|
 | `comparison_64k.html` (2026-05-22) | 63 etiketli sorgu, K=10: P@10 CLIP **0.175** vs QuiltNet **0.395**; mAP 0.272/0.520; nDCG 0.172/0.410; gecikme 32.7/62.5 ms (CPU) | = V1 (rerank yok, unknown filtresi yok) |
-| `comparison_114k.html` (2026-06-04) | 56 etiketli sorgu, K=10: P@10 CLIP **0.323** vs QuiltNet **0.539**; mAP 0.440/0.633; nDCG 0.326/0.547; gecikme 106.3/181.9 ms | **Dosya adı "114k" ama içindeki korpus "64,052 görsel"**; `compare_models.py` ise sabit olarak "114K image corpus" yazıyor. Rapor ile kod senkron değil. Sorgu adları (`skin squamous cancer`, `q003`) V3 ensemble'ın genel varyantı. Başlıkta rerank etiketi yok → rerank **kapalı** koşmuş görünüyor |
+| `comparison_114k.html` (2026-06-04) | 56 etiketli sorgu, K=10: P@10 CLIP **0.323** vs QuiltNet **0.539**; mAP 0.440/0.633; nDCG 0.326/0.547; gecikme 106.3/181.9 ms | **Dosya adı "114k" ama içindeki korpus "64,052 görsel"**; `compare_models.py` ise sabit olarak "114K image corpus" yazıyor. Rapor ile kod senkron değil. **Açık soru:** "64,052" sayısının kaynağı bulunamadı (§7.1: gerçek korpus 114,222). Sorgu adları (`skin squamous cancer`, `q003`) V3 ensemble'ın genel varyantı. Başlıkta rerank etiketi yok → rerank **kapalı** koşmuş görünüyor |
 | `comparison_v1_v2_v3.html` (2026-05-22) | QuiltNet P@10: V1 0.395 → V2 0.457 → V3 0.480; CLIP: 0.175 → 0.216 → 0.230 | Raporun kendisi, sorgu setleri farklı olduğu için değerlerin doğrudan karşılaştırılamayacağını yazıyor |
 | `search_*.html` ×3 (2026-04-29) | Tek sorgu CLIP vs QuiltNet görsel çıktı; iddia yok | `lymph node` için QuiltNet'in 5 sonucundan 3'ü `unknown`/alakasız görünüyor |
 
@@ -78,7 +78,7 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 | 3 | **Tek set üzerinde ayar, ayrı split yok.** V1→V2'de zayıf kategorilerin sorguları sonuçlara bakılarak yeniden yazıldı ("Weak categories fully rewritten"); α/β de aynı sorgularda. Dev/test ayrımı yok | `make_queries_v2.py:1-8` | Yüksek |
 | 4 | **Değerlendirmede `unknown` sonuçları etiketle atılıyor** (`--filter_unknown`): retrieval aşamasında etiket kullanılıyor. Uygulama bunu yapmıyor → rapor ≠ uygulama davranışı | `compare_models.py:42-57` | Orta |
 | 5 | **Eğitim/test sızıntısı (QuiltNet adil mi?).** `00_prepare` varsayılan split `train`; QuiltNet Quilt-1M üzerinde eğitildi. Hangi split'in gerçekten kullanıldığı **bulunamadı** (artifact yok). Eğer `train` ise QuiltNet kendi eğitim verisinde ölçülmüş olur | `00_prepare_quilt.py:48` | Yüksek (doğrulanmalı) |
-| 6 | **Etiket gürültüsü ve kaba ilgi.** Etiket otomatik/metadata kaynaklı; ilk eleman alınıyor; `unknown` ~%33 (rapor notu). Kategori düzeyi P@10 hastalık düzeyi doğruluğu değil | `make_comparison_report.py` metodoloji | Orta |
+| 6 | **Etiket gürültüsü ve kaba ilgi.** Etiket otomatik/metadata kaynaklı; ilk eleman alınıyor; `unknown` korpusta **%21.89** (görsel bazında, §7.4; eski "~%33" rapor notu korpusla örtüşmüyordu). Kategori düzeyi P@10 hastalık düzeyi doğruluğu değil | `make_comparison_report.py` metodoloji | Orta |
 | 7 | **nDCG'nin IDCG'si her kategoride ≥K ilgili belge olduğunu varsayıyor**; küçük kategorilerde (Ophthalmic 1 sorgu) şişirir/saptırır | `compare_models.py:130`, rapor dipnotu | Düşük-Orta |
 | 8 | **İstatistiksel güç düşük**: kategori başına 1-10 sorgu, güven aralığı/seed yok, kategori ağırlığı eşit değil (makro yerine sorgu ortalaması) | rapor tabloları | Orta |
 
@@ -142,7 +142,8 @@ Korpus **tamamen `train`**. Dosyanın tamamı da `train`; yani dışarıda bıra
 - 35,605 görselin birden fazla **farklı** caption'ı var. Aynı görselin satırları arasında `pathology` farkı **0** (etiket görsel başına tutarlı).
 - Tam yinelenen (path+caption+pathology) satır yok.
 - **Etki (doğrulanmadı):** Reranker ve CE caption kullanıyor; çok-caption'lı görselde hangisinin seçildiği kodda net değil (`src/` içinde captions yükleyen bir yer bulamadım, grep sonucu `config.py` dışında yok). Birleştirme/ilk satır/son satır hangisi ise Jaccard skoru buna bağlı; **R2 öncesi incelenmeli**.
-- `config.py` captions için varsayılanı `<artifacts>/captions_quilt.jsonl` olarak veriyor, dosya ise `data/captions_quilt.jsonl` altında. Env ile verilmezse açık hata beklenir (CLAUDE.md kuralı), ama burada elle kontrol edilmedi.
+- `config.py` captions varsayılanı `<artifacts>/captions_quilt.jsonl` idi, dosya `data/` altında. **Düzeltildi** (`f14bb9b`): varsayılan artık `<data>/captions_quilt.jsonl`.
+- Hangi caption'ın kullanıldığı kod okunarak çözüldü: §7.6 (b).
 
 ### 7.4 Pathology dağılımı ve `unknown` oranı
 
@@ -172,7 +173,7 @@ Doğru birim **görsel** (satır değil). Satır bazlı sayım çok-caption'lı 
 | `Unknown` (büyük U) | 3 | 0.00% |
 
 - 20 ayrı değer: 18 uzmanlık + `unknown` + 3 görsellik `Unknown` (büyük/küçük harf tutarsızlığı; `unknown` filtresi büyük U'yu kaçırır).
-- `unknown` oranı **%21.89** görsel bazında. §3'te "~%33 (rapor notu)" yazıyordu; bu değer korpusla örtüşmüyor, kaynağı (muhtemelen sonuç listesindeki oran, korpus oranı değil) **doğrulanmadı**.
+- `unknown` oranı **%21.89** görsel bazında. §4 risk 6'da "~%33 (rapor notu)" yazıyordu (düzeltildi); bu değer korpusla örtüşmüyor, kaynağı (muhtemelen sonuç listesindeki oran, korpus oranı değil) **doğrulanmadı**.
 - Satır bazında sayılar yuvarlak (unknown 25,000, Dermatopathology 20,000, Gastrointestinal 18,000...). Bu, `00_prepare_quilt.py` örneklemesinde kategori başına **satır** kotası uygulandığını düşündürüyor **(tahmin, kod okunarak doğrulanmalı)**. Bu doğruysa dağılım Quilt-1M'in doğal dağılımı değil, örneklemenin ürünü.
 - Çok sınıflı dengesizlik: Ophthalmic, Hepatopathology, Cytopathology, Pediatric < %1.1. Bu kategorilerde sorgu başına anlamlı P@10 için yeterli ilgili belge olmayabilir (§4 risk 7 ile ilişkili).
 
@@ -192,9 +193,37 @@ Doğru birim **görsel** (satır değil). Satır bazlı sayım çok-caption'lı 
 
 `model_info.json`'da model sürümü/commit hash'i, `open_clip`/`transformers` sürümü, seed ve komut **yok**; embedding üretimi tekrar üretilebilirlik kuralını karşılamıyor.
 
+### 7.6 Kod okuyarak yanıtlanan sorular (2026-10-14)
+
+Yöntem: sadece kod okundu, artifact/CSV açılmadı, hiçbir şey çalıştırılmadı. Satır numaraları bu tarihteki `src/pathosearch/` hâli.
+
+**(a) `split` nereden geliyor?** CSV sütunundan.
+- `prepare_quilt.py` `NEEDED_COLS` içinde `split` var ve `pd.read_csv(usecols=NEEDED_COLS)` ile okunuyor. Filtre: `chunk["split"] == split` (`collect_candidates`). `--split` varsayılanı `train`, seçenekler `train/val/test`.
+- JSONL'daki `split` alanı satırın kendi değeri **değil**; `extract_and_write` her satıra `args.split` değerini yazıyor. Filtre doğru çalıştıysa ikisi aynıdır.
+- **Bulunamadı:** CSV'deki gerçek değerlerin (`train/val/test` yazımı, dağılımı) doğrulanması; CSV bu makinede incelenmedi. §7.2'deki "%100 train" bulgusu bu yüzden JSONL'daki yazılan değere dayanıyor, CSV'ye değil.
+
+**(b) Çok-caption'lı görselde hangi caption kullanılıyor?** Her yerde tek caption: **JSONL'daki o görselin son satırı.**
+- `faiss_search.load_captions` `{basename: {caption, pathology}}` sözlüğü kuruyor; aynı basename tekrar gelince atama üzerine yazıyor (`cap_map[fname] = ...`). Birleştirme yok, ilk satır korunmuyor.
+- Aynı sözlük `raw_search` ile her sonuca `caption`/`pathology` olarak ekleniyor. Reranker (`rerank_results`), cross-encoder (`c.get("caption")`), uygulama (`pipeline.SearchIndex.captions`) ve `compare_models` hep bu sonuç alanını okuyor. Başka bir caption yükleyen yer **bulunamadı**.
+- "Son satır" anlamsal bir seçim değil: `prepare_quilt` örneklemeden sonra satırları `sample(frac=1, random_state=seed)` ile karıştırıyor, yani hangi caption'ın kazandığı JSONL sırasına (seed'e) bağlı. Jaccard skoru bu rastgele seçime bağlı.
+- JSONL'da bir görselin tüm Quilt caption'ları da olmayabilir: örnekleme **satır** bazlı (bkz. c), bir görselin yalnız örneklenen satırları dosyaya girer.
+- Not: klasör modunda ikinci kez gelen satır `dst.exists()` olduğu için görsel kopyalamayı atlıyor (`skip`) ama yine de JSONL'a yazılıyor; çok-caption'lı görsellerin JSONL'da birden fazla satırı olmasının kod tarafındaki nedeni bu.
+
+**(c) Kategori başına satır kotası var mı?** Evet, iki modda da, birim **satır** (görsel değil).
+- `stratified` (varsayılan): kategori başına `quota = max(1, round(n * count / total))`, `count/total` satır sayısı. Orantılı; `--n` toplam satır hedefi.
+- `balanced`: `BALANCED_TARGETS` kategori başına en fazla `min(hedef, havuz)` satır alır; `--n` yok sayılır. Kategori başına yuvarlak tavanlar (`unknown` 25000, `dermatopathology` 20000, ...) buradan geliyor.
+- Mevcut `captions_quilt.jsonl` hangi modla üretildi: **bulunamadı** (komut ve `subset_stats.json` incelenmedi). §7.4'teki yuvarlak satır sayıları `balanced` ile tutarlı **(tahmin)**; `artifacts/subset_stats.json` (`category_distribution`) bunu doğrular.
+- Sonuç: `balanced` ise dağılım Quilt-1M'in doğal dağılımı değil, hedef tablosunun ürünü; kategori oranlarından korpus temsiliyeti çıkarılamaz.
+- Okurken görülen, doğrulanmamış şüphe: `stratified_sample` içinde `remaining = df[~df.index.isin(result.index)]` satırında `result` `ignore_index=True` ile yeniden indekslenmiş; indeksler `df` ile eşleşmediği için doldurma (`len(result) < n`) yanlış satırları dışlayıp tekrar eden satır ekleyebilir. Çalıştırılıp test edilmedi.
+
+**Bu bölümle birlikte yapılan kod değişiklikleri**
+- `f14bb9b`: captions varsayılan yolu `data/captions_quilt.jsonl`.
+- Pathology normalizasyonu (`labels.normalize_pathology`: kırp + küçük harf): `load_captions`, `parse_pathology`, `is_relevant` ve reranker bonusunda uygulanıyor, böylece `Unknown`/`unknown` tek kategori. `BALANCED_TARGETS` anahtarları küçük harfe çevrildi ve ayrı `"Unknown": 4000` girdisi kaldırıldı (normalizasyondan sonra `unknown` ile çakışırdı). Etkisi: arayüzde ve raporlarda kategori adları küçük harfle görünür (ör. `dermatopathology`); bellekte, mevcut JSONL'u yeniden üretmeden de uygulanır çünkü normalizasyon yükleme sırasında yapılıyor.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
 2. ~~Gerçek korpus train mi test mi, 64k mı 114k mı?~~ **Yanıtlandı (§7.1-7.2):** 114,222 görsel, %100 `train`. Sende: "QuiltNet'in train verisi üzerinde ölçüm" sonucunu R2'de nasıl ele alalım (ayrı held-out korpus mu, mevcut korpusta dürüstlük notu mu)?
 3. Uygulamadaki iddia metni R1'de nötrlenip R2'de yeniden hesaplansın mı? (Not: git geçmişine göre iddia metni zaten değiştirilmiş görünüyor: `76b5bbc`; uygulama durumu elle doğrulanmadı.)
-4. §7.3: Çok-caption'lı görseller için reranker hangi caption'ı kullanmalı? Karar R2'den önce gerekli.
+4. §7.3: Çok-caption'lı görseller için reranker hangi caption'ı kullanmalı? Karar R2'den önce gerekli. (Mevcut davranış §7.6 (b): JSONL'daki son satır, seed'e bağlı.)
+5. Açık soru: `comparison_114k.html` içindeki "64,052 görsel" ifadesi nereden geldi? (§3, §7.1)
