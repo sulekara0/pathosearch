@@ -220,6 +220,22 @@ Yöntem: sadece kod okundu, artifact/CSV açılmadı, hiçbir şey çalıştır�
 - `f14bb9b`: captions varsayılan yolu `data/captions_quilt.jsonl`.
 - Pathology normalizasyonu (`labels.normalize_pathology`: kırp + küçük harf): `load_captions`, `parse_pathology`, `is_relevant` ve reranker bonusunda uygulanıyor, böylece `Unknown`/`unknown` tek kategori. `BALANCED_TARGETS` anahtarları küçük harfe çevrildi ve ayrı `"Unknown": 4000` girdisi kaldırıldı (normalizasyondan sonra `unknown` ile çakışırdı). Etkisi: arayüzde ve raporlarda kategori adları küçük harfle görünür (ör. `dermatopathology`); bellekte, mevcut JSONL'u yeniden üretmeden de uygulanır çünkü normalizasyon yükleme sırasında yapılıyor.
 
+### 7.7 CSV, disk ve JSONL çapraz kontrolü (2026-10-14)
+
+Yöntem: `data/quilt_1M_lookup.csv` (chunk'lı okuma), `data/captions_quilt.jsonl`, `artifacts/clip/ids.json` ve `data/images` (yalnız dosya adı sayımı) **salt okunur** incelendi; hiçbir veri dosyası değiştirilmedi. Eşleştirme anahtarı dosya adı (CSV `image_path` = basename). Analiz betiği repo dışında tutuldu, bu yüzden bu sayılar henüz repoda tekrar üretilebilir bir komuta bağlı değil. Not: 7.7.5 ve 7.7.6 sonuçları aşağıda.
+
+#### 7.7.1 CSV `split` sütunu
+
+CSV: 1,017,708 satır, 653,209 tekil `image_path`. `split` yalnızca iki değer alıyor (NaN yok):
+
+| split | satır | tekil görsel |
+|---|---|---|
+| `train` | 1,004,149 | 643,522 |
+| `val` | 13,559 | 9,906 |
+
+- Toplam tekil (653,209) iki satırın toplamından (653,428) küçük: **219 görsel hem `train` hem `val` satırında** geçiyor.
+- `prepare_quilt` filtresi (`not_histology==0`, caption dolu) sonrası: `train` 999,198 satır / 640,098 görsel, `val` 13,559 satır / 9,906 görsel.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
