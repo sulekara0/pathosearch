@@ -11,8 +11,13 @@ def test_defaults_are_relative_and_derived() -> None:
     assert s.data_dir == Path("data")
     assert s.artifacts_dir == Path("artifacts")
     assert s.images_dir == Path("data") / "images"
-    assert s.captions_path == Path("artifacts") / "captions_quilt.jsonl"
+    assert s.captions_path == Path("data") / "captions_quilt.jsonl"
     assert s.encoder_dir("quilt") == Path("artifacts") / "quilt"
+
+
+def test_captions_default_follows_data_dir() -> None:
+    s = load_settings({"PATHOSEARCH_DATA_DIR": "x", "PATHOSEARCH_ARTIFACTS_DIR": "y"})
+    assert s.captions_path == Path("x") / "captions_quilt.jsonl"
 
 
 def test_env_overrides() -> None:

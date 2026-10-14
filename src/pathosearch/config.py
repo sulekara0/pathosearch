@@ -9,7 +9,7 @@ Variables:
     PATHOSEARCH_DATA_DIR       root for raw data           (default: data)
     PATHOSEARCH_ARTIFACTS_DIR  embeddings, indexes, etc.   (default: artifacts)
     PATHOSEARCH_IMAGES_DIR     image corpus                (default: <data>/images)
-    PATHOSEARCH_CAPTIONS_PATH  captions JSONL              (default: <artifacts>/captions_quilt.jsonl)
+    PATHOSEARCH_CAPTIONS_PATH  captions JSONL              (default: <data>/captions_quilt.jsonl)
 """
 
 from __future__ import annotations
@@ -63,7 +63,7 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
     captions_path = (
         Path(env[ENV_CAPTIONS_PATH])
         if ENV_CAPTIONS_PATH in env
-        else artifacts_dir / "captions_quilt.jsonl"
+        else data_dir / "captions_quilt.jsonl"
     )
     return Settings(data_dir, artifacts_dir, images_dir, captions_path)
 
