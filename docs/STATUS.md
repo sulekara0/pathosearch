@@ -306,6 +306,10 @@ Gerekçe:
 
 Sınırlar: bunu doğrudan kanıtlayan komut/`subset_stats.json` bulunamadı (çıkarım). Tekil görsel sayısı satırdan düşük, çünkü örnekleme **satır** bazlı ve aynı görselin birden çok satırı aynı kategoriye gidiyor (görsel başına en çok 9 satır). Korpus oranları Quilt-1M'in doğal dağılımı değil, hedef tablosunun ürünüdür (7.6 c ile aynı sonuç, artık veriyle destekli).
 
+#### 7.7.6 `stratified_sample` top-up şüphesi: doğrulandı
+
+`tests/test_prepare_quilt.py` sahte 30 satırlık DataFrame (3 kategori × 10) ile `n=10` çağırıyor: kotalar `round(3.33)=3` ×3 = 9 satır, yani `len(result) < n` dalı çalışıyor. 30 seed'in içinde **tekrar eden satır çıkıyor** (ilk hata seed 4 civarında), test başarısız. Neden: `result` `ignore_index=True` ile 0..8'e yeniden indekslendi, `df.index.isin(result.index)` ise orijinal etiketlerle karşılaştırıyor; bu yüzden (a) zaten seçilmiş satırlar `remaining`'e geri girip yeniden çekilebiliyor, (b) indeksi 0..8 olan seçilmemiş satırlar hiç çekilemiyor. Kod **düzeltilmedi**; test `xfail(strict=True)` olarak duruyor (düzeltilince XPASS ile CI'ı kırıp işaretler). Gerçek veride etkisi: `stratified` modu ancak `n` kotaların toplamından büyükse tetikleniyor; mevcut JSONL `balanced` üretildiği için (7.7.5) bu hatadan etkilenmemiş.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
