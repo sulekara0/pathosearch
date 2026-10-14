@@ -10,6 +10,7 @@ Variables:
     PATHOSEARCH_ARTIFACTS_DIR  embeddings, indexes, etc.   (default: artifacts)
     PATHOSEARCH_IMAGES_DIR     image corpus                (default: <data>/images)
     PATHOSEARCH_CAPTIONS_PATH  captions JSONL              (default: <data>/captions_quilt.jsonl)
+    PATHOSEARCH_CSV_PATH       Quilt-1M lookup CSV         (default: <data>/quilt_1M_lookup.csv)
 """
 
 from __future__ import annotations
@@ -25,6 +26,7 @@ ENV_DATA_DIR = "PATHOSEARCH_DATA_DIR"
 ENV_ARTIFACTS_DIR = "PATHOSEARCH_ARTIFACTS_DIR"
 ENV_IMAGES_DIR = "PATHOSEARCH_IMAGES_DIR"
 ENV_CAPTIONS_PATH = "PATHOSEARCH_CAPTIONS_PATH"
+ENV_CSV_PATH = "PATHOSEARCH_CSV_PATH"
 
 
 @dataclass(frozen=True)
@@ -33,6 +35,7 @@ class Settings:
     artifacts_dir: Path
     images_dir: Path
     captions_path: Path
+    csv_path: Path
 
     def encoder_dir(self, encoder_name: str) -> Path:
         """Directory holding embeddings/ids/index for one encoder."""
@@ -65,7 +68,8 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
         if ENV_CAPTIONS_PATH in env
         else data_dir / "captions_quilt.jsonl"
     )
-    return Settings(data_dir, artifacts_dir, images_dir, captions_path)
+    csv_path = Path(env[ENV_CSV_PATH]) if ENV_CSV_PATH in env else data_dir / "quilt_1M_lookup.csv"
+    return Settings(data_dir, artifacts_dir, images_dir, captions_path, csv_path)
 
 
 def require_dir(path: Path, hint: str = "") -> Path:

@@ -70,3 +70,10 @@ def test_no_silent_fallback_to_test_dirs(tmp_path: Path) -> None:
     (tmp_path / "images_test" / "a.jpg").write_bytes(b"x")
     with pytest.raises(DataNotFoundError):
         require_dir(tmp_path / "images")
+
+
+def test_csv_path_default_and_override() -> None:
+    assert (
+        load_settings({"PATHOSEARCH_DATA_DIR": "x"}).csv_path == Path("x") / "quilt_1M_lookup.csv"
+    )
+    assert load_settings({"PATHOSEARCH_CSV_PATH": "q.csv"}).csv_path == Path("q.csv")
