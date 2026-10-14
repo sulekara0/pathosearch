@@ -103,8 +103,98 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 - `README` "scripts/ ... reports/" diyor ama `requirements.txt`'te `playwright`, `sentence-transformers` (ms-marco fallback) yok.
 - Türkçe/İngilizce karışık yorum ve UI metni; klinik teşhis ibaresi yok, "eğitim/araştırma" uyarısı app'te yok (README'de var).
 
-## 7. Senin onayın gereken noktalar
+## 7. Artifact incelemesi (2026-10-14)
+
+Yöntem: `data/captions_quilt.jsonl` ve `artifacts/{clip,quilt}/*/` dosyaları **sadece okundu**, hiçbiri değiştirilmedi. Geçici analiz betikleri repo dışında tutuldu. Görsel sayısı kontrolü yapılmadı (zip'ler henüz çıkarılmadı). Bu bölüm §0 madde 1'i (artifact yok) ve §4'teki 2. sorusunu yanıtlar.
+
+### 7.1 Korpus boyutu: CLIP ve QuiltNet aynı mı?
+
+**Evet, birebir aynı.**
+
+| Kontrol | CLIP | QuiltNet |
+|---|---|---|
+| `ids.json` uzunluğu | 114,222 | 114,222 |
+| Tekil id | 114,222 | 114,222 |
+| `embeddings.npy` şekli (başlıktan) | (114222, 512) float32 | (114222, 512) float32 |
+| `faiss_meta.json` `n` | 114,222 | 114,222 |
+
+İki `ids.json` kümesi aynı ve **sıraları da aynı** (fark 0). Sonuç: korpus **114k**; `comparison_114k.html` dosya adı doğru, ama içindeki "64,052 görsel" ifadesi bu korpusla uyuşmuyor, nedeni **bulunamadı** (§3'teki tutarsızlık sürüyor).
+
+### 7.2 Split dağılımı (`ids.json`'da olan satırlar)
+
+`ids.json`'daki 114,222 id'nin **tamamı** captions'ta bulundu (eksik 0). Eşleştirme anahtarı `path`'in dosya adı (basename).
+
+| split | satır | oran |
+|---|---|---|
+| `train` | 168,739 | 100% |
+| `test` / `val` / diğer | 0 | 0% |
+
+Korpus **tamamen `train`**. Dosyanın tamamı da `train`; yani dışarıda bırakılmış test satırı yok. §4 risk 5 ("QuiltNet kendi eğitim verisinde ölçülmüş olabilir") artık **sadece varsayım değil, veriyle destekli**: korpus `train` etiketli. Tek belirsizlik: `split` alanının Quilt-1M CSV'sinden mi geldiği kodda doğrulanmalı, ve QuiltNet'in eğitim kümesiyle tam örtüşme derecesi **bulunamadı** (kontrol edilmedi).
+
+### 7.3 Caption satırı ≠ görsel sayısı
+
+`captions_quilt.jsonl` 168,739 satır, ama tekil `path` (ve basename) sayısı **114,222**. Fark, aynı görselin birden fazla caption'a sahip olması (Quilt-1M'de bir görsel için birden çok metin var):
+
+| Satır/görsel | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|
+| Görsel sayısı | 78,617 | 22,327 | 9,131 | 3,044 | 828 | 199 | 45 | 29 | 2 |
+
+- 35,605 görselin birden fazla **farklı** caption'ı var. Aynı görselin satırları arasında `pathology` farkı **0** (etiket görsel başına tutarlı).
+- Tam yinelenen (path+caption+pathology) satır yok.
+- **Etki (doğrulanmadı):** Reranker ve CE caption kullanıyor; çok-caption'lı görselde hangisinin seçildiği kodda net değil (`src/` içinde captions yükleyen bir yer bulamadım, grep sonucu `config.py` dışında yok). Birleştirme/ilk satır/son satır hangisi ise Jaccard skoru buna bağlı; **R2 öncesi incelenmeli**.
+- `config.py` captions için varsayılanı `<artifacts>/captions_quilt.jsonl` olarak veriyor, dosya ise `data/captions_quilt.jsonl` altında. Env ile verilmezse açık hata beklenir (CLAUDE.md kuralı), ama burada elle kontrol edilmedi.
+
+### 7.4 Pathology dağılımı ve `unknown` oranı
+
+Doğru birim **görsel** (satır değil). Satır bazlı sayım çok-caption'lı görselleri fazla sayar ve `unknown`'u yanlış (%14.82) gösterir.
+
+| pathology | görsel | oran |
+|---|---|---|
+| unknown | 25,000 | 21.89% |
+| Dermatopathology | 17,248 | 15.10% |
+| Gastrointestinal | 11,669 | 10.22% |
+| Pulmonary | 8,312 | 7.28% |
+| Gynecologic | 7,578 | 6.63% |
+| Soft tissue | 7,454 | 6.53% |
+| Hematopathology | 5,370 | 4.70% |
+| Genitourinary | 5,093 | 4.46% |
+| Renal | 4,371 | 3.83% |
+| Bone | 4,015 | 3.52% |
+| Breast | 3,502 | 3.07% |
+| Neuropathology | 3,492 | 3.06% |
+| Endocrine | 3,046 | 2.67% |
+| Head and Neck | 2,874 | 2.52% |
+| Cardiac | 1,759 | 1.54% |
+| Ophthalmic | 1,152 | 1.01% |
+| Hepatopathology | 998 | 0.87% |
+| Cytopathology | 975 | 0.85% |
+| Pediatric | 311 | 0.27% |
+| `Unknown` (büyük U) | 3 | 0.00% |
+
+- 20 ayrı değer: 18 uzmanlık + `unknown` + 3 görsellik `Unknown` (büyük/küçük harf tutarsızlığı; `unknown` filtresi büyük U'yu kaçırır).
+- `unknown` oranı **%21.89** görsel bazında. §3'te "~%33 (rapor notu)" yazıyordu; bu değer korpusla örtüşmüyor, kaynağı (muhtemelen sonuç listesindeki oran, korpus oranı değil) **doğrulanmadı**.
+- Satır bazında sayılar yuvarlak (unknown 25,000, Dermatopathology 20,000, Gastrointestinal 18,000...). Bu, `00_prepare_quilt.py` örneklemesinde kategori başına **satır** kotası uygulandığını düşündürüyor **(tahmin, kod okunarak doğrulanmalı)**. Bu doğruysa dağılım Quilt-1M'in doğal dağılımı değil, örneklemenin ürünü.
+- Çok sınıflı dengesizlik: Ophthalmic, Hepatopathology, Cytopathology, Pediatric < %1.1. Bu kategorilerde sorgu başına anlamlı P@10 için yeterli ilgili belge olmayabilir (§4 risk 7 ile ilişkili).
+
+### 7.5 `model_info.json` ve `faiss_meta.json`
+
+| Alan | CLIP | QuiltNet |
+|---|---|---|
+| `name` | `clip:openai/clip-vit-base-patch32` | `openclip:hf-hub:wisdomik/QuiltNet-B-32` |
+| `embed_dim` | 512 | 512 |
+| `device` | cuda | cuda |
+| `n_images` | 114,222 | 114,222 |
+| `batch_size` | 64 | 64 |
+| `duration_seconds` | 3017.03 | 3122.96 |
+| `creation_time` | 2026-06-03T08:52:00 | 2026-06-03T13:01:17 |
+
+`faiss_meta.json` iki modelde de: `{"metric": "ip", "n": 114222, "d": 512}`. İndeks tipi (Flat/HNSW) bu dosyada **yazmıyor**; `faiss_index.bin` boyutu (233,926,701 B ≈ 114,222×512×4 + başlık) düz depolamayla uyumlu, yani **Flat** olması muhtemel **(tahmin, indeks açılıp doğrulanmadı)**.
+
+`model_info.json`'da model sürümü/commit hash'i, `open_clip`/`transformers` sürümü, seed ve komut **yok**; embedding üretimi tekrar üretilebilirlik kuralını karşılamıyor.
+
+## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
-2. Gerçek korpus `train` mi `test` split'i, 64k mı 114k mı? (Yerelde `subset_stats.json` / `ids.json` bakılırsa netleşir.)
-3. Uygulamadaki iddia metni R1'de nötrlenip R2'de yeniden hesaplansın mı?
+2. ~~Gerçek korpus train mi test mi, 64k mı 114k mı?~~ **Yanıtlandı (§7.1-7.2):** 114,222 görsel, %100 `train`. Sende: "QuiltNet'in train verisi üzerinde ölçüm" sonucunu R2'de nasıl ele alalım (ayrı held-out korpus mu, mevcut korpusta dürüstlük notu mu)?
+3. Uygulamadaki iddia metni R1'de nötrlenip R2'de yeniden hesaplansın mı? (Not: git geçmişine göre iddia metni zaten değiştirilmiş görünüyor: `76b5bbc`; uygulama durumu elle doğrulanmadı.)
+4. §7.3: Çok-caption'lı görseller için reranker hangi caption'ı kullanmalı? Karar R2'den önce gerekli.
