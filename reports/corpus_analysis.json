@@ -1,0 +1,557 @@
+{
+  "inputs": {
+    "csv": "data/quilt_1M_lookup.csv",
+    "captions": "data/captions_quilt.jsonl",
+    "images_dir": "data/images/images_part_1",
+    "ids": "artifacts/clip/ids.json",
+    "csv_columns": [
+      "Unnamed: 0",
+      "caption",
+      "image_path",
+      "subset",
+      "split",
+      "pathology",
+      "roi_text",
+      "noisy_text",
+      "corrected_text",
+      "med_umls_ids",
+      "magnification",
+      "height",
+      "width",
+      "not_histology",
+      "single_wsi"
+    ]
+  },
+  "sec_7_7_1_csv_split": {
+    "rows": 1017708,
+    "unique_images": 653209,
+    "rows_per_split": {
+      "train": 1004149,
+      "val": 13559
+    },
+    "images_with_at_least_one_row_in_split": {
+      "train": 643522,
+      "val": 9906
+    },
+    "image_split_classes": {
+      "train_and_val": 219,
+      "train_only": 643303,
+      "val_only": 9687
+    }
+  },
+  "sec_7_x_jsonl": {
+    "rows": 168739,
+    "unique_images": 114222,
+    "split_field_values": {
+      "train": 168739
+    },
+    "rows_per_image_histogram": {
+      "1": 78617,
+      "2": 22327,
+      "3": 9131,
+      "4": 3044,
+      "5": 828,
+      "6": 199,
+      "7": 45,
+      "8": 29,
+      "9": 2
+    },
+    "label_conflicts_within_image": 0,
+    "ids_not_in_jsonl": 0,
+    "image_label_distribution": {
+      "unknown": {
+        "images": 25003,
+        "share": 0.2189
+      },
+      "dermatopathology": {
+        "images": 17248,
+        "share": 0.151
+      },
+      "gastrointestinal": {
+        "images": 11669,
+        "share": 0.1022
+      },
+      "pulmonary": {
+        "images": 8312,
+        "share": 0.0728
+      },
+      "gynecologic": {
+        "images": 7578,
+        "share": 0.0663
+      },
+      "soft tissue": {
+        "images": 7454,
+        "share": 0.0653
+      },
+      "hematopathology": {
+        "images": 5370,
+        "share": 0.047
+      },
+      "genitourinary": {
+        "images": 5093,
+        "share": 0.0446
+      },
+      "renal": {
+        "images": 4371,
+        "share": 0.0383
+      },
+      "bone": {
+        "images": 4015,
+        "share": 0.0352
+      },
+      "breast": {
+        "images": 3502,
+        "share": 0.0307
+      },
+      "neuropathology": {
+        "images": 3492,
+        "share": 0.0306
+      },
+      "endocrine": {
+        "images": 3046,
+        "share": 0.0267
+      },
+      "head and neck": {
+        "images": 2874,
+        "share": 0.0252
+      },
+      "cardiac": {
+        "images": 1759,
+        "share": 0.0154
+      },
+      "ophthalmic": {
+        "images": 1152,
+        "share": 0.0101
+      },
+      "hepatopathology": {
+        "images": 998,
+        "share": 0.0087
+      },
+      "cytopathology": {
+        "images": 975,
+        "share": 0.0085
+      },
+      "pediatric": {
+        "images": 311,
+        "share": 0.0027
+      }
+    },
+    "balanced_targets_vs_jsonl": {
+      "dermatopathology": {
+        "target_rows": 20000,
+        "jsonl_rows": 20000,
+        "jsonl_images": 17248
+      },
+      "unknown": {
+        "target_rows": 25000,
+        "jsonl_rows": 25003,
+        "jsonl_images": 25003
+      },
+      "gastrointestinal": {
+        "target_rows": 18000,
+        "jsonl_rows": 18000,
+        "jsonl_images": 11669
+      },
+      "pulmonary": {
+        "target_rows": 14000,
+        "jsonl_rows": 14000,
+        "jsonl_images": 8312
+      },
+      "gynecologic": {
+        "target_rows": 14000,
+        "jsonl_rows": 14000,
+        "jsonl_images": 7578
+      },
+      "soft tissue": {
+        "target_rows": 12000,
+        "jsonl_rows": 12000,
+        "jsonl_images": 7454
+      },
+      "breast": {
+        "target_rows": 12000,
+        "jsonl_rows": 6500,
+        "jsonl_images": 3502
+      },
+      "renal": {
+        "target_rows": 10000,
+        "jsonl_rows": 8504,
+        "jsonl_images": 4371
+      },
+      "hematopathology": {
+        "target_rows": 10000,
+        "jsonl_rows": 10000,
+        "jsonl_images": 5370
+      },
+      "genitourinary": {
+        "target_rows": 8000,
+        "jsonl_rows": 8000,
+        "jsonl_images": 5093
+      },
+      "bone": {
+        "target_rows": 7000,
+        "jsonl_rows": 7000,
+        "jsonl_images": 4015
+      },
+      "neuropathology": {
+        "target_rows": 6000,
+        "jsonl_rows": 6000,
+        "jsonl_images": 3492
+      },
+      "cardiac": {
+        "target_rows": 5000,
+        "jsonl_rows": 3194,
+        "jsonl_images": 1759
+      },
+      "hepatopathology": {
+        "target_rows": 5000,
+        "jsonl_rows": 1934,
+        "jsonl_images": 998
+      },
+      "endocrine": {
+        "target_rows": 5000,
+        "jsonl_rows": 5000,
+        "jsonl_images": 3046
+      },
+      "head and neck": {
+        "target_rows": 5000,
+        "jsonl_rows": 5000,
+        "jsonl_images": 2874
+      },
+      "cytopathology": {
+        "target_rows": 4000,
+        "jsonl_rows": 1687,
+        "jsonl_images": 975
+      },
+      "ophthalmic": {
+        "target_rows": 3000,
+        "jsonl_rows": 2286,
+        "jsonl_images": 1152
+      },
+      "pediatric": {
+        "target_rows": 3000,
+        "jsonl_rows": 631,
+        "jsonl_images": 311
+      }
+    },
+    "balanced_targets_total": 186000
+  },
+  "sec_7_7_2_to_7_7_4_disk_and_ids": {
+    "ids_total": 114222,
+    "ids_unique": 114222,
+    "ids_split_classes": {
+      "train_and_val": 36,
+      "train_only": 114186
+    },
+    "disk_unique_names": 65322,
+    "disk_duplicate_names": 0,
+    "disk_in_ids": 38096,
+    "disk_not_in_ids": 27226,
+    "ids_missing_on_disk": 76126,
+    "disk_not_in_csv": 0,
+    "disk_split_classes": {
+      "train_and_val": 25,
+      "train_only": 64369,
+      "val_only": 928
+    },
+    "disk_not_in_ids_split_classes": {
+      "train_and_val": 13,
+      "train_only": 26285,
+      "val_only": 928
+    }
+  },
+  "sec_7_8_val_only_on_disk": {
+    "definition": "on disk AND CSV split classes == val only (no train row)",
+    "min_per_category": 20,
+    "images": 928,
+    "csv_rows": 1283,
+    "also_in_ids": 0,
+    "label_conflicts_within_image": 0,
+    "all_val_only_images": {
+      "images": 928,
+      "unknown_images": 471,
+      "unknown_share": 0.5075,
+      "per_category": {
+        "unknown": {
+          "images": 471,
+          "share": 0.5075
+        },
+        "dermatopathology": {
+          "images": 161,
+          "share": 0.1735
+        },
+        "gastrointestinal": {
+          "images": 107,
+          "share": 0.1153
+        },
+        "soft tissue": {
+          "images": 72,
+          "share": 0.0776
+        },
+        "genitourinary": {
+          "images": 31,
+          "share": 0.0334
+        },
+        "pulmonary": {
+          "images": 22,
+          "share": 0.0237
+        },
+        "renal": {
+          "images": 18,
+          "share": 0.0194
+        },
+        "cardiac": {
+          "images": 11,
+          "share": 0.0119
+        },
+        "hematopathology": {
+          "images": 10,
+          "share": 0.0108
+        },
+        "bone": {
+          "images": 6,
+          "share": 0.0065
+        },
+        "neuropathology": {
+          "images": 5,
+          "share": 0.0054
+        },
+        "endocrine": {
+          "images": 4,
+          "share": 0.0043
+        },
+        "ophthalmic": {
+          "images": 4,
+          "share": 0.0043
+        },
+        "gynecologic": {
+          "images": 3,
+          "share": 0.0032
+        },
+        "head and neck": {
+          "images": 2,
+          "share": 0.0022
+        },
+        "pediatric": {
+          "images": 1,
+          "share": 0.0011
+        }
+      },
+      "categories_with_at_least_20_excluding_unknown": [
+        "dermatopathology",
+        "gastrointestinal",
+        "genitourinary",
+        "pulmonary",
+        "soft tissue"
+      ],
+      "categories_below_threshold": [
+        "bone",
+        "cardiac",
+        "endocrine",
+        "gynecologic",
+        "head and neck",
+        "hematopathology",
+        "neuropathology",
+        "ophthalmic",
+        "pediatric",
+        "renal"
+      ]
+    },
+    "eligible_images_not_histology0_and_caption_present": {
+      "images": 928,
+      "unknown_images": 471,
+      "unknown_share": 0.5075,
+      "per_category": {
+        "unknown": {
+          "images": 471,
+          "share": 0.5075
+        },
+        "dermatopathology": {
+          "images": 161,
+          "share": 0.1735
+        },
+        "gastrointestinal": {
+          "images": 107,
+          "share": 0.1153
+        },
+        "soft tissue": {
+          "images": 72,
+          "share": 0.0776
+        },
+        "genitourinary": {
+          "images": 31,
+          "share": 0.0334
+        },
+        "pulmonary": {
+          "images": 22,
+          "share": 0.0237
+        },
+        "renal": {
+          "images": 18,
+          "share": 0.0194
+        },
+        "cardiac": {
+          "images": 11,
+          "share": 0.0119
+        },
+        "hematopathology": {
+          "images": 10,
+          "share": 0.0108
+        },
+        "bone": {
+          "images": 6,
+          "share": 0.0065
+        },
+        "neuropathology": {
+          "images": 5,
+          "share": 0.0054
+        },
+        "endocrine": {
+          "images": 4,
+          "share": 0.0043
+        },
+        "ophthalmic": {
+          "images": 4,
+          "share": 0.0043
+        },
+        "gynecologic": {
+          "images": 3,
+          "share": 0.0032
+        },
+        "head and neck": {
+          "images": 2,
+          "share": 0.0022
+        },
+        "pediatric": {
+          "images": 1,
+          "share": 0.0011
+        }
+      },
+      "categories_with_at_least_20_excluding_unknown": [
+        "dermatopathology",
+        "gastrointestinal",
+        "genitourinary",
+        "pulmonary",
+        "soft tissue"
+      ],
+      "categories_below_threshold": [
+        "bone",
+        "cardiac",
+        "endocrine",
+        "gynecologic",
+        "head and neck",
+        "hematopathology",
+        "neuropathology",
+        "ophthalmic",
+        "pediatric",
+        "renal"
+      ]
+    },
+    "csv_rows_per_image_histogram": {
+      "1": 698,
+      "2": 143,
+      "3": 58,
+      "4": 22,
+      "5": 5,
+      "6": 2
+    },
+    "distinct_captions_per_image_histogram": {
+      "1": 698,
+      "2": 143,
+      "3": 58,
+      "4": 22,
+      "5": 5,
+      "6": 2
+    },
+    "csv_columns": [
+      "Unnamed: 0",
+      "caption",
+      "image_path",
+      "subset",
+      "split",
+      "pathology",
+      "roi_text",
+      "noisy_text",
+      "corrected_text",
+      "med_umls_ids",
+      "magnification",
+      "height",
+      "width",
+      "not_histology",
+      "single_wsi"
+    ],
+    "column_availability": {
+      "caption": {
+        "rows_non_missing": 1283,
+        "images_with_any_non_missing": 928
+      },
+      "subset": {
+        "rows_non_missing": 1283,
+        "images_with_any_non_missing": 928
+      },
+      "split": {
+        "rows_non_missing": 1283,
+        "images_with_any_non_missing": 928
+      },
+      "pathology": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "roi_text": {
+        "rows_non_missing": 630,
+        "images_with_any_non_missing": 354
+      },
+      "noisy_text": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "corrected_text": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "med_umls_ids": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "magnification": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "height": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "width": {
+        "rows_non_missing": 812,
+        "images_with_any_non_missing": 457
+      },
+      "not_histology": {
+        "rows_non_missing": 1283,
+        "images_with_any_non_missing": 928
+      },
+      "single_wsi": {
+        "rows_non_missing": 1283,
+        "images_with_any_non_missing": 928
+      }
+    },
+    "magnification_values": {
+      "0.0": 480,
+      "<missing>": 471,
+      "2.0": 203,
+      "1.0": 129
+    },
+    "subset_values": {
+      "quilt": 812,
+      "openpath": 210,
+      "pubmed": 175,
+      "laion": 86
+    },
+    "not_histology_values": {
+      "0": 1283
+    },
+    "single_wsi_values": {
+      "0": 671,
+      "1": 612
+    }
+  },
+  "command": "uv run python scripts/analyze_corpus.py --encoder clip --min_per_category 20"
+}
