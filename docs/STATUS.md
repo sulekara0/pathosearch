@@ -248,6 +248,22 @@ CSV: 1,017,708 satır, 653,209 tekil `image_path`. `split` yalnızca iki değer 
 
 **Hepsi "gerçekten train" değil:** 36 görselin CSV'de `val` satırı da var. Yani 7.2'deki "%100 train" ifadesi (JSONL'daki yazılan değere dayanıyordu) CSV'ye göre **114,186 saf train + 36 train/val karışık** olarak düzeltilmeli. Etki küçük (%0.03) ama held-out değerlendirmede bu 36 görsel dışlanmalı.
 
+#### 7.7.3 `data/images` diskte ne var?
+
+Görseller tek alt klasörde (`data/images/images_part_1`); tekil dosya adı sayısı **65,322**.
+
+| Kontrol | Sayı |
+|---|---|
+| Diskte, `ids.json`'da **var** | 38,096 |
+| Diskte, `ids.json`'da **yok** | 27,226 |
+| `ids.json`'da olup diskte **eksik** | **76,126** (114,222'nin %66.6'sı) |
+| Diskte olup CSV'de olmayan | 0 |
+
+Diskteki 65,322 görselin CSV split'i: yalnız `train` 64,369 · yalnız `val` 928 · `train`+`val` 25.
+Diskte olup `ids.json`'da olmayan 27,226 görselin split'i: yalnız `train` 26,285 · yalnız `val` 928 · `train`+`val` 13.
+
+**Sonuç:** `ids.json`/embedding/indeks 114,222 görseli kapsıyor ama diskte bunların yalnızca 38,096'sı var. Arayüzde sonuç görseli gösterimi ve görsel→görsel mod diskte olmayan görseller için çalışamaz. Bunun nedeni (görsellerin sonradan taşınması/silinmesi, yalnız `images_part_1`'in çıkarılmış olması) **bulunamadı**; diskte kaç `images_part_*.zip` olduğu bu incelemede kontrol edilmedi.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
