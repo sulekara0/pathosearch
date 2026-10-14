@@ -264,6 +264,13 @@ Diskte olup `ids.json`'da olmayan 27,226 görselin split'i: yalnız `train` 26,2
 
 **Sonuç:** `ids.json`/embedding/indeks 114,222 görseli kapsıyor ama diskte bunların yalnızca 38,096'sı var. Arayüzde sonuç görseli gösterimi ve görsel→görsel mod diskte olmayan görseller için çalışamaz. Bunun nedeni (görsellerin sonradan taşınması/silinmesi, yalnız `images_part_1`'in çıkarılmış olması) **bulunamadı**; diskte kaç `images_part_*.zip` olduğu bu incelemede kontrol edilmedi.
 
+#### 7.7.4 CSV'de `train` dışı görseller
+
+- `val` satırı: 13,559; tekil görsel: 9,906. Bunlardan 219'u aynı zamanda `train`'de de var, yani **yalnız-`val` görsel: 9,687**.
+- Diskte `val` görseli: 953 (yalnız-`val` 928 + `train`+`val` 25). Bu 928 yalnız-`val` görselin **hiçbiri `ids.json`'da yok**, yani korpusa girmemiş.
+- `ids.json`'daki `val` bağlantılı görsel: 36 (hepsi `train` ile de eşleşen, bkz. 7.7.2).
+- Gözlem (yorum, doğrulanmadı): diskteki 928 yalnız-`val` görsel, indeksin dışında kaldıkları için R2'de held-out değerlendirme adayı olabilir; ama bunların QuiltNet eğitiminde kullanılıp kullanılmadığı ve sayının golden set için yeterliliği **bulunamadı/kontrol edilmedi**.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
