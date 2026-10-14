@@ -236,6 +236,18 @@ CSV: 1,017,708 satır, 653,209 tekil `image_path`. `split` yalnızca iki değer 
 - Toplam tekil (653,209) iki satırın toplamından (653,428) küçük: **219 görsel hem `train` hem `val` satırında** geçiyor.
 - `prepare_quilt` filtresi (`not_histology==0`, caption dolu) sonrası: `train` 999,198 satır / 640,098 görsel, `val` 13,559 satır / 9,906 görsel.
 
+#### 7.7.2 `ids.json`'daki 114,222 görselin CSV split'i
+
+114,222 id'nin tamamı CSV'de bulundu (eksik 0, tekrar 0).
+
+| CSV'deki split kümesi | görsel |
+|---|---|
+| yalnız `train` | 114,186 |
+| `train` + `val` (ikisinde de satır var) | **36** |
+| yalnız `val` | 0 |
+
+**Hepsi "gerçekten train" değil:** 36 görselin CSV'de `val` satırı da var. Yani 7.2'deki "%100 train" ifadesi (JSONL'daki yazılan değere dayanıyordu) CSV'ye göre **114,186 saf train + 36 train/val karışık** olarak düzeltilmeli. Etki küçük (%0.03) ama held-out değerlendirmede bu 36 görsel dışlanmalı.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
