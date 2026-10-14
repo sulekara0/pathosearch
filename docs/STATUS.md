@@ -310,6 +310,82 @@ Sınırlar: bunu doğrudan kanıtlayan komut/`subset_stats.json` bulunamadı (ç
 
 `tests/test_prepare_quilt.py` sahte 30 satırlık DataFrame (3 kategori × 10) ile `n=10` çağırıyor: kotalar `round(3.33)=3` ×3 = 9 satır, yani `len(result) < n` dalı çalışıyor. 30 seed'in içinde **tekrar eden satır çıkıyor** (ilk hata seed 4 civarında), test başarısız. Neden: `result` `ignore_index=True` ile 0..8'e yeniden indekslendi, `df.index.isin(result.index)` ise orijinal etiketlerle karşılaştırıyor; bu yüzden (a) zaten seçilmiş satırlar `remaining`'e geri girip yeniden çekilebiliyor, (b) indeksi 0..8 olan seçilmemiş satırlar hiç çekilemiyor. Kod **düzeltilmedi**; test `xfail(strict=True)` olarak duruyor (düzeltilince XPASS ile CI'ı kırıp işaretler). Gerçek veride etkisi: `stratified` modu ancak `n` kotaların toplamından büyükse tetikleniyor; mevcut JSONL `balanced` üretildiği için (7.7.5) bu hatadan etkilenmemiş.
 
+### 7.8 Yalnız-`val` görseller, caption durumu ve QuiltNet split kaynakları (2026-10-15)
+
+Yöntem: yalnız okuma. Zip dosyalarına bakılmadı, hiçbir veri dosyası değiştirilmedi. Sayılar tek komutla yeniden üretilir:
+
+```
+uv run python scripts/analyze_corpus.py --encoder clip --min_per_category 20
+```
+
+Çıktı: `reports/corpus_analysis.json` (yollar `.env`'den: `PATHOSEARCH_CSV_PATH`, `_CAPTIONS_PATH`, `_IMAGES_DIR`, `_ARTIFACTS_DIR`). Seed yok, rastgelelik yok. Mantık `src/pathosearch/eval/corpus_analysis.py`, test `tests/test_corpus_analysis.py`.
+
+**Tekrar üretilebilirlik kontrolü:** komut 7.7.1, 7.7.2, 7.7.3, 7.7.4 (CSV split, `ids.json`/disk sayıları), 7.3 (satır/görsel histogramı), 7.4 (görsel bazlı kategori dağılımı) ve 7.7.5 (`BALANCED_TARGETS` karşılaştırma tablosu) sayılarını **birebir** üretti. Bu komutun kapsamadığı bölümler (7.1 CLIP/QuiltNet id eşitliği, 7.5 `model_info.json`/`faiss_meta.json`, 7.6 kod okuması, 7.7.6 test) hâlâ elle/ayrı kaynaktan.
+
+#### 7.8.1 Diskteki 928 yalnız-`val` görselin kategori dağılımı
+
+Tanım: `data/images` altında dosya adı var **ve** CSV'de yalnız `val` satırları var (hiç `train` satırı yok). 928 görsel, 1,283 CSV satırı. Hiçbiri `ids.json`'da yok (0). Etiket: `pathology` listesinin ilk elemanı, küçük harfe normalize (`prepare_quilt.parse_pathology`, korpusla aynı kural). Görsel içinde etiket çelişkisi: 0.
+
+| kategori | görsel | oran | ≥20 |
+|---|---|---|---|
+| unknown | 471 | 50.75% | (kategori sayılmadı) |
+| dermatopathology | 161 | 17.35% | evet |
+| gastrointestinal | 107 | 11.53% | evet |
+| soft tissue | 72 | 7.76% | evet |
+| genitourinary | 31 | 3.34% | evet |
+| pulmonary | 22 | 2.37% | evet |
+| renal | 18 | 1.94% | hayır |
+| cardiac | 11 | 1.19% | hayır |
+| hematopathology | 10 | 1.08% | hayır |
+| bone | 6 | 0.65% | hayır |
+| neuropathology | 5 | 0.54% | hayır |
+| endocrine | 4 | 0.43% | hayır |
+| ophthalmic | 4 | 0.43% | hayır |
+| gynecologic | 3 | 0.32% | hayır |
+| head and neck | 2 | 0.22% | hayır |
+| pediatric | 1 | 0.11% | hayır |
+
+- **`unknown` oranı %50.75** (471/928). Korpustaki %21.89'dan (7.4) belirgin yüksek.
+- **Eşik ≥20 (unknown hariç) geçen yalnız 5 kategori:** dermatopathology, gastrointestinal, soft tissue, genitourinary, pulmonary. Kalan 10 kategori eşiğin altında; bunlar için bu 928'lik küme tek başına golden set kaynağı olamaz.
+- Hazırlık filtresi (`not_histology==0` ve caption dolu) 928 görselin **hiçbirini** elemiyor (`not_histology` hepsinde `0`); filtreli dağılım yukarıdakiyle aynı.
+- Eşik 20 isteğe bağlı örnek değerdir (`--min_per_category` ile değişir). 20 görsel, sorgu başına P@10 için bile sınırda (§4 risk 7 ile ilişkili); yeterlilik kararı sende.
+
+#### 7.8.2 Caption durumu ve CSV alanları
+
+| CSV satırı/görsel | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| görsel sayısı | 698 | 143 | 58 | 22 | 5 | 2 |
+
+- Her görselde CSV satır sayısı = farklı caption sayısı (görsel başına yinelenen caption yok). **230 görselin (%24.8) birden fazla caption'ı var**; korpustaki oran %31.2 (35,605/114,222) idi.
+- `caption`, `subset`, `split`, `not_histology`, `single_wsi`: 1,283 satırın hepsinde dolu.
+- **Yalnız bir alt kümede dolu alanlar** (satır: 812; görsel: 457): `pathology`, `noisy_text`, `corrected_text`, `med_umls_ids`, `magnification`, `height`, `width`. `roi_text`: 630 satır / 354 görsel (boş liste `[]` eksik sayıldı).
+- Kalan 471 görselde (= `unknown` sayısı) bu alanların hepsi boş. `subset` değerleri (satır): `quilt` 812, `openpath` 210, `pubmed` 175, `laion` 86. 812 sayısı dolu-alan satırlarıyla örtüşüyor; ama "alanlar yalnız `quilt` alt kümesinde dolu" sonucu satır düzeyinde ayrıca çaprazlanmadı, **doğrulanmadı**.
+- `magnification` değerleri `0.0` (480), `1.0` (129), `2.0` (203), eksik (471). Bu sayısal kodların neye karşılık geldiği bu çalışmada **bulunamadı**; yorumlanmadı.
+- `single_wsi`: `1` → 612 satır, `0` → 671 satır.
+
+#### 7.8.3 QuiltNet eğitiminde `val` kullanıldı mı, retrieval için hangi split holdout?
+
+Kaynaklar WebFetch ile çekildi (sayfa metni küçük bir model tarafından özetlendi; alıntılar o çıktıdan, PDF'in tam metni elle okunmadı). Tablo kaynak düzeyini gösterir.
+
+| Soru | Bulgu | Kaynak / doğrulama düzeyi |
+|---|---|---|
+| Retrieval hangi veride ölçüldü? | "Our experiments are conducted on two datasets: our holdout dataset from Quilt-1M and the ARCH dataset." Tablo 2 başlığı: "Cross-modal retrieval results on the Quilt-1M holdout set and ARCH dataset." | Makale §4 (arXiv 2306.11207, HTML). **Birincil kaynak** |
+| Holdout nasıl oluşturuldu / boyutu? | **Bulunamadı.** Makalede holdout'un nasıl ayrıldığı ve boyutu yazmıyor. | Makale tam metni tarandı |
+| Önerilen split var mı? | "There are no recommended data splits, as this data was curated mainly for pretraining rather than evaluation." | Makale Ek E (Datasheet), §2 Data composition. Birincil. §4'teki "holdout" ifadesiyle gerilim içeriyor; makale çözmüyor |
+| Tablo 7 (Ek C.1) | Retrieval satırı: `histopathology image-text retrieval \| - \| Quilt-1M \| 1.02M \| - \| 13,559 \| -`. Başlık "Size (Train/Val/Test)" ama düzleştirilmiş metinden hangi sayının hangi sütuna ait olduğu **belirlenemedi** | Makale Ek C.1. Birincil, ama okuma belirsiz |
+| QuiltNet nasıl eğitildi? | "We train QuiltNet by finetuning an OpenAI pre-trained CLIP model on Quilt-1M". Hangi satırların (train/val) eğitime girdiği **yazmıyor** | Makale §4. Birincil |
+| Resmi repo README (kök, `eval/README.md`, `data/README.md`) | Split/holdout/`split` sütunu hakkında **hiçbir ifade yok**. `eval/README.md` retrieval'ı yalnız "For evaluation (zero-shot, retrieval, linear probing)" diye anıyor | GitHub `wisdomikezogwo/quilt1m`. Birincil |
+| HF model kartı `wisdomik/QuiltNet-B-32` | Split bilgisi yok; "Evaluation done with code in the CLIP Benchmark suite." | Birincil (model kartı) |
+| Resmi repo **kodu** (holdout'u seçen / eğitimde `val`'i dışlayan kod) | **Bulunamadı / incelenmedi.** Yalnız README'ler ve kök dizin listesi okundu; eğitim ve eval kodu okunmadı | – |
+| Deepwiki (`deepwiki.com/wisdomikezogwo/quilt1m/...`) | Sayfaya erişilemedi (HTTP 429), içeriği okunmadı. Bir arama özetinde "değerlendirme sayfası val split'ten söz etmiyor" gibi bir ifade vardı | **Doğrulanmadı (ikincil kaynak).** Hiçbir sonuç buna dayandırılmadı |
+
+**Sayısal örtüşme (çıkarım, makalede yazmıyor):** CSV'de `val` satır sayısı **13,559**, Tablo 7'deki sayı da **13,559**; ayrıca "1.02M" CSV'nin toplam satırına (1,017,708) uyuyor. Bu, CSV'deki `val`'in makaledeki retrieval holdout'u olduğuna işaret **ediyor**, ama makale bunu açıkça söylemiyor ve Tablo 7'nin sütun ataması belirsiz. Sonuç: "CSV `val` = QuiltNet'in retrieval holdout'u" **olası ama doğrulanmadı**; "val eğitimde kullanılmadı" ise **hiçbir kaynakta doğrulanmadı**.
+
+**Projeye etkisi (yorum):**
+- 928 yalnız-`val` görselin QuiltNet'in görmediği veri olduğunu **iddia edemeyiz**; elimizdeki en iyi kanıt yukarıdaki sayısal örtüşme.
+- Korpus (114,222) 114,186 saf `train` + 36 `train`/`val` karışık görsel (7.7.2); QuiltNet'in bunları gördüğü varsayımı en makul varsayım, ama split metadatasından değil "genel eğitim kümesi" varsayımından geliyor.
+- Karar gereken nokta §8-2 (held-out korpus mu, dürüstlük notu mu). 928 görsel yalnız 5 kategoride ≥20 ve %51'i `unknown`; tek başına golden set için yetersiz görünüyor. Alternatif (CSV'de 9,687 yalnız-`val` görsel var, diskte 928) bu çalışmada **denenmedi**, zip'lere bakılmadı.
+
 ## 8. Senin onayın gereken noktalar
 
 1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) sende bildiğin bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası?
