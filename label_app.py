@@ -36,10 +36,12 @@ RULES = """
 CSS = """
 <style>
 .st-key-query_header {
-    position: sticky; top: 2.9rem; z-index: 100; padding: 0.4rem 0 0.6rem;
+    position: sticky; top: 2.9rem; z-index: 100; padding: 0.2rem 0 0.4rem;
     background: var(--background-color, white); border-bottom: 1px solid rgba(128,128,128,.35);
 }
-.st-key-image_box img { max-height: 68vh; object-fit: contain; }
+.block-container { padding-top: 3rem; padding-bottom: 1rem; }
+.st-key-image_box img { max-height: 46vh; object-fit: contain; }
+.st-key-image_box_full img { object-fit: contain; }
 </style>
 """
 
@@ -108,19 +110,24 @@ def on_show_caption(key: tuple[str, str]) -> None:
 @st.fragment(run_every="1s")
 def clock(session: LabelingSession) -> None:
     spl = session.seconds_per_label()
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Geçen süre", format_elapsed(session.elapsed()))
-    c2.metric("Bu oturumda", session.n_submitted)
-    c3.metric("Ort. sn/etiket", "–" if spl is None else f"{spl:.1f}")
+    per_label = "–" if spl is None else f"{spl:.1f}"
+    st.markdown(
+        f"⏱ **{format_elapsed(session.elapsed())}** · oturum **{session.n_submitted}** · "
+        f"**{per_label}** sn/etiket"
+    )
 
 
 def header(session: LabelingSession, task: Task | None) -> None:
+    """Query, progress and counters on a single sticky row."""
     with st.container(key="query_header"):
+        q_col, p_col, c_col = st.columns([5, 3, 3], vertical_alignment="center")
         if task is not None:
-            st.markdown(f"### Sorgu: {task.query.text}")
-        st.progress(session.done / max(session.total, 1))
-        st.caption(f"Etiketlenen çift: **{session.done} / {session.total}**")
-        clock(session)
+            q_col.markdown(f"**Sorgu:** {task.query.text}")
+        p_col.progress(
+            session.done / max(session.total, 1), text=f"{session.done} / {session.total}"
+        )
+        with c_col:
+            clock(session)
 
 
 def grading_buttons() -> None:
@@ -143,7 +150,6 @@ def grading_buttons() -> None:
 def main() -> None:
     st.set_page_config(page_title="Golden set etiketleme", layout="wide")
     st.markdown(CSS, unsafe_allow_html=True)
-    st.warning("Eğitim/araştırma aracıdır; klinik teşhis aracı değildir.")
 
     try:
         args = parse_args()
@@ -163,6 +169,7 @@ def main() -> None:
         st.button(
             "Geri al", key="undo", shortcut="u", on_click=on_undo, disabled=not session.can_undo
         )
+        st.caption("Eğitim/araştırma aracıdır; klinik teşhis aracı değildir.")
         return
 
     key = task.key
@@ -177,11 +184,17 @@ def main() -> None:
         shown = "Emin değilim" if previous.grade is None else previous.grade
         st.info(f"Geri alınan çift. Önceki etiket: **{shown}** (yeni etiket bunun yerine geçer)")
 
-    with st.container(key="image_box"):
+    full_size = bool(st.session_state.get("full_size", False))
+    with st.container(key="image_box_full" if full_size else "image_box"):
         st.image(str(path), width="stretch")
 
-    # caption control is deliberately separate from the grading row
-    cap_col, _ = st.columns([1, 3])
+    grading_buttons()
+
+    # secondary controls; the caption button stays separate from the grading row
+    undo_col, cap_col, full_col = st.columns(3, vertical_alignment="center")
+    undo_col.button(
+        "↶ Geri al (u)", key="undo", shortcut="u", on_click=on_undo, disabled=not session.can_undo
+    )
     cap_col.button(
         "Caption göster",
         key="show_caption",
@@ -189,6 +202,7 @@ def main() -> None:
         args=(key,),
         help="Caption'ı açmak etikete 'caption_seen=true' olarak kaydedilir.",
     )
+    full_col.toggle("Tam boy", key="full_size")
     if st.session_state.caption_key == key:
         try:
             cap = captions(str(args.csv), tuple(sorted({t.item.image for t in session.queue}))).get(
@@ -199,12 +213,9 @@ def main() -> None:
             st.stop()
         st.info(cap if cap else "(CSV'de bu görsel için caption bulunamadı)")
 
-    grading_buttons()
-    st.button(
-        "↶ Geri al (u)", key="undo", shortcut="u", on_click=on_undo, disabled=not session.can_undo
-    )
     with st.expander("Etiket kuralı"):
         st.markdown(RULES)
+    st.caption("Eğitim/araştırma aracıdır; klinik teşhis aracı değildir.")
 
 
 main()

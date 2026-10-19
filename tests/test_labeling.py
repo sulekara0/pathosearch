@@ -162,6 +162,8 @@ def test_app_labels_a_pair_and_undoes(fake, monkeypatch: pytest.MonkeyPatch) -> 
     assert shortcuts["grade_0"] == "0" and shortcuts["grade_2"] == "2"
     assert shortcuts["undo"] == "u"
     assert at.button(key="undo").disabled
+    at.toggle(key="full_size").set_value(True).run()
+    assert not at.exception and at.button(key="grade_2")
 
     at.button(key="show_caption").click().run()
     assert any("fake first caption of" in i.value for i in at.info)
