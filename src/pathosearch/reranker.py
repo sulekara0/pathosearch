@@ -222,6 +222,11 @@ def _weighted_caption_overlap(query_tokens: list[str], caption_tokens: list[str]
     return weighted_intersection / weighted_union if weighted_union > 0 else 0.0
 
 
+def caption_overlap(query: str, caption: str) -> float:
+    """Weighted Jaccard between ``query`` and ``caption`` (the reranker's lexical signal)."""
+    return _weighted_caption_overlap(_tokenize(query), _tokenize(caption))
+
+
 # ---------------------------------------------------------------------------
 # Core re-ranking function
 # ---------------------------------------------------------------------------
