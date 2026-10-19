@@ -1,84 +1,51 @@
-# golden_v0 sızıntı analizi (betimsel)
+# golden_v0 sızıntı analizi: 820 görsel (0.99 eleme SONRASI)
 
-Komut: `uv run python scripts/leakage_analysis.py --golden eval_data/golden_v0` (seed 42, ham sayılar `leakage_analysis_golden_v0.json`, çiftler `leakage_pairs_golden_v0.html`).
-Ön koşul: `reports/leakage_golden_v0.json` (`scripts/leakage_report.py`, τ=0.95). Bu analiz τ'yu ve sızıntı kodunu **değiştirmez**, yalnızca ölçer.
+Komut: `uv run python scripts/leakage_analysis.py --golden eval_data/golden_v0` (seed 42, ham sayılar `leakage_analysis_golden_v0.json`).
+Manifest: `build_golden_corpus.py --rule val_only_on_disk --out eval_data/golden_v0 --exclude-near-dup 0.99 --dedup-within 0.99` (928 aday → 37 ana korpusa yakın, 71 golden içi kopya çıkarıldı → 820). Gerekçe: [ADR-0003](../docs/adr/0003-near-duplicate-threshold.md). Eleme öncesi analiz: [leakage_analysis_golden_v0_candidates928.md](leakage_analysis_golden_v0_candidates928.md).
+τ=0.95 sızıntı raporu (`leakage_golden_v0.json`) bilgi amaçlıdır; `passed=False` beklenen durumdur.
 
-## 0. Önceki raporun düzeltmesi
-
-`leakage_golden_v0.json` içindeki `violation_counts` (799 ve 2194) **iki encoder'ın toplamıdır**, ayrı görsel/çift sayısı değildir.
-
-| | CLIP | QuiltNet | Birleşim | Kesişim |
-|---|---|---|---|---|
-| Ana korpusa cos > 0.95 olan golden görseli | 659 | 140 | 677 | 122 |
-
-## 1. Golden → ana korpus: en yakın komşu cosine dağılımı (928 görsel, 114,222 ana görsele karşı)
+## 1. Golden → ana korpus (820 görsel, 114,222 ana görsele karşı)
 
 | | CLIP | QuiltNet |
 |---|---|---|
 | min | 0.5498 | 0.7777 |
-| p50 | 0.9606 | 0.9189 |
-| p90 | 0.9789 | 0.9606 |
-| p99 | 0.9988 | 0.9987 |
-| maks | 1.0000 | 1.0000 |
-| ≥ 0.95 | 659 | 140 |
-| ≥ 0.99 | 28 | 33 |
-| ≥ 0.999 | 9 | 8 |
-| ≥ 0.9999 | 7 | 7 |
+| p50 | 0.9600 | 0.9178 |
+| p90 | 0.9768 | 0.9515 |
+| p99 | 0.9837 | 0.9832 |
+| maks | **0.9886** | **0.9877** |
+| ≥ 0.95 | 575 | 94 |
+| ≥ 0.99 / 0.999 / 0.9999 | 0 / 0 / 0 | 0 / 0 / 0 |
 
-Histogram (20 kutu, [min, 1]) JSON'da `golden_vs_main.histogram`.
+0.99 üstü kalıntı yok. ≥ 0.9999 çift olmadığı için yan yana HTML üretilmedi (928'lik aday kümenin çift listesi: `leakage_pairs_golden_v0_candidates928.html`).
+Ana korpusa ≥ 0.95 olan ayrı görsel: CLIP 575, QuiltNet 94, birleşim 592, kesişim 77.
 
-## 2. Referans: rastgele 928 ana korpus görseli → ana korpusun geri kalanı (kendi hariç)
+## 2. Referans: rastgele 820 ana korpus görseli → ana korpusun geri kalanı (kendi hariç)
 
-Aynı korpus boyutu, seed 42.
+Seed 42. Örnek boyutu 820 olduğu için 928'lik analizdeki referans örnekle aynı değildir.
 
 | | CLIP | QuiltNet |
 |---|---|---|
-| min | 0.6741 | 0.8162 |
-| p50 | 0.9774 | 0.9741 |
-| p90 | 0.9997 | 0.9995 |
-| p99 | 1.0000 | 1.0000 |
-| ≥ 0.95 | 804 | 597 |
-| ≥ 0.99 | 345 | 355 |
-| ≥ 0.999 | 142 | 145 |
-| ≥ 0.9999 | 66 | 66 |
+| p50 | 0.9802 | 0.9774 |
+| p90 | 0.9995 | 0.9998 |
+| ≥ 0.95 | 694 (%85) | 525 (%64) |
+| ≥ 0.99 | 319 | 330 |
+| ≥ 0.9999 | 52 | 72 |
 
-**Okuma:**
-- CLIP'te 0.95 bu alanda "normal": ana korpus görsellerinin bile %86.6'sının (804/928) eşi ≥ 0.95. Golden'ın medyanı (0.9606) referansın (0.9774) altında. Yani CLIP için 0.95 yakın kopyayı ayırt etmiyor, ihlal sayısı (659) büyük ölçüde CLIP'in histoloji görselleri birbirine yaklaştırmasını yansıtıyor (yorum).
-- QuiltNet'te 0.95 daha seçici (referansta %64 ≥ 0.95, golden'da %15).
-- Her iki encoder'da golden, ana korpusun kendi iç kopya yoğunluğundan **daha az** kopyaya sahip (≥ 0.9999: golden 7, referans 66). Ana korpusun kendi içinde çok kopya olması bu veri kümesinin (çok-kaynaklı, tekrar eden görseller) özelliği.
-- Yüksek eşiklerde (≥ 0.99) iki encoder uyumlu: CLIP 28, QuiltNet 33. Bu, ≥ 0.99 bölgesinde encoder'dan bağımsız gerçek kopyaların bulunduğunu gösteriyor (yorum).
+CLIP'te ana korpusun kendisi bile 0.95'in üstünde yoğun; golden'daki 575 bu alandaki CLIP geometrisinin yansıması (yorum).
 
-## 3. cos ≥ 0.9999 çiftler
+## 3. Golden içi yakın kopyalar
 
-Her iki encoder'da **aynı 7 golden görsel** çıkıyor (en yakın komşu 2 görselde encoder'a göre değişiyor). Yan yana HTML: `reports/leakage_pairs_golden_v0.html`. Not: ana korpus görsellerinin çoğu diskte yok (STATUS §7.7.3), bu yüzden 14 satırın çoğunda yalnızca golden tarafı görüntülenebildi, ana taraf "image not on disk" gösteriyor. Görsellere bakılarak değil, ID ve caption'lara dayanarak yorumlandı.
+| | CLIP τ=0.95 | QuiltNet τ=0.95 | τ=0.99 (iki encoder) |
+|---|---|---|---|
+| çift | 1,294 | 81 | 0 |
+| kapsanan görsel | 406 | 114 | 0 |
+| küme | 37 | 45 | 0 |
+| en büyük küme | 289 | 5 | – |
 
-| golden görsel | en yakın ana görsel (CLIP) | caption |
-|---|---|---|
-| 1592807763981524992_2.jpg | 1071718073856446464_2.jpg | birebir aynı ("Signet-ring cell carcinoma. HE and MUC5AC+MUC6…") |
-| 1604766599784718336_2.jpg | 1114049447330177024_2.jpg | birebir aynı ("Walthard cell nest. Ovary…") |
-| 1604947727770533888_3.jpg | 1139872568561639424_3.jpg | bir harf farkı (sebaceus / sebaceous) |
-| 1610021142663950338_1.jpg | 1141530066620260352_1.jpg | birebir aynı ("Mucoepidermoid carcinoma, clear cell variant…") |
-| iklRyY1nBIE_image_1ca11c38….jpg | 0HcMuZN-pYo_image_ae57649b….jpg | farklı, genel cümleler |
-| OqkkM3fudXk_image_687a7d08….jpg | ZesFec_tGt0_image_fc401e2d….jpg | farklı, genel cümleler |
-| OqkkM3fudXk_image_8d3b8680….jpg | ZesFec_tGt0_image_d9a4c97b….jpg | farklı, genel cümleler |
+CLIP τ=0.95'teki 289'luk küme zincirleme bağ; QuiltNet'te en büyük küme 5.
 
-Tam caption'lar JSON'da (`pairs_ge_threshold`). Yorum (doğrulanmadı): sayısal ID'li 4 çift aynı tweet görselinin farklı kimlikle tekrarı, 3 YouTube çifti farklı videoların kare kopyaları olabilir. Bu, golden `val` görsellerinin ana korpustaki `train` görselleriyle örtüştüğünü gösterir; Quilt-1M'in kendi içinde val/train kopyası var.
+## 4. Sınırlar
 
-## 4. Golden içi yakın kopyalar
-
-| | CLIP τ=0.95 | QuiltNet τ=0.95 | CLIP τ=0.99 | QuiltNet τ=0.99 |
-|---|---|---|---|---|
-| çift sayısı | 1,899 | 295 | 77 | 73 |
-| kapsanan ayrı görsel | 529 (%57) | 258 (%28) | 115 | 107 |
-| küme sayısı (bağlı bileşen) | 52 | 85 | 51 | 47 |
-| en büyük küme | 357 | 12 | 4 | 6 |
-
-(2194 = 1899 + 295 toplamıydı, ayrı çift sayısı değil.)
-
-**Okuma:** CLIP τ=0.95'teki tek küme 357 görseli bağlıyor (zincirleme bağ); bu bir CLIP geometri etkisi gibi görünüyor, çünkü QuiltNet'te en büyük küme 12. τ=0.99'da iki encoder aynı büyüklükte sonuç veriyor (~110 görsel, ~50 küme, en büyük 4-6): golden içinde yaklaşık 110 görsellik, ~50 küme oluşturan gerçek kopya grubu var.
-
-## 5. Sınırlar
-
-- Referans (§2) ana korpusun kendi içindeki komşuluğudur; golden→ana ile birebir aynı örnekleme değildir (boyut aynı, seed 42).
-- Cosine yakınlığı kanıt değil göstergedir; §3 yalnızca caption ve ID'lere dayanıyor.
-- Hiçbir eşik değiştirilmedi; karar (eşik, eleme, `golden_v1`) proje sahibine ait.
+- Cosine yakınlığı gösterge; ana korpus görsellerinin çoğu diskte yok, eşleşmeler gözle doğrulanamadı.
+- Referans örneklem golden→ana ile birebir eşlenik değil.
+- 0.99 ile 0.95 arasındaki görseller korpusta kalır (kabul edilen karar, ADR-0003 eki).

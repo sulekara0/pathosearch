@@ -1,19 +1,19 @@
 {
   "clip": {
     "golden_vs_main": {
-      "n": 928,
+      "n": 820,
       "min": 0.5498,
       "percentiles": {
-        "p50": 0.9606,
-        "p90": 0.9789,
-        "p99": 0.9988
+        "p50": 0.96,
+        "p90": 0.9768,
+        "p99": 0.9837
       },
-      "max": 1.0,
+      "max": 0.9886,
       "count_ge": {
-        "0.95": 659,
-        "0.99": 28,
-        "0.999": 9,
-        "0.9999": 7
+        "0.95": 575,
+        "0.99": 0,
+        "0.999": 0,
+        "0.9999": 0
       },
       "histogram": {
         "edges": [
@@ -50,134 +50,123 @@
           1,
           0,
           1,
-          4,
+          3,
           2,
           2,
-          14,
-          14,
-          36,
-          55,
-          209,
-          474,
-          113
+          9,
+          12,
+          32,
+          53,
+          189,
+          444,
+          71
         ]
       }
     },
     "random_main_vs_rest_of_main": {
-      "n": 928,
-      "min": 0.6741,
+      "n": 820,
+      "min": 0.6695,
       "percentiles": {
-        "p50": 0.9774,
-        "p90": 0.9997,
+        "p50": 0.9802,
+        "p90": 0.9995,
         "p99": 1.0
       },
       "max": 1.0,
       "count_ge": {
-        "0.95": 804,
-        "0.99": 345,
-        "0.999": 142,
-        "0.9999": 66
+        "0.95": 694,
+        "0.99": 319,
+        "0.999": 121,
+        "0.9999": 52
       },
       "histogram": {
         "edges": [
-          0.6741,
-          0.6904,
-          0.7067,
-          0.723,
-          0.7393,
-          0.7556,
-          0.7719,
-          0.7882,
-          0.8044,
-          0.8207,
-          0.837,
-          0.8533,
-          0.8696,
-          0.8859,
-          0.9022,
-          0.9185,
-          0.9348,
-          0.9511,
-          0.9674,
-          0.9837,
+          0.6695,
+          0.686,
+          0.7026,
+          0.7191,
+          0.7356,
+          0.7521,
+          0.7687,
+          0.7852,
+          0.8017,
+          0.8182,
+          0.8348,
+          0.8513,
+          0.8678,
+          0.8843,
+          0.9009,
+          0.9174,
+          0.9339,
+          0.9504,
+          0.967,
+          0.9835,
           1.0
         ],
         "counts": [
-          2,
           1,
           0,
-          2,
           0,
-          1,
           2,
-          2,
-          0,
           3,
-          2,
+          1,
+          1,
+          0,
+          0,
           4,
-          5,
           7,
-          15,
-          26,
-          58,
-          163,
-          238,
-          379
+          8,
+          3,
+          4,
+          14,
+          16,
+          66,
+          132,
+          193,
+          347
         ]
       }
     },
     "within_golden_tau_0.95": {
-      "n_pairs": 1899,
-      "n_images": 529,
-      "n_clusters": 52,
+      "n_pairs": 1294,
+      "n_images": 406,
+      "n_clusters": 37,
       "largest_cluster_sizes": [
-        357,
-        24,
+        289,
+        18,
         15,
-        7,
-        7,
-        6,
-        6,
-        5,
+        8,
         4,
+        4,
+        3,
+        3,
+        3,
         3
       ],
-      "singleton_pairs_clusters_of_2": 31
+      "singleton_pairs_clusters_of_2": 25
     },
     "within_golden_tau_0.99": {
-      "n_pairs": 77,
-      "n_images": 115,
-      "n_clusters": 51,
-      "largest_cluster_sizes": [
-        4,
-        4,
-        4,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3,
-        3
-      ],
-      "singleton_pairs_clusters_of_2": 41
+      "n_pairs": 0,
+      "n_images": 0,
+      "n_clusters": 0,
+      "largest_cluster_sizes": [],
+      "singleton_pairs_clusters_of_2": 0
     }
   },
   "quilt": {
     "golden_vs_main": {
-      "n": 928,
+      "n": 820,
       "min": 0.7777,
       "percentiles": {
-        "p50": 0.9189,
-        "p90": 0.9606,
-        "p99": 0.9987
+        "p50": 0.9178,
+        "p90": 0.9515,
+        "p99": 0.9832
       },
-      "max": 1.0,
+      "max": 0.9877,
       "count_ge": {
-        "0.95": 140,
-        "0.99": 33,
-        "0.999": 8,
-        "0.9999": 7
+        "0.95": 94,
+        "0.99": 0,
+        "0.999": 0,
+        "0.9999": 0
       },
       "histogram": {
         "edges": [
@@ -208,353 +197,125 @@
           0,
           0,
           0,
-          4,
+          3,
           1,
-          12,
+          11,
+          18,
+          31,
+          52,
+          83,
+          128,
+          136,
+          132,
+          94,
+          61,
+          35,
+          14,
           20,
-          41,
-          56,
-          90,
-          133,
-          149,
-          142,
-          101,
-          66,
-          39,
-          16,
-          24,
-          30
+          0
         ]
       }
     },
     "random_main_vs_rest_of_main": {
-      "n": 928,
-      "min": 0.8162,
+      "n": 820,
+      "min": 0.8338,
       "percentiles": {
-        "p50": 0.9741,
-        "p90": 0.9995,
+        "p50": 0.9774,
+        "p90": 0.9998,
         "p99": 1.0
       },
       "max": 1.0,
       "count_ge": {
-        "0.95": 597,
-        "0.99": 355,
-        "0.999": 145,
-        "0.9999": 66
+        "0.95": 525,
+        "0.99": 330,
+        "0.999": 147,
+        "0.9999": 72
       },
       "histogram": {
         "edges": [
-          0.8162,
-          0.8254,
-          0.8345,
-          0.8437,
-          0.8529,
-          0.8621,
-          0.8713,
-          0.8805,
-          0.8897,
-          0.8989,
-          0.9081,
-          0.9173,
-          0.9265,
-          0.9357,
-          0.9448,
-          0.954,
-          0.9632,
-          0.9724,
-          0.9816,
-          0.9908,
+          0.8338,
+          0.8421,
+          0.8504,
+          0.8587,
+          0.867,
+          0.8753,
+          0.8837,
+          0.892,
+          0.9003,
+          0.9086,
+          0.9169,
+          0.9252,
+          0.9335,
+          0.9418,
+          0.9501,
+          0.9584,
+          0.9668,
+          0.9751,
+          0.9834,
+          0.9917,
           1.0
         ],
         "counts": [
-          1,
-          1,
-          0,
-          1,
-          6,
           2,
+          2,
+          3,
+          7,
+          8,
+          14,
           13,
-          21,
-          26,
-          33,
-          44,
-          53,
-          53,
-          61,
-          35,
-          57,
+          18,
+          28,
+          36,
+          36,
           48,
-          65,
-          59,
-          332
+          38,
+          42,
+          44,
+          22,
+          36,
+          45,
+          62,
+          292
         ]
       }
     },
     "within_golden_tau_0.95": {
-      "n_pairs": 295,
-      "n_images": 258,
-      "n_clusters": 85,
+      "n_pairs": 81,
+      "n_images": 114,
+      "n_clusters": 45,
       "largest_cluster_sizes": [
-        12,
-        9,
-        8,
-        7,
-        7,
-        7,
-        7,
-        6,
-        6,
-        5
-      ],
-      "singleton_pairs_clusters_of_2": 52
-    },
-    "within_golden_tau_0.99": {
-      "n_pairs": 73,
-      "n_images": 107,
-      "n_clusters": 47,
-      "largest_cluster_sizes": [
-        6,
+        5,
+        5,
+        5,
+        4,
+        4,
         4,
         3,
         3,
         3,
-        3,
-        3,
-        3,
-        3,
-        2
+        3
       ],
-      "singleton_pairs_clusters_of_2": 38
+      "singleton_pairs_clusters_of_2": 30
+    },
+    "within_golden_tau_0.99": {
+      "n_pairs": 0,
+      "n_images": 0,
+      "n_clusters": 0,
+      "largest_cluster_sizes": [],
+      "singleton_pairs_clusters_of_2": 0
     }
   },
   "flagged_distinct_images_tau_0.95": {
     "per_encoder": {
-      "clip": 659,
-      "quilt": 140
+      "clip": 575,
+      "quilt": 94
     },
-    "union": 677,
-    "intersection": 122
+    "union": 592,
+    "intersection": 77
   },
   "pairs_ge_threshold": {
     "threshold": 0.9999,
-    "pairs": [
-      {
-        "encoder": "clip",
-        "golden": "1592807763981524992_2.jpg",
-        "nearest": "1071718073856446464_2.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
-        ],
-        "nearest_captions": [
-          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": true
-      },
-      {
-        "encoder": "clip",
-        "golden": "1604766599784718336_2.jpg",
-        "nearest": "1114049447330177024_2.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
-        ],
-        "nearest_captions": [
-          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": true
-      },
-      {
-        "encoder": "clip",
-        "golden": "1604947727770533888_3.jpg",
-        "nearest": "1139872568561639424_3.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Nevus sebaceus (Sebaceous nevus). Skin, resection. pathology dermpath"
-        ],
-        "nearest_captions": [
-          "Nevus sebaceous (Sebaceous nevus). Skin, resection. pathology dermpath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      },
-      {
-        "encoder": "clip",
-        "golden": "1610021142663950338_1.jpg",
-        "nearest": "1141530066620260352_1.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
-        ],
-        "nearest_captions": [
-          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": true
-      },
-      {
-        "encoder": "clip",
-        "golden": "iklRyY1nBIE_image_1ca11c38-daeb-45a2-9ba3-4e2afe2d9f81.jpg",
-        "nearest": "0HcMuZN-pYo_image_ae57649b-b2c2-4053-a9d5-fbbddb1be586.jpg",
-        "cosine": 0.999913,
-        "golden_captions": [
-          "Basal cells are present around most of the cells."
-        ],
-        "nearest_captions": [
-          "No medical information provided."
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": true,
-        "captions_identical": false
-      },
-      {
-        "encoder": "clip",
-        "golden": "OqkkM3fudXk_image_687a7d08-fd2d-49f3-aa07-dfd4844a8b31.jpg",
-        "nearest": "ZesFec_tGt0_image_fc401e2d-be02-4bc9-9345-c37ab45a4e24.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Cells with an epithelioid appearance are present.",
-          "These cells have a characteristic phenotype."
-        ],
-        "nearest_captions": [
-          "The cells have a characteristic phenotype."
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      },
-      {
-        "encoder": "clip",
-        "golden": "OqkkM3fudXk_image_8d3b8680-c778-4308-bb12-23d0eee254c1.jpg",
-        "nearest": "ZesFec_tGt0_image_d9a4c97b-d35e-43e0-a3bc-3eec3922e07c.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Chondroblastomas have a characteristic cellular phenotype with sheets of cells with an epithelioid appearance."
-        ],
-        "nearest_captions": [
-          "The tumor has a characteristic cellular phenotype that is recognizable.",
-          "The tumor cells appear epithelioid and form sheets.",
-          "There is calcification present in the tumor, specifically chicken wire calcification."
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      },
-      {
-        "encoder": "quilt",
-        "golden": "1592807763981524992_2.jpg",
-        "nearest": "1071718073856446464_2.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
-        ],
-        "nearest_captions": [
-          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": true
-      },
-      {
-        "encoder": "quilt",
-        "golden": "1604766599784718336_2.jpg",
-        "nearest": "1114049447330177024_2.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
-        ],
-        "nearest_captions": [
-          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": true
-      },
-      {
-        "encoder": "quilt",
-        "golden": "1604947727770533888_3.jpg",
-        "nearest": "1139872568561639424_3.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Nevus sebaceus (Sebaceous nevus). Skin, resection. pathology dermpath"
-        ],
-        "nearest_captions": [
-          "Nevus sebaceous (Sebaceous nevus). Skin, resection. pathology dermpath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      },
-      {
-        "encoder": "quilt",
-        "golden": "1610021142663950338_1.jpg",
-        "nearest": "1141530066620260352_1.jpg",
-        "cosine": 0.999999,
-        "golden_captions": [
-          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
-        ],
-        "nearest_captions": [
-          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": true
-      },
-      {
-        "encoder": "quilt",
-        "golden": "iklRyY1nBIE_image_1ca11c38-daeb-45a2-9ba3-4e2afe2d9f81.jpg",
-        "nearest": "0HcMuZN-pYo_image_7215ccd9-d6d7-4a68-8bd0-4389aea64f3b.jpg",
-        "cosine": 0.999993,
-        "golden_captions": [
-          "Basal cells are present around most of the cells."
-        ],
-        "nearest_captions": [
-          "GATA3 staining is present in the skin."
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      },
-      {
-        "encoder": "quilt",
-        "golden": "OqkkM3fudXk_image_687a7d08-fd2d-49f3-aa07-dfd4844a8b31.jpg",
-        "nearest": "ZesFec_tGt0_image_fc401e2d-be02-4bc9-9345-c37ab45a4e24.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Cells with an epithelioid appearance are present.",
-          "These cells have a characteristic phenotype."
-        ],
-        "nearest_captions": [
-          "The cells have a characteristic phenotype."
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      },
-      {
-        "encoder": "quilt",
-        "golden": "OqkkM3fudXk_image_8d3b8680-c778-4308-bb12-23d0eee254c1.jpg",
-        "nearest": "ZesFec_tGt0_image_d9a4c97b-d35e-43e0-a3bc-3eec3922e07c.jpg",
-        "cosine": 1.0,
-        "golden_captions": [
-          "Chondroblastomas have a characteristic cellular phenotype with sheets of cells with an epithelioid appearance."
-        ],
-        "nearest_captions": [
-          "The tumor has a characteristic cellular phenotype that is recognizable.",
-          "The tumor cells appear epithelioid and form sheets.",
-          "There is calcification present in the tumor, specifically chicken wire calcification."
-        ],
-        "golden_on_disk": true,
-        "nearest_on_disk": false,
-        "captions_identical": false
-      }
-    ]
+    "pairs": []
   },
   "meta": {
     "command": "uv run python scripts/leakage_analysis.py --golden eval_data/golden_v0",

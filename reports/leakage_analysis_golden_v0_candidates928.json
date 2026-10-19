@@ -1,0 +1,564 @@
+{
+  "clip": {
+    "golden_vs_main": {
+      "n": 928,
+      "min": 0.5498,
+      "percentiles": {
+        "p50": 0.9606,
+        "p90": 0.9789,
+        "p99": 0.9988
+      },
+      "max": 1.0,
+      "count_ge": {
+        "0.95": 659,
+        "0.99": 28,
+        "0.999": 9,
+        "0.9999": 7
+      },
+      "histogram": {
+        "edges": [
+          0.5498,
+          0.5723,
+          0.5948,
+          0.6173,
+          0.6399,
+          0.6624,
+          0.6849,
+          0.7074,
+          0.7299,
+          0.7524,
+          0.7749,
+          0.7974,
+          0.8199,
+          0.8424,
+          0.8649,
+          0.8875,
+          0.91,
+          0.9325,
+          0.955,
+          0.9775,
+          1.0
+        ],
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          4,
+          2,
+          2,
+          14,
+          14,
+          36,
+          55,
+          209,
+          474,
+          113
+        ]
+      }
+    },
+    "random_main_vs_rest_of_main": {
+      "n": 928,
+      "min": 0.6741,
+      "percentiles": {
+        "p50": 0.9774,
+        "p90": 0.9997,
+        "p99": 1.0
+      },
+      "max": 1.0,
+      "count_ge": {
+        "0.95": 804,
+        "0.99": 345,
+        "0.999": 142,
+        "0.9999": 66
+      },
+      "histogram": {
+        "edges": [
+          0.6741,
+          0.6904,
+          0.7067,
+          0.723,
+          0.7393,
+          0.7556,
+          0.7719,
+          0.7882,
+          0.8044,
+          0.8207,
+          0.837,
+          0.8533,
+          0.8696,
+          0.8859,
+          0.9022,
+          0.9185,
+          0.9348,
+          0.9511,
+          0.9674,
+          0.9837,
+          1.0
+        ],
+        "counts": [
+          2,
+          1,
+          0,
+          2,
+          0,
+          1,
+          2,
+          2,
+          0,
+          3,
+          2,
+          4,
+          5,
+          7,
+          15,
+          26,
+          58,
+          163,
+          238,
+          379
+        ]
+      }
+    },
+    "within_golden_tau_0.95": {
+      "n_pairs": 1899,
+      "n_images": 529,
+      "n_clusters": 52,
+      "largest_cluster_sizes": [
+        357,
+        24,
+        15,
+        7,
+        7,
+        6,
+        6,
+        5,
+        4,
+        3
+      ],
+      "singleton_pairs_clusters_of_2": 31
+    },
+    "within_golden_tau_0.99": {
+      "n_pairs": 77,
+      "n_images": 115,
+      "n_clusters": 51,
+      "largest_cluster_sizes": [
+        4,
+        4,
+        4,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      "singleton_pairs_clusters_of_2": 41
+    }
+  },
+  "quilt": {
+    "golden_vs_main": {
+      "n": 928,
+      "min": 0.7777,
+      "percentiles": {
+        "p50": 0.9189,
+        "p90": 0.9606,
+        "p99": 0.9987
+      },
+      "max": 1.0,
+      "count_ge": {
+        "0.95": 140,
+        "0.99": 33,
+        "0.999": 8,
+        "0.9999": 7
+      },
+      "histogram": {
+        "edges": [
+          0.7777,
+          0.7888,
+          0.7999,
+          0.8111,
+          0.8222,
+          0.8333,
+          0.8444,
+          0.8555,
+          0.8666,
+          0.8777,
+          0.8889,
+          0.9,
+          0.9111,
+          0.9222,
+          0.9333,
+          0.9444,
+          0.9555,
+          0.9667,
+          0.9778,
+          0.9889,
+          1.0
+        ],
+        "counts": [
+          1,
+          0,
+          0,
+          0,
+          4,
+          1,
+          12,
+          20,
+          41,
+          56,
+          90,
+          133,
+          149,
+          142,
+          101,
+          66,
+          39,
+          16,
+          24,
+          30
+        ]
+      }
+    },
+    "random_main_vs_rest_of_main": {
+      "n": 928,
+      "min": 0.8162,
+      "percentiles": {
+        "p50": 0.9741,
+        "p90": 0.9995,
+        "p99": 1.0
+      },
+      "max": 1.0,
+      "count_ge": {
+        "0.95": 597,
+        "0.99": 355,
+        "0.999": 145,
+        "0.9999": 66
+      },
+      "histogram": {
+        "edges": [
+          0.8162,
+          0.8254,
+          0.8345,
+          0.8437,
+          0.8529,
+          0.8621,
+          0.8713,
+          0.8805,
+          0.8897,
+          0.8989,
+          0.9081,
+          0.9173,
+          0.9265,
+          0.9357,
+          0.9448,
+          0.954,
+          0.9632,
+          0.9724,
+          0.9816,
+          0.9908,
+          1.0
+        ],
+        "counts": [
+          1,
+          1,
+          0,
+          1,
+          6,
+          2,
+          13,
+          21,
+          26,
+          33,
+          44,
+          53,
+          53,
+          61,
+          35,
+          57,
+          48,
+          65,
+          59,
+          332
+        ]
+      }
+    },
+    "within_golden_tau_0.95": {
+      "n_pairs": 295,
+      "n_images": 258,
+      "n_clusters": 85,
+      "largest_cluster_sizes": [
+        12,
+        9,
+        8,
+        7,
+        7,
+        7,
+        7,
+        6,
+        6,
+        5
+      ],
+      "singleton_pairs_clusters_of_2": 52
+    },
+    "within_golden_tau_0.99": {
+      "n_pairs": 73,
+      "n_images": 107,
+      "n_clusters": 47,
+      "largest_cluster_sizes": [
+        6,
+        4,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        2
+      ],
+      "singleton_pairs_clusters_of_2": 38
+    }
+  },
+  "flagged_distinct_images_tau_0.95": {
+    "per_encoder": {
+      "clip": 659,
+      "quilt": 140
+    },
+    "union": 677,
+    "intersection": 122
+  },
+  "pairs_ge_threshold": {
+    "threshold": 0.9999,
+    "pairs": [
+      {
+        "encoder": "clip",
+        "golden": "1592807763981524992_2.jpg",
+        "nearest": "1071718073856446464_2.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
+        ],
+        "nearest_captions": [
+          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": true
+      },
+      {
+        "encoder": "clip",
+        "golden": "1604766599784718336_2.jpg",
+        "nearest": "1114049447330177024_2.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
+        ],
+        "nearest_captions": [
+          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": true
+      },
+      {
+        "encoder": "clip",
+        "golden": "1604947727770533888_3.jpg",
+        "nearest": "1139872568561639424_3.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Nevus sebaceus (Sebaceous nevus). Skin, resection. pathology dermpath"
+        ],
+        "nearest_captions": [
+          "Nevus sebaceous (Sebaceous nevus). Skin, resection. pathology dermpath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      },
+      {
+        "encoder": "clip",
+        "golden": "1610021142663950338_1.jpg",
+        "nearest": "1141530066620260352_1.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
+        ],
+        "nearest_captions": [
+          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": true
+      },
+      {
+        "encoder": "clip",
+        "golden": "iklRyY1nBIE_image_1ca11c38-daeb-45a2-9ba3-4e2afe2d9f81.jpg",
+        "nearest": "0HcMuZN-pYo_image_ae57649b-b2c2-4053-a9d5-fbbddb1be586.jpg",
+        "cosine": 0.999913,
+        "golden_captions": [
+          "Basal cells are present around most of the cells."
+        ],
+        "nearest_captions": [
+          "No medical information provided."
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": true,
+        "captions_identical": false
+      },
+      {
+        "encoder": "clip",
+        "golden": "OqkkM3fudXk_image_687a7d08-fd2d-49f3-aa07-dfd4844a8b31.jpg",
+        "nearest": "ZesFec_tGt0_image_fc401e2d-be02-4bc9-9345-c37ab45a4e24.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Cells with an epithelioid appearance are present.",
+          "These cells have a characteristic phenotype."
+        ],
+        "nearest_captions": [
+          "The cells have a characteristic phenotype."
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      },
+      {
+        "encoder": "clip",
+        "golden": "OqkkM3fudXk_image_8d3b8680-c778-4308-bb12-23d0eee254c1.jpg",
+        "nearest": "ZesFec_tGt0_image_d9a4c97b-d35e-43e0-a3bc-3eec3922e07c.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Chondroblastomas have a characteristic cellular phenotype with sheets of cells with an epithelioid appearance."
+        ],
+        "nearest_captions": [
+          "The tumor has a characteristic cellular phenotype that is recognizable.",
+          "The tumor cells appear epithelioid and form sheets.",
+          "There is calcification present in the tumor, specifically chicken wire calcification."
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      },
+      {
+        "encoder": "quilt",
+        "golden": "1592807763981524992_2.jpg",
+        "nearest": "1071718073856446464_2.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
+        ],
+        "nearest_captions": [
+          "Signet-ring cell carcinoma. HE and MUC5AC+MUC6. pathology GIPath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": true
+      },
+      {
+        "encoder": "quilt",
+        "golden": "1604766599784718336_2.jpg",
+        "nearest": "1114049447330177024_2.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
+        ],
+        "nearest_captions": [
+          "Walthard cell nest. Ovary, HE stain. pathology Gynpath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": true
+      },
+      {
+        "encoder": "quilt",
+        "golden": "1604947727770533888_3.jpg",
+        "nearest": "1139872568561639424_3.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Nevus sebaceus (Sebaceous nevus). Skin, resection. pathology dermpath"
+        ],
+        "nearest_captions": [
+          "Nevus sebaceous (Sebaceous nevus). Skin, resection. pathology dermpath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      },
+      {
+        "encoder": "quilt",
+        "golden": "1610021142663950338_1.jpg",
+        "nearest": "1141530066620260352_1.jpg",
+        "cosine": 0.999999,
+        "golden_captions": [
+          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
+        ],
+        "nearest_captions": [
+          "Mucoepidermoid carcinoma, clear cell variant. Parotid gland, parotidectomy. HE and PAS stain. pathology ENTpath"
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": true
+      },
+      {
+        "encoder": "quilt",
+        "golden": "iklRyY1nBIE_image_1ca11c38-daeb-45a2-9ba3-4e2afe2d9f81.jpg",
+        "nearest": "0HcMuZN-pYo_image_7215ccd9-d6d7-4a68-8bd0-4389aea64f3b.jpg",
+        "cosine": 0.999993,
+        "golden_captions": [
+          "Basal cells are present around most of the cells."
+        ],
+        "nearest_captions": [
+          "GATA3 staining is present in the skin."
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      },
+      {
+        "encoder": "quilt",
+        "golden": "OqkkM3fudXk_image_687a7d08-fd2d-49f3-aa07-dfd4844a8b31.jpg",
+        "nearest": "ZesFec_tGt0_image_fc401e2d-be02-4bc9-9345-c37ab45a4e24.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Cells with an epithelioid appearance are present.",
+          "These cells have a characteristic phenotype."
+        ],
+        "nearest_captions": [
+          "The cells have a characteristic phenotype."
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      },
+      {
+        "encoder": "quilt",
+        "golden": "OqkkM3fudXk_image_8d3b8680-c778-4308-bb12-23d0eee254c1.jpg",
+        "nearest": "ZesFec_tGt0_image_d9a4c97b-d35e-43e0-a3bc-3eec3922e07c.jpg",
+        "cosine": 1.0,
+        "golden_captions": [
+          "Chondroblastomas have a characteristic cellular phenotype with sheets of cells with an epithelioid appearance."
+        ],
+        "nearest_captions": [
+          "The tumor has a characteristic cellular phenotype that is recognizable.",
+          "The tumor cells appear epithelioid and form sheets.",
+          "There is calcification present in the tumor, specifically chicken wire calcification."
+        ],
+        "golden_on_disk": true,
+        "nearest_on_disk": false,
+        "captions_identical": false
+      }
+    ]
+  },
+  "meta": {
+    "command": "uv run python scripts/leakage_analysis.py --golden eval_data/golden_v0",
+    "seed": 42,
+    "tau_for_description": 0.95
+  }
+}
