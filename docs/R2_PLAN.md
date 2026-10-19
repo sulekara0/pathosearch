@@ -30,8 +30,8 @@ R2'nin hedefi bağımsız, insan etiketli bir golden set. v0 için aday korpus: 
 **Varsayım sınırı:** "val QuiltNet eğitiminde görülmedi" iddiası doğrulanmadı (§7.8.3). Golden setin geçerliliği buna bağlı değil, çünkü etiketler insandan geliyor. Bu varsayım yalnızca CLIP ve QuiltNet karşılaştırmasının adil olup olmadığını etkiliyor. O yüzden her raporda sabit bir `caveats` alanı olacak: *"QuiltNet held-out status of CSV val split: unverified (STATUS §7.8.3)."*
 
 Alınan kararlar:
-- Annotator caption'ı başta görmüyor; isterse açıyor ve açtığı `caption_seen=true` olarak kaydediliyor.
-- Kappa'yı ikinci bir kişi hesaplıyor (inter-annotator).
+- Annotator caption'ı başta görmez; gerekirse açar ve açtığı `caption_seen=true` olarak kaydedilir.
+- Kappa, ikinci bir insan annotator'ın etiketleriyle hesaplanır (inter-annotator).
 - Sorgular yeni yazılıyor ve havuz kurulmadan önce donduruluyor.
 
 ## Tasarım ilkeleri
@@ -126,15 +126,15 @@ Her madde ayrı bir commit. `ruff`, `mypy` ve `pytest` geçmeden commit yok.
 
 | # | İş | Kim | Çıktı (repo / gitignore) |
 |---|---|---|---|
-| B1 | `scripts/build_golden_corpus.py --rule val_only_on_disk --out eval_data/golden_v0`. Sayılar §7.8.1 ile birebir tutmalı (928; kategori tablosu) | ben | `corpus_manifest.jsonl` + `manifest_meta.json` (kural, kaynak dosya boyutu/mtime, sayılar) |
-| B2 | 928 görsel için CLIP ve QuiltNet embedding'leri: mevcut `build_embeddings --captions_jsonl <manifest> --out_dir artifacts/golden_v0/<enc>` + `faiss_search build` | ben (CPU) | `artifacts/golden_v0/*` (gitignore) |
-| B3 | Sızıntı raporu (A8 a–d) | ben | `reports/leakage_golden_v0.json` |
-| B4 | Önce **20 sorguluk pilot** (5 kategori × 4), pilot B5–B7'den geçer, sonra **100'e** büyütülür (`--n_queries`, `--depth` parametre). Sorgular, kavram listesinden, golden sonuçlarına ve caption'lara bakılmadan yazılır. İstersen kategori bazında aday listesi taslağını ben çıkarırım, final seçim senin. Ardından `splits.json` | sen (+ben taslak) | `queries.jsonl`, `splits.json`: **havuzdan önce commit** |
-| B5 | Pooling (4 sistem, derinlik 10, +5 rastgele, seed 42) + overlap alt kümesi | ben | `pool.jsonl`, `overlap.jsonl` |
-| B6 | Etiketleme: A tüm havuz, B overlap (%20) | sen + 2. kişi | `judgments/A.jsonl`, `judgments/B.jsonl` |
-| B7 | Kappa raporu → uzlaştırma → final qrels | ben + sen | `reports/agreement_golden_v0.json`, `adjudication.jsonl`, `qrels.tsv` |
-| B8 | `run_eval` dev. Test yalnızca R2 sonunda **bir kez** koşar. Eski "0.539 → 0.609" iddiası golden set P@10 ile yeniden hesaplanır; korpus farklı olduğu için sayılar doğrudan karşılaştırılamaz, raporda bu yazılır | ben | `reports/eval_golden_v0_dev_*.{json,md}` |
-| B9 | `docs/STATUS.md` güncellemesi (yeni §9) | ben | – |
+| B1 | `scripts/build_golden_corpus.py --rule val_only_on_disk --out eval_data/golden_v0`. Sayılar §7.8.1 ile birebir tutmalı (928; kategori tablosu) | otomatik adım | `corpus_manifest.jsonl` + `manifest_meta.json` (kural, kaynak dosya boyutu/mtime, sayılar) |
+| B2 | 928 görsel için CLIP ve QuiltNet embedding'leri: mevcut `build_embeddings --captions_jsonl <manifest> --out_dir artifacts/golden_v0/<enc>` + `faiss_search build` | otomatik adım (CPU) | `artifacts/golden_v0/*` (gitignore) |
+| B3 | Sızıntı raporu (A8 a–d) | otomatik adım | `reports/leakage_golden_v0.json` |
+| B4 | Önce **20 sorguluk pilot** (5 kategori × 4), pilot B5–B7'den geçer, sonra **100'e** büyütülür (`--n_queries`, `--depth` parametre). Sorgular, kavram listesinden, golden sonuçlarına ve caption'lara bakılmadan yazılır. Kategori bazında aday listesi taslağı otomatik adımla çıkarılabilir, final seçim insan annotator'a aittir. Ardından `splits.json` | insan annotator (+ otomatik taslak) | `queries.jsonl`, `splits.json`: **havuzdan önce commit** |
+| B5 | Pooling (4 sistem, derinlik 10, +5 rastgele, seed 42) + overlap alt kümesi | otomatik adım | `pool.jsonl`, `overlap.jsonl` |
+| B6 | Etiketleme: A tüm havuz, B overlap (%20) | insan annotator A + insan annotator B | `judgments/A.jsonl`, `judgments/B.jsonl` |
+| B7 | Kappa raporu → uzlaştırma → final qrels | otomatik adım + insan annotator | `reports/agreement_golden_v0.json`, `adjudication.jsonl`, `qrels.tsv` |
+| B8 | `run_eval` dev. Test yalnızca R2 sonunda **bir kez** koşar. Eski "0.539 → 0.609" iddiası golden set P@10 ile yeniden hesaplanır; korpus farklı olduğu için sayılar doğrudan karşılaştırılamaz, raporda bu yazılır | otomatik adım | `reports/eval_golden_v0_dev_*.{json,md}` |
+| B9 | `docs/STATUS.md` güncellemesi (yeni §9) | otomatik adım | – |
 
 ## Kapsam dışı (R2'nin ayrı issue'ları)
 
