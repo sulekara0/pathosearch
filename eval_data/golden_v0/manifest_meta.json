@@ -1,0 +1,39 @@
+{
+  "rule": "val_only_on_disk",
+  "images": 928,
+  "disk_images_scanned": 65322,
+  "per_category": {
+    "bone": 6,
+    "cardiac": 11,
+    "dermatopathology": 161,
+    "endocrine": 4,
+    "gastrointestinal": 107,
+    "genitourinary": 31,
+    "gynecologic": 3,
+    "head and neck": 2,
+    "hematopathology": 10,
+    "neuropathology": 5,
+    "ophthalmic": 4,
+    "pediatric": 1,
+    "pulmonary": 22,
+    "renal": 18,
+    "soft tissue": 72,
+    "unknown": 471
+  },
+  "split_classes": {
+    "val_only": 928
+  },
+  "sources": {
+    "csv": {
+      "path": "data/quilt_1M_lookup.csv",
+      "size_bytes": 2238624042,
+      "mtime_utc": "2026-06-10T13:47:58+00:00"
+    },
+    "ids": {
+      "path": "artifacts/clip/ids.json",
+      "size_bytes": 6573339,
+      "mtime_utc": "2026-06-02T22:52:00+00:00"
+    }
+  },
+  "command": "uv run python scripts/build_golden_corpus.py --rule val_only_on_disk --out eval_data\\golden_v0"
+}
