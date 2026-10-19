@@ -36,3 +36,19 @@ B3 sızıntı raporu `passed=False` verdi: ana korpusa cos > 0.95 olan golden g�
 
 - Golden korpus küçülür; kalan sayı ve ≥ 20 görselli kategori sayısı `manifest_meta.json`'da raporlanır.
 - İki encoder'dan herhangi birine göre eleme, keskin tarafa yatar (daha çok görsel çıkar).
+
+## Ek (2026-10-19): golden_v0 eleme sonrası durum ve kabul edilen kararlar
+
+Kaynak: [reports/leakage_analysis_golden_v0.md](../../reports/leakage_analysis_golden_v0.md) (820 görsel). Eleme öncesi 928'lik aday kümenin analizi `reports/leakage_analysis_golden_v0_candidates928.*` altında.
+
+**Sonuç.** `--exclude-near-dup 0.99 --dedup-within 0.99` ile kurulan 820'lik manifestte (37 görsel ana korpusa yakın olduğu için çıkarıldı, 71 görsel golden içi kopya olarak düşürüldü):
+- Ana korpusa en yakın komşu cosine'i maksimum **0.9886 (CLIP) / 0.9877 (QuiltNet)**. ≥ 0.99, ≥ 0.999, ≥ 0.9999 sayıları 0; **0.99 üstü kalıntı yok**.
+- Golden içinde τ=0.99'da yakın kopya çifti 0.
+- τ=0.95'te CLIP'te **575**, QuiltNet'te **94** görsel hâlâ ana korpusa ≥ 0.95 yakın (birleşim 592, kesişim 77). Bu fark CLIP'in alan geometrisiyle açıklanıyor: rastgele ana korpus görsellerinin CLIP'te %85'i (694/820), QuiltNet'te %64'ü (525/820) kendi komşusuna ≥ 0.95. Bu, referans örnek 820 görselle yeniden çekildiği için ADR'in ana metnindeki 928'lik referanstan (%87 / %64) küçük farkla çıktı.
+
+**Karar.**
+1. Golden set için geçiş ölçütü **0.99 elemesidir**; ek eleme yapılmaz.
+2. τ=0.95 sızıntı raporu (`reports/leakage_golden_v0.json`) bilgi amaçlı kalır. **`passed=False` olması beklenen ve bilinçli kabul edilen durumdur**; bu çıktı CI'da ya da koşullarda hata sayılmaz.
+3. Raporlara (`run_eval`) şu not eklenir: golden set 0.99 yakın-kopya elemesinden geçti, 0.95 ölçütüne göre temiz değil.
+
+**Bilinen yan etki (golden_v1 için açık sorun).** Eleme küçük kategorileri orantısız vurdu: neuropathology 5→2, bone 6→3, ayrıca cardiac 11→7, hematopathology 10→7, renal 18→13. Büyük kategoriler görece korundu (dermatopathology 161→137, pulmonary 22→22). `unknown` hariç ≥ 20 görselli kategori sayısı 5'te kaldı. Küçük kategoriler için kategori düzeyi sonuç çıkarmak zaten zayıftı; elemeden sonra daha da zayıf. **Açık sorun:** `golden_v1` (zip'ten gelen ~9.7k yalnız-`val` görsel) bu kategorileri güçlendirmeli ve elemenin kategori dağılımına etkisi baştan izlenmeli.
