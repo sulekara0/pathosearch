@@ -81,6 +81,10 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 | 6 | **Etiket gürültüsü ve kaba ilgi.** Etiket otomatik/metadata kaynaklı; ilk eleman alınıyor; `unknown` korpusta **%21.89** (görsel bazında, §7.4; eski "~%33" rapor notu korpusla örtüşmüyordu). Kategori düzeyi P@10 hastalık düzeyi doğruluğu değil | `make_comparison_report.py` metodoloji | Orta |
 | 7 | **nDCG'nin IDCG'si her kategoride ≥K ilgili belge olduğunu varsayıyor**; küçük kategorilerde (Ophthalmic 1 sorgu) şişirir/saptırır | `compare_models.py:130`, rapor dipnotu | Düşük-Orta |
 | 8 | **İstatistiksel güç düşük**: kategori başına 1-10 sorgu, güven aralığı/seed yok, kategori ağırlığı eşit değil (makro yerine sorgu ortalaması) | rapor tabloları | Orta |
+| 9 | **Korpus tamamen `train`; CLIP-QuiltNet farkı "yalnızca alan ön-eğitimi" diye yorumlanamaz.** Bitirme raporu %50.6'lık farkı alan ön-eğitimine yüklüyor, ama QuiltNet bu görselleri eğitimde görmüş olabilir | §7.2, §7.7.2, §7.9 | Yüksek |
+| 10 | **Dolaylı sızıntı: rapor γ=0'ı yeterli sayıyor.** Reranker caption sözcüklerine bakıyor, relevance etiketi aynı satırın kategorisinden geliyor. γ=0 yalnızca doğrudan sızıntıyı kapatır; caption sözcükleri ile kategori arasındaki korelasyon durur. V5b'nin +0.070 kazancı (0.539 → 0.609) bu yüzden şişkin olabilir (risk 1'in raporla da desteklenen hâli) | §7.9, `reranker.py` | Yüksek |
+| 11 | **Sorgular sonuçlara bakılarak yeniden yazılmış (V2), ayar-test ayrımı yok.** Sürümler arası artış (V1 → V2 → V3) kısmen sorgu ayarından gelebilir (risk 3 ile aynı kök) | §7.9, `make_queries_v2.py:1-8` | Yüksek |
+| 12 | **Doğrulanmamış dış iddialar.** Raporda "literatürde eşdeğeri yok" gibi özgünlük iddiaları ve "0.45-0.65 tipik aralık" karşılaştırması var; bu repoda doğrulanmadı | §7.9 | Düşük-Orta |
 
 **Sonuç:** İddia, şu haliyle bağımsız ölçüm sayılamaz. 0.539 rerank'siz QuiltNet ölçümü olarak raporda var, 0.609 hiçbir yerde yok. Rerank kazancı büyük olasılıkla (1)'in etkisiyle şişkin. Arayüzdeki metin R2'ye kadar kaldırılmalı ya da "doğrulanmadı" denmeli (karar sende).
 
@@ -385,6 +389,57 @@ Kaynaklar WebFetch ile çekildi (sayfa metni küçük bir model tarafından öze
 - 928 yalnız-`val` görselin QuiltNet'in görmediği veri olduğunu **iddia edemeyiz**; elimizdeki en iyi kanıt yukarıdaki sayısal örtüşme.
 - Korpus (114,222) 114,186 saf `train` + 36 `train`/`val` karışık görsel (7.7.2); QuiltNet'in bunları gördüğü varsayımı en makul varsayım, ama split metadatasından değil "genel eğitim kümesi" varsayımından geliyor.
 - Karar gereken nokta §8-2 (held-out korpus mu, dürüstlük notu mu). 928 görsel yalnız 5 kategoride ≥20 ve %51'i `unknown`; tek başına golden set için yetersiz görünüyor. Alternatif (CSV'de 9,687 yalnız-`val` görsel var, diskte 928) bu çalışmada **denenmedi**, zip'lere bakılmadı.
+
+### 7.9 Bitirme raporundan aktarılan bilgiler (2026-10-19)
+
+Kaynak: ortak bitirme raporu. **Rapor repoda yok; ham çıktıları ve komutları da repoda bulunmuyor.** Bu bölümdeki her sayı ve ifade "raporda yazıyor, repodan tekrar üretilemiyor" statüsündedir; doğrulanmış sayılmaz. Bölüm yalnız raporun anlattığını aktarır, kod veya artifact okunarak teyit edilmedi (aksi belirtilen yerler hariç). CLAUDE.md kuralı gereği komut + config + seed olmadan metrik iddiası sayılmaz.
+
+#### 7.9.1 Sürüm tablosu (rapora göre)
+
+P@10, K=10. **Sorgu setleri ve korpus sürümler arasında değiştiği için satırlar doğrudan karşılaştırılamaz** (bkz. §3, `comparison_v1_v2_v3.html` notu).
+
+| Sürüm | Açıklama | QuiltNet P@10 | CLIP P@10 |
+|---|---|---|---|
+| V1 | Baseline, 64K alt küme, basit sorgular | 0.395 | 0.175 |
+| V2 | Yeniden yazılmış sorgular + `unknown` filtresi | 0.457 | 0.216 |
+| V3 | RRF ensemble (56 kavram × 3 varyant) | 0.480 | 0.230 |
+| V4 | Inverse-frequency dengeli 114K alt küme | 0.539 | 0.323 |
+| V5 | Naïve Jaccard (α=.6, β=.4, min-max) | 0.548 | 0.273 (rapor başarısız sayıyor) |
+| V5b | Ağırlıklı Jaccard (α=.75, β=.25, γ=0, min-max yok) | 0.609 | 0.336 |
+| V6 | BiomedCLIP cross-encoder (top-100 → top-10) | 0.654 | 0.434 |
+| V7 chain | Jaccard → cross-encoder | 0.634 (rapor başarısız sayıyor) | – |
+| V7 final | V6 + domain gate | 0.654 | 0.434 |
+
+#### 7.9.2 "0.539 → 0.609" iddiasının kaynağı (rapora göre)
+
+- Rapora göre `app.py`'deki "0.539 → 0.609" ifadesi **V4 → V5b** geçişidir: 0.539 rerank'siz QuiltNet (V4), 0.609 V5b.
+- Bu, §4'teki "0.609 hiçbir yerde yok" bulgusunu **kaynak rapor düzeyinde** çözer. Ham çıktı yok, bu yüzden 0.609 repodan **tekrar üretilemiyor** ve §4'teki tekrar üretilebilirlik eksikliği sürüyor. §4'teki "0.609 muhtemelen rerank'li sonuç" tahmini rapor tarafından desteklenmiş oldu.
+- `compare_models.py`'nin varsayılan α=.6/β=.4 ayarı rapordaki **başarısız V5** ayarıdır (V5b değil). Uygulamadaki α=.75/β=.25 V5b ile örtüşüyor.
+
+#### 7.9.3 "64,052" tutarsızlığı (tahmin)
+
+Rapora göre V1-V3 64K alt kümeyle, V4 ve sonrası 114,222 görselle koşulmuş. `comparison_114k.html` içindeki "64,052" ifadesi bu karışıklıktan kaynaklanıyor **olabilir (tahmin, doğrulanmadı)**. §8-5 açık kalıyor.
+
+#### 7.9.4 Diskte eksik görseller (tahmin)
+
+Rapora göre part-2 ve part-3 zip'leri bir noktada indirilip açılmış (195,966 aday; dengeli örnekleme sonrası 114,222). Diskimizdeki `data/images` tek klasör (`images_part_1`, 65,322 görsel, §7.7.3). Bu, `ids.json`'daki 76,126 görselin diskte olmamasını açıklıyor **olabilir**: part-2/3 dosyaları yalnız Çağrı'nın makinesinde kalmış olabilir. **Tahmin, doğrulanmadı.**
+
+#### 7.9.5 Rapordaki ölçüm yöntemi
+
+- Ground truth: elle yazılan `expected` kategori listesi; relevance: `pathology ∈ expected` (§4 ile aynı tanım).
+- γ=0 ile doğrudan sızıntı kapatıldığı belirtiliyor; metrikler `unknown` filtreli, K=10.
+- Domain gate: 12 çapa cümlesi, CLIP text kulesi, en yakın 3'ün ortalaması, eşik 0.80. 10 sorguluk kalibrasyonda 10/10; rapor 0.8015 vs 0.8026 gibi kıl payı vakalar olduğunu da yazıyor (eşik hassas, ROC yok, bkz. §5).
+- V6 cross-encoder CPU'da sorgu başına ~26 sn; demo V5b kullanıyor (~200 ms). Gecikme değerleri rapordan, repoda ölçüm çıktısı yok.
+- Rapor Görsel→Görsel modunu **nicel olarak ölçmemiş**.
+
+#### 7.9.6 Raporun tartışmadığı noktalar
+
+Bunlar §4 risk tablosuna 9-12 olarak eklendi:
+
+- **(a)** Korpus tamamen `train` split (§7.7.2). Rapor %50.6'lık CLIP-QuiltNet farkını "yalnızca alan ön-eğitiminin etkisi" olarak yorumluyor, ama QuiltNet bu görselleri eğitimde görmüş olabilir (§7.8.3: tersi hiçbir kaynakta doğrulanmadı).
+- **(b)** Reranker caption sözcüklerine bakıyor, relevance etiketi de aynı satırın kategorisinden geliyor. γ=0 yalnızca doğrudan sızıntıyı kapatır; dolaylı korelasyon durur. V5b'nin +0.070 kazancı bu yüzden şişkin olabilir.
+- **(c)** Sorgu setleri sürümler arasında sonuçlara bakılarak yeniden yazılmış (V2) ve ayar-test ayrımı yok.
+- **(d)** Rapordaki "literatürde eşdeğeri yok" gibi özgünlük iddiaları ve "0.45-0.65 tipik aralık" karşılaştırması bu repoda doğrulanmadı.
 
 ## 8. Senin onayın gereken noktalar
 
