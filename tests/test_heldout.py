@@ -7,7 +7,10 @@ from pathosearch.eval.heldout import (
     NEAR_DUP_TAU,
     LeakageError,
     assert_disjoint,
+    build_leakage_report,
+    compare_with_analysis,
     duplicate_names,
+    manifest_meta,
     near_duplicates,
     overlap_with_main_ids,
     select_heldout,
@@ -128,3 +131,71 @@ def test_duplicates_inside_golden() -> None:
     emb = np.array([[1, 0], [1, 0.001], [0, 1]], dtype=np.float32)
     assert [(a, b) for a, b, _ in within_near_duplicates(emb, ["y", "x", "z"])] == [("x", "y")]
     assert within_near_duplicates(np.eye(3, dtype=np.float32), ["a", "b", "c"]) == []
+
+
+# --- manifest metadata, analysis comparison, aggregate report --------------------------
+
+
+def _entries():
+    return select_heldout(make_scan(), DISK, ["e_val_in_ids.jpg"], "val_only_on_disk")
+
+
+def test_manifest_meta_records_rule_counts_and_sources(tmp_path) -> None:
+    src = tmp_path / "ids.json"
+    src.write_text("[]", encoding="utf-8")
+    meta = manifest_meta("val_only_on_disk", _entries(), {"ids": src}, disk_images=6)
+    assert meta["rule"] == "val_only_on_disk" and meta["images"] == 2
+    assert meta["per_category"] == {"dermatopathology": 1, "unknown": 1}
+    assert meta["split_classes"] == {"val_only": 2} and meta["disk_images_scanned"] == 6
+    assert meta["sources"]["ids"]["size_bytes"] == 2 and "mtime_utc" in meta["sources"]["ids"]
+
+
+def _analysis(images, per_category):
+    return {
+        "sec_7_8_val_only_on_disk": {
+            "images": images,
+            "all_val_only_images": {
+                "per_category": {k: {"images": v} for k, v in per_category.items()}
+            },
+        }
+    }
+
+
+def test_compare_with_analysis() -> None:
+    ok = _analysis(2, {"dermatopathology": 1, "unknown": 1})
+    assert compare_with_analysis(_entries(), ok) == []
+    bad = _analysis(3, {"dermatopathology": 1, "unknown": 1, "bone": 1})
+    problems = compare_with_analysis(_entries(), bad)
+    assert (
+        "images: manifest 2 vs analysis 3" in problems
+        and "bone: manifest 0 vs analysis 1" in problems
+    )
+
+
+def _emb(rows):
+    return np.array(rows, dtype=np.float32)
+
+
+def test_leakage_report_clean_and_dirty() -> None:
+    golden_ids = ["g1", "g2"]
+    mask = {"g1": VAL, "g2": VAL}
+    g = {"clip": (_emb([[1, 0], [0, 1]]), golden_ids)}
+    m = {"clip": (_emb([[0.5, 0.5], [-1, 0.2]]), ["m1", "m2"])}
+    clean = build_leakage_report(golden_ids, ["m1", "m2"], mask, g, m)
+    assert clean["passed"] and sum(clean["violation_counts"].values()) == 0
+
+    dirty_m = {"clip": (_emb([[1, 0.001], [0.5, 0.5]]), ["g1", "m2"])}  # g1 is also a main image
+    dirty = build_leakage_report(golden_ids, ["g1", "m2"], {"g1": VAL | TRAIN}, g, dirty_m)
+    assert not dirty["passed"]
+    assert dirty["a_overlap_with_main_ids"] == ["g1"]
+    assert dirty["b_has_train_row"] == ["g1"] and dirty["b_not_in_csv"] == ["g2"]
+    assert dirty["c_near_duplicates_of_main_corpus"]["clip"][0]["image"] == "g1"
+    assert dirty["violation_counts"]["a_overlap_with_main_ids"] == 1
+
+
+def test_leakage_report_validates_inputs() -> None:
+    g = {"clip": (_emb([[1, 0]]), ["g1"])}
+    with pytest.raises(ValueError, match="same encoders"):
+        build_leakage_report(["g1"], ["m"], {}, g, {})
+    with pytest.raises(ValueError, match="differ from the manifest"):
+        build_leakage_report(["g1", "g2"], ["m"], {}, g, {"clip": (_emb([[1, 0]]), ["m"])})

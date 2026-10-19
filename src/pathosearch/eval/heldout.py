@@ -19,6 +19,9 @@ from __future__ import annotations
 from collections import Counter
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
 
 import numpy as np
 
@@ -174,3 +177,104 @@ def within_near_duplicates(
                     a, b = sorted((ids[i], ids[int(j)]))
                     pairs.append((a, b, float(sims[row, j])))
     return sorted(pairs)
+
+
+# --- B1 / B3 helpers: manifest metadata, comparison, aggregate report ------------------
+
+
+def manifest_meta(
+    rule: str,
+    entries: Sequence[CorpusEntry],
+    source_files: Mapping[str, Path],
+    disk_images: int,
+) -> dict[str, Any]:
+    """Provenance record written next to the manifest (rule, source size/mtime, counts)."""
+    sources: dict[str, Any] = {}
+    for label, path in source_files.items():
+        st = path.stat()
+        sources[label] = {
+            "path": path.as_posix(),
+            "size_bytes": st.st_size,
+            "mtime_utc": datetime.fromtimestamp(st.st_mtime, tz=timezone.utc).isoformat(
+                timespec="seconds"
+            ),
+        }
+    return {
+        "rule": rule,
+        "images": len(entries),
+        "disk_images_scanned": disk_images,
+        "per_category": dict(sorted(Counter(e.pathology for e in entries).items())),
+        "split_classes": dict(sorted(Counter(e.split_class for e in entries).items())),
+        "sources": sources,
+    }
+
+
+def compare_with_analysis(entries: Sequence[CorpusEntry], analysis: Mapping[str, Any]) -> list[str]:
+    """Differences between a manifest and ``reports/corpus_analysis.json`` (STATUS §7.8.1).
+
+    Empty list = the counts match exactly. Only meaningful for the ``val_only_on_disk`` rule.
+    """
+    section = analysis["sec_7_8_val_only_on_disk"]
+    expected = {
+        cat: v["images"] for cat, v in section["all_val_only_images"]["per_category"].items()
+    }
+    got = Counter(e.pathology for e in entries)
+    problems: list[str] = []
+    if len(entries) != section["images"]:
+        problems.append(f"images: manifest {len(entries)} vs analysis {section['images']}")
+    for cat in sorted(set(expected) | set(got)):
+        if expected.get(cat, 0) != got.get(cat, 0):
+            problems.append(f"{cat}: manifest {got.get(cat, 0)} vs analysis {expected.get(cat, 0)}")
+    return problems
+
+
+Embeddings = Mapping[str, tuple[np.ndarray, Sequence[str]]]  # encoder -> (matrix, ids)
+
+
+def build_leakage_report(
+    golden_ids: Sequence[str],
+    main_ids: Sequence[str],
+    image_mask: Mapping[str, int],
+    golden_emb: Embeddings,
+    main_emb: Embeddings,
+    tau: float = NEAR_DUP_TAU,
+) -> dict[str, Any]:
+    """Run checks (a)-(d) and summarise; ``passed`` is True only if every list is empty."""
+    if set(golden_emb) != set(main_emb):
+        raise ValueError("golden and main embeddings need the same encoders")
+    for enc, (emb, ids) in golden_emb.items():
+        if set(ids) != set(golden_ids) or len(ids) != len(set(ids)):
+            raise ValueError(f"{enc}: golden embedding ids differ from the manifest images")
+        if len(emb) != len(ids):
+            raise ValueError(f"{enc}: golden embeddings and ids differ in length")
+
+    near: dict[str, list[dict[str, Any]]] = {}
+    within: dict[str, list[list[Any]]] = {}
+    for enc in sorted(golden_emb):
+        g_emb, g_ids = golden_emb[enc]
+        m_emb, m_ids = main_emb[enc]
+        near[enc] = [
+            {"image": d.image, "max_cosine": round(d.max_cosine, 4), "nearest": d.nearest}
+            for d in near_duplicates(g_emb, g_ids, m_emb, m_ids, tau)
+        ]
+        within[enc] = [[a, b, round(c, 4)] for a, b, c in within_near_duplicates(g_emb, g_ids, tau)]
+
+    train = train_row_violations(golden_ids, image_mask)
+    report: dict[str, Any] = {
+        "tau": tau,
+        "images": len(set(golden_ids)),
+        "a_overlap_with_main_ids": overlap_with_main_ids(golden_ids, main_ids),
+        "b_has_train_row": train["has_train_row"],
+        "b_not_in_csv": train["not_in_csv"],
+        "c_near_duplicates_of_main_corpus": near,
+        "d_duplicate_names": duplicate_names(golden_ids),
+        "d_within_golden_near_duplicates": within,
+    }
+    counts = {
+        key: sum(len(x) for x in val.values()) if isinstance(val, dict) else len(val)
+        for key, val in report.items()
+        if key[:2] in {"a_", "b_", "c_", "d_"}
+    }
+    report["violation_counts"] = counts
+    report["passed"] = not any(counts.values())
+    return report

@@ -36,17 +36,17 @@ Kurallar:
 
 ## 3. İş akışı
 
-Her adımın hangi kodla yapıldığı ve **şu an CLI'nin var olup olmadığı**:
+Her adımın hangi kodla yapıldığı:
 
 | Adım | Ne yapılır | Kod | Durum |
 |---|---|---|---|
-| B1 | Held-out korpus manifesti (`val_only_on_disk` kuralı) | `eval/heldout.py: select_heldout` | Modül var, `scripts/build_golden_corpus.py` henüz yok |
+| B1 | Held-out korpus manifesti (`val_only_on_disk` kuralı) | `eval/heldout.py: select_heldout` | `scripts/build_golden_corpus.py` (sayıları `reports/corpus_analysis.json` ile karşılaştırır) |
 | B2 | 928 görsel için CLIP ve QuiltNet embedding + FAISS indeksi (`artifacts/golden_v0/<enc>/`) | `build_embeddings`, `faiss_search build` | Mevcut araçlar; golden manifest ile çalıştırılacak |
-| B3 | Sızıntı raporu | `eval/heldout.py` (a–d) | Fonksiyonlar var, rapor betiği yok |
-| B4 | Sorguların yazılması, dev/test bölünmesi | `eval/splits.py` | Sorgular insan işi; `splits.json` havuzdan **önce** commit edilir |
-| B5 | Pooling (4 sistem, derinlik 10, +5 rastgele) ve overlap alt kümesi | `eval/pooling.py` | Fonksiyonlar var, CLI yok |
+| B3 | Sızıntı raporu | `eval/heldout.py` (a–d) | `scripts/leakage_report.py` → `reports/leakage_<golden>.json` (ihlal varsa çıkış kodu 1) |
+| B4 | Sorguların yazılması, dev/test bölünmesi | `eval/splits.py` | Sorgular insan işi. `scripts/make_splits.py`; `splits.json` havuzdan **önce** commit edilir, var olan dosyanın üzerine yazmaz |
+| B5 | Pooling (4 sistem, derinlik 10, +5 rastgele) ve overlap alt kümesi | `eval/pooling.py` | `scripts/build_pool.py` (`splits.json` yoksa çalışmaz) |
 | B6 | Etiketleme | `label_app.py` | Hazır |
-| B7 | Kappa, uzlaştırma, final qrels | `eval/agreement.py` | Fonksiyonlar var, CLI yok |
+| B7 | Kappa, uzlaştırma, final qrels | `eval/agreement.py` | `scripts/agreement_report.py` → `reports/agreement_<golden>.json`; `--write_qrels` yalnızca tüm uyuşmazlıklar `adjudication.jsonl`'de çözülmüşse `qrels.tsv` yazar |
 | B8 | Değerlendirme | `scripts/run_eval.py` | Hazır |
 
 ### Etiketleme aracı

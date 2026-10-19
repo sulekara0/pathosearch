@@ -12,18 +12,17 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
-from pathosearch.config import load_settings, require_dir, require_file
+from pathosearch.config import load_settings, require_file
 from pathosearch.eval.golden import GoldenPaths, load_corpus
 from pathosearch.eval.run_eval import (
+    build_runners,
     check_split_allowed,
     command_line,
     golden_caption_map,
-    make_runner,
     parse_system,
     run_eval,
     write_report,
 )
-from pathosearch.pipeline import SearchIndex
 
 
 def main() -> None:
@@ -39,10 +38,6 @@ def main() -> None:
     args = p.parse_args()
     check_split_allowed(args.split, args.i_know_this_is_test)  # fail before loading models
 
-    # heavy imports only after argument/guard checks
-    from pathosearch.encoders import get_encoder
-    from pathosearch.faiss_search import load_embeddings, load_index
-
     s = load_settings()
     golden = GoldenPaths(args.golden)
     csv_path = require_file(args.csv or s.csv_path, "Set PATHOSEARCH_CSV_PATH or pass --csv")
@@ -50,16 +45,7 @@ def main() -> None:
     captions = golden_caption_map(load_corpus(golden.corpus), csv_path)
 
     specs = [parse_system(n) for n in args.systems.split(",")]
-    runners = {}
-    for enc_name in sorted({sp.encoder for sp in specs}):
-        art_dir = require_dir(art_root / enc_name, "Run B2 (golden embeddings + index) first")
-        index, metric = load_index(str(art_dir))
-        _, ids = load_embeddings(str(art_dir))
-        idx = SearchIndex(index, metric, ids, captions)
-        encoder = get_encoder(enc_name)
-        for sp in specs:
-            if sp.encoder == enc_name:
-                runners[sp.name] = make_runner(encoder, idx, sp.rerank, args.k)
+    runners = build_runners(specs, args.k, art_root, captions)
 
     report = run_eval(
         golden,

@@ -105,6 +105,27 @@ def make_runner(encoder: TextEncoder, idx: SearchIndex, rerank: bool, k: int) ->
     return run
 
 
+def build_runners(
+    specs: Sequence[SystemSpec], k: int, art_root: Path, captions: Mapping[str, dict]
+) -> dict[str, Runner]:
+    """Load each encoder and its golden index (``art_root/<encoder>/``) once; one runner per spec."""
+    from pathosearch.config import require_dir
+    from pathosearch.encoders import get_encoder
+    from pathosearch.faiss_search import load_embeddings, load_index
+
+    runners: dict[str, Runner] = {}
+    for enc_name in sorted({sp.encoder for sp in specs}):
+        art_dir = require_dir(art_root / enc_name, "Run B2 (golden embeddings + index) first")
+        index, metric = load_index(str(art_dir))
+        _, ids = load_embeddings(str(art_dir))
+        idx = SearchIndex(index, metric, ids, dict(captions))
+        encoder = get_encoder(enc_name)
+        for sp in specs:
+            if sp.encoder == enc_name:
+                runners[sp.name] = make_runner(encoder, idx, sp.rerank, k)
+    return runners
+
+
 def golden_caption_map(corpus: Sequence[CorpusEntry], csv_path: Path) -> dict[str, dict]:
     """``{image: {"caption", "pathology"}}`` for the golden corpus (first CSV caption)."""
     caps = load_first_captions(csv_path, [e.image for e in corpus])
