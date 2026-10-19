@@ -101,7 +101,6 @@
 {"image": "11987db3-2add-4a0b-afb9-ae5fc47502c4.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "122aff8e-7927-482a-a150-21a779e903bf.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1592807763981524992_1.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1592807763981524992_2.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1592892539409162244_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1592895270655647745_3.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1593002344996012033_0.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -173,12 +172,10 @@
 {"image": "1599770848314826753_1.png", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1599879904606052352_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "15c0dd27-babb-434d-80f9-6e65f54d2eb1_0.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1600143125778931714_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1600156888972369921_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1600200812101521408_2.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1600780326443266050_2.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1600796176403812354_0.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1600838108144091136_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1600867598651883520_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1601189480014102529_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1601254364676399105_0.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -219,12 +216,10 @@
 {"image": "1604521878965452800_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1604567173472452608_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1604585340433764352_2.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1604766599784718336_2.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1604818930912067586_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1604848092259684352_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1604910161705193472_1.png", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1604910207267659777_0.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1604947727770533888_3.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1605128994717696000_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1605228413874491394_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1605315426388512769_0.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -259,11 +254,9 @@
 {"image": "1608805243655180289_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1608870534132932615_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1609232796114976769_1.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1609248047401242630_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1609747614789926920_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1609773270643146752_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1609951232369766401_2.jpg", "pathology": "unknown", "split_class": "val_only"}
-{"image": "1610021142663950338_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1610260194201636865_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1610264087056850944_0.png", "pathology": "unknown", "split_class": "val_only"}
 {"image": "1610322376662700038_1.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -349,10 +342,7 @@
 {"image": "38fdf69a-6821-4b7e-9a4f-ae28329b2709_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "39dfebbf-dcf6-439c-b702-890fdab0ccc5_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "3I13n-YeppY_image_58b231eb-0084-4334-bc02-966bbd1f37ca.jpg", "pathology": "neuropathology", "split_class": "val_only"}
-{"image": "3I13n-YeppY_image_788d1902-4ffe-48a4-b538-92825dbffbfc.jpg", "pathology": "neuropathology", "split_class": "val_only"}
 {"image": "3I13n-YeppY_image_b3a3e72c-a4dd-410c-892f-327564a4a9d6.jpg", "pathology": "neuropathology", "split_class": "val_only"}
-{"image": "3I13n-YeppY_image_c5af6f0c-ab0b-4ce8-97e7-4eb14bfea2eb.jpg", "pathology": "neuropathology", "split_class": "val_only"}
-{"image": "3I13n-YeppY_image_ccc6da9b-9661-4451-9c95-9ec6b2ef9aee.jpg", "pathology": "neuropathology", "split_class": "val_only"}
 {"image": "3b0b379c-aa55-446c-925c-208479fc78f8.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "3be10bca-bb73-467c-bdff-944d27fbdd8c_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "3mRB9j0eyVM_image_492b9987-d0e2-4954-aca0-c9489cd97900.jpg", "pathology": "gynecologic", "split_class": "val_only"}
@@ -420,7 +410,6 @@
 {"image": "8S4LeiO6Bbk_image_26c44d9f-c626-47bf-863c-d41e4cfa9720.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_294689bd-4e49-4997-bfe8-586a59c6a03a.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_2af076fd-7ef4-4078-8a3e-8775f6b4e547.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_399c0607-b6b7-42ed-bfd8-639e0006c57b.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_3c56e911-96c2-4ce1-8223-1483e19d7702.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_4cf01ffd-be34-4e29-a9de-bbdf7c2376e1.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_4e0449f7-f5a1-41db-ba0e-90731b4390d7.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
@@ -430,20 +419,13 @@
 {"image": "8S4LeiO6Bbk_image_8408bd75-b7f3-445a-bea2-27b09285f5d7.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_8735b46d-df9d-4706-a284-4fdabb7c7d9d.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_90602596-9d50-488c-9797-c1c5431ad97f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_9303c60b-b40f-4e47-9c32-519765d8f5c6.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_96db8195-9fd3-493b-af2d-cae6a387df27.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_9dea1855-71fe-4f95-b8b0-528a25101f8a.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_9fc14b93-00c1-42bd-b509-5513c42f36a9.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_a0d9ca4b-d2c9-43b5-be52-eea868bbd3fd.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_a24283b3-9953-4409-8337-b87885291ca7.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_a5b959bf-e4af-4841-af83-c230d3d109ea.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_a620e8c7-c69d-45dd-a59c-1c1cbe14f75f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_a7e10d09-4695-4ab5-94d5-0729c138ff60.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_b4da8638-1f38-4754-bdde-a6e5bc353f02.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_c3c24263-20bb-42f9-a729-718ce5d80c21.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8S4LeiO6Bbk_image_d6d12dc2-328c-4877-9819-2d6a22ddd6c5.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_da91943b-95f1-427f-85ac-c15b9d31eae8.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "8S4LeiO6Bbk_image_e17ce632-d8cc-4545-8a00-2cd984386fa0.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "8a17117c-fec6-40a2-b4d7-91a1380619a5.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "8c233a6c-ead1-4c4f-a63b-d819833c55b7.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "8de76c7f-50b6-45c1-8073-cbd38dd2b25e_1.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -464,7 +446,6 @@
 {"image": "B4t69FxeXx4_image_88f4d134-2418-483a-8ac3-4a19c3e86c38.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "B4t69FxeXx4_image_8d9d7094-bdcb-41a4-a42a-de7103436a62.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "JJCmajTkFRo_image_68fbaa87-8ac7-4355-b358-31e1a3b4e795.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "JJCmajTkFRo_image_c02eec5d-c15c-4047-82db-0415564a8dda.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "JJCmajTkFRo_image_fb84f4bc-d97f-42dd-9781-2b9410f98851.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "Kj6SOWRnqz8_image_7a95c183-ee34-4dc6-890f-a908e47d05c0.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "Kj6SOWRnqz8_image_c090844f-37aa-4b81-9cc8-7918858b9a0b.jpg", "pathology": "renal", "split_class": "val_only"}
@@ -491,17 +472,12 @@
 {"image": "LlPaENuqzVQ_image_f540ecae-a151-4f97-8cd9-e4f432995daf.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "N_U58g-Tjrs_image_8e8965b2-73d2-429a-a13d-1195f77d54ff.jpg", "pathology": "pediatric", "split_class": "val_only"}
 {"image": "OqkkM3fudXk_image_250e8eeb-ca05-44b7-bbb2-a65f37a3afc4.jpg", "pathology": "bone", "split_class": "val_only"}
-{"image": "OqkkM3fudXk_image_687a7d08-fd2d-49f3-aa07-dfd4844a8b31.jpg", "pathology": "bone", "split_class": "val_only"}
-{"image": "OqkkM3fudXk_image_8d3b8680-c778-4308-bb12-23d0eee254c1.jpg", "pathology": "bone", "split_class": "val_only"}
-{"image": "OqkkM3fudXk_image_90abbc6e-4f7d-40e3-962e-01e2aeb62ecf.jpg", "pathology": "bone", "split_class": "val_only"}
 {"image": "OqkkM3fudXk_image_d41cc85b-d617-4608-8eed-ffb7e3fe1f77.jpg", "pathology": "bone", "split_class": "val_only"}
 {"image": "OqkkM3fudXk_image_f6c21829-f8bb-4c94-8a00-781b597c891b.jpg", "pathology": "bone", "split_class": "val_only"}
 {"image": "PJX3uZ7fRn4_image_58c13e51-6b73-4a2e-af30-6d73cb103b02.jpg", "pathology": "gynecologic", "split_class": "val_only"}
-{"image": "QDb68_G1HR4_image_056af030-5055-4969-9b2f-1a9a9c2c9c09.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_114e59f8-c87c-4778-9f87-5874755f989e.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_23701937-42d3-4de6-886e-e93e779aa5e6.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_24995344-4683-4b3f-87a4-c29969668bee.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "QDb68_G1HR4_image_25b751c3-311c-4861-8ebf-dc0e802bbb13.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_263184c9-87aa-4174-abf3-5e6685d35db1.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_26eba169-a38a-4e4c-beb5-90c792b38be4.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_27208e30-5b7a-48cc-ad53-b7bf6afb2d8e.jpg", "pathology": "soft tissue", "split_class": "val_only"}
@@ -513,7 +489,6 @@
 {"image": "QDb68_G1HR4_image_58733c53-2917-48ff-9e89-5e60a990067c.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_71fc4c72-1681-462d-bf6b-3fdef87d70ed.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_7228117a-7566-4287-aa7d-eefef7b88dd8.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "QDb68_G1HR4_image_72696061-bdf2-437c-a2ee-0049bbeeccaa.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_794c3082-f1ab-4a96-8c70-ac74cca5a383.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_7a3e0f8e-6a0d-4d48-bf7d-6e9904bf3379.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_88188903-6fa0-4f99-bb23-b8f9f7789c00.jpg", "pathology": "soft tissue", "split_class": "val_only"}
@@ -523,11 +498,8 @@
 {"image": "QDb68_G1HR4_image_cfac16f4-b5e6-4165-822a-a2735f6db6d0.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_dc1cbbd9-abf8-4b64-a205-83a6cb3915ed.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_dc609ac7-8f5c-4e94-8793-ec6234d820d1.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "QDb68_G1HR4_image_e009c82e-0711-4f7b-b465-33e5f644bbbe.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "QDb68_G1HR4_image_e13dedfb-c1ad-4474-a5a8-f8ae1f7b5f40.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_e2780dc5-1e1e-408e-9c42-2bf487bd9ed5.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_e2e36066-4eee-4f17-b5f7-884a8314f264.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "QDb68_G1HR4_image_e52350fa-394d-4d59-ab4c-51372ea31817.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_e965d61c-29ff-4c22-808d-e20a0cc0bfca.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_ec952f0b-3c0e-4252-a55d-b6ffa3d02ba1.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "QDb68_G1HR4_image_fa2d5a10-6de5-47e2-a64a-ded0b736947a.jpg", "pathology": "soft tissue", "split_class": "val_only"}
@@ -535,25 +507,18 @@
 {"image": "WhnEXkBN4D8_image_1b1e41fa-b1f2-4879-aafd-08bff7fb07b7.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_27eadb3c-ce49-4591-857f-e4fccb4d1353.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_3c9a6ae2-6f62-4ae5-9c55-656506388b8c.jpg", "pathology": "renal", "split_class": "val_only"}
-{"image": "WhnEXkBN4D8_image_6d5fe0a7-b48f-4084-8299-4e1c9ea2a030.jpg", "pathology": "renal", "split_class": "val_only"}
-{"image": "WhnEXkBN4D8_image_805de82c-9055-498e-8012-3aff91258e54.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_825587c6-736e-44ff-bdac-f98d65e7e418.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_8ba0020b-eb64-4a16-a1fb-be2e2777528a.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_91506dd8-ec42-45e7-bc8f-c58032509d2e.jpg", "pathology": "renal", "split_class": "val_only"}
-{"image": "WhnEXkBN4D8_image_96571070-3093-403e-8c74-e7c107bbdbe9.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_97dad2c0-cd88-4fe2-b2f1-21c299b9e330.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_a6039e23-f8fc-46f5-98ae-1c2eb4fc5363.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_b902994d-ff6f-4f2c-8beb-fcca4d872c83.jpg", "pathology": "renal", "split_class": "val_only"}
-{"image": "WhnEXkBN4D8_image_ce6107a2-3c60-4280-86b2-8f83f49d17fa.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_d3cf4651-24fd-4a8a-a34b-6e1a56e0f05a.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "WhnEXkBN4D8_image_e00615d1-70f8-47b8-abef-4711544e48b4.jpg", "pathology": "renal", "split_class": "val_only"}
-{"image": "WhnEXkBN4D8_image_e2b2d56f-7dd0-422e-a316-68c32d578080.jpg", "pathology": "renal", "split_class": "val_only"}
 {"image": "Wiyo6taYRF4_image_21900261-9a57-49f2-95b4-b8002ba56165.jpg", "pathology": "hematopathology", "split_class": "val_only"}
 {"image": "Wiyo6taYRF4_image_24fa4428-5be8-4617-b271-7eccdf6cc36f.jpg", "pathology": "hematopathology", "split_class": "val_only"}
-{"image": "Wiyo6taYRF4_image_3aae9b20-5095-4960-90cf-fc5d1e9ed19d.jpg", "pathology": "hematopathology", "split_class": "val_only"}
 {"image": "Wiyo6taYRF4_image_8085e1ea-adfa-44ac-8fa8-2164881b4afb.jpg", "pathology": "hematopathology", "split_class": "val_only"}
 {"image": "Wiyo6taYRF4_image_8ec240a1-cd99-485c-8390-b36b49277f89.jpg", "pathology": "hematopathology", "split_class": "val_only"}
-{"image": "Wiyo6taYRF4_image_b5053b62-d2a6-4c4c-b0de-23e9c6dd8b88.jpg", "pathology": "hematopathology", "split_class": "val_only"}
 {"image": "a09f8827-974c-4f43-836d-f7100bd0aad5_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "a100296a-8540-43ba-bee0-77a8d1e7ec79_1.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "a1a1fe62-f36d-4fef-b6de-b43e302ba956.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -600,11 +565,7 @@
 {"image": "eWME5fnIofs_image_31e4f870-b9cc-4d7d-b758-d4dfef620bee.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "eWME5fnIofs_image_3246d1a2-bd09-4f12-b9e5-677eabb2b32e.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "eWME5fnIofs_image_6be85b2d-6e47-4fb9-8eff-db5f517e2821.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "eWME5fnIofs_image_6d08bf4e-220a-4054-8983-aafffd308aa3.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "eWME5fnIofs_image_9f013909-7fb2-4b84-bf99-161073174808.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "eWME5fnIofs_image_a8599b87-0df8-4e29-8a44-556b249cead7.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "eWME5fnIofs_image_be2871e6-928e-4c8e-8242-55bb54a9a4bb.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "eWME5fnIofs_image_df52aa07-b771-4979-9cd8-d19151f0af1d.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "ea249873-cffb-4892-9255-42dd757d16fd_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "ee8dbd96-3cc0-4dd4-b8ef-4de889c1e55b_0.jpg", "pathology": "unknown", "split_class": "val_only"}
 {"image": "ef88b6a1-0b1d-41de-8527-3094665c6ba0_1.jpg", "pathology": "unknown", "split_class": "val_only"}
@@ -622,14 +583,9 @@
 {"image": "gcLu6sNtYoc_image_18949083-5ec6-4b60-a77a-cdf77a977dcb.jpg", "pathology": "hematopathology", "split_class": "val_only"}
 {"image": "gcLu6sNtYoc_image_2c6cead6-7eb0-45fb-b8a9-67fba60b0cdb.jpg", "pathology": "hematopathology", "split_class": "val_only"}
 {"image": "gcLu6sNtYoc_image_8531df6e-4437-463c-9af2-60e09e99547e.jpg", "pathology": "hematopathology", "split_class": "val_only"}
-{"image": "gcLu6sNtYoc_image_a143a238-1b6c-4b29-bb9c-5efa1b228fff.jpg", "pathology": "hematopathology", "split_class": "val_only"}
-{"image": "hXNzOl1m_5U_image_03276238-faa2-4494-9fa2-8e08068ab8c7.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "hXNzOl1m_5U_image_0ce60d3b-40c6-4148-b4f1-10b25f28b664.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hXNzOl1m_5U_image_0f040b67-a30d-4a63-b40b-0431f85de267.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "hXNzOl1m_5U_image_12fec0ce-4503-4600-af83-3807450d5a62.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hXNzOl1m_5U_image_1c30395a-e4b7-49f8-853a-9fc874831c3f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hXNzOl1m_5U_image_91f77b1c-4cbc-4ab4-9524-bbc8059b0758.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "hXNzOl1m_5U_image_f1eea077-3217-4d3e-a44a-13484ff404d7.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hXNzOl1m_5U_image_f2b9e335-b1a3-47d2-a7d4-b7c89eab3e13.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hXNzOl1m_5U_image_f94c88be-d45f-47e1-ace3-21c6a9f7771d.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hoV-JkD6Wb0_image_0b6fa857-77c6-4a07-9c7e-2db44a67cd88.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
@@ -639,20 +595,15 @@
 {"image": "hoV-JkD6Wb0_image_4a527a05-1434-4bf5-a26a-6d9a6454057f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hoV-JkD6Wb0_image_4fc187e1-a01b-4882-ad00-fd05544cbd98.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hoV-JkD6Wb0_image_61d24bf7-5741-4b0a-9baa-72d5d2fe9a72.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "hoV-JkD6Wb0_image_8d211a6d-0f18-47dc-8b3d-02420dbc1ef1.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hoV-JkD6Wb0_image_ba942f99-289f-43c3-8920-e9506778ea05.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hoV-JkD6Wb0_image_f148ab1c-8092-44d5-8114-8c241ba939fe.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "hoV-JkD6Wb0_image_f600e612-2ecf-4fa0-95d7-295e8b8f8384.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "ib991vTA67A_image_118c9f42-093c-40ec-9137-0dbe39133d2f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "ib991vTA67A_image_24033fca-f5b1-4b94-99b8-f5aa97a327d2.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "ib991vTA67A_image_4ad96366-3195-4299-85ca-1e2b799b8a27.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "ib991vTA67A_image_602e7430-6c60-4a70-84eb-cdab4a842b8c.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "ib991vTA67A_image_7ef17199-a7e0-4110-a23a-b7baa8eea675.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "ib991vTA67A_image_d6c40114-578a-4c6e-9559-e2e7b89c5d00.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "ib991vTA67A_image_eecf8160-ce87-46b5-85bd-44bdf9b62159.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_001eb735-75d8-4eac-bd04-b16c15283567.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_026392ec-24c5-4e2a-807f-b554cf36412a.jpg", "pathology": "genitourinary", "split_class": "val_only"}
-{"image": "iklRyY1nBIE_image_1ca11c38-daeb-45a2-9ba3-4e2afe2d9f81.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_1d9814f2-bd8b-4025-ad5a-d7e1bd7f3cc1.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_1df1b9d9-bb7a-4670-8f51-75779f10790b.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_27eb32f0-f4c5-433c-a8c2-0391c7ec9b53.jpg", "pathology": "genitourinary", "split_class": "val_only"}
@@ -666,18 +617,14 @@
 {"image": "iklRyY1nBIE_image_5f4af7d3-bb03-478c-ab24-df1ccae9c578.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_71e463c4-160a-4609-a183-82a27cecb4b1.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_78b5c820-6a07-46a6-9393-f8f13ce837b9.jpg", "pathology": "genitourinary", "split_class": "val_only"}
-{"image": "iklRyY1nBIE_image_795443bd-aa3f-4334-9d3c-e37dd5980908.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_7acbb91d-274f-4065-8993-6f88a1685816.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_804783fa-15aa-42df-b863-4efd49e35d8f.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_85885ca9-e9ba-4c6a-8545-af0a4f123802.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_89ee0f42-f20d-45a7-960d-a0c556865681.jpg", "pathology": "genitourinary", "split_class": "val_only"}
-{"image": "iklRyY1nBIE_image_8def5f04-b42d-40d2-a389-8d5999146419.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_927af67d-722b-4641-8bd6-630e17a89c1a.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_943dc3a5-3548-4b93-8b05-23755f6f6e2c.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_9ecd7223-f8a9-45fd-a7f9-422ee735a987.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_b9b46b03-1c81-4f28-9897-c56e05c53474.jpg", "pathology": "genitourinary", "split_class": "val_only"}
-{"image": "iklRyY1nBIE_image_c2d111a1-8052-49e7-aeb1-b62abea34559.jpg", "pathology": "genitourinary", "split_class": "val_only"}
-{"image": "iklRyY1nBIE_image_c40bb3eb-e020-49eb-9ef5-b7e17d74d6db.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_ceddecec-4cfa-41f7-b046-dba4ffa55505.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_dd07a609-e079-432c-962c-b1268f0c4be0.jpg", "pathology": "genitourinary", "split_class": "val_only"}
 {"image": "iklRyY1nBIE_image_dd8d84f6-9a15-4d27-b3b5-032a1b331478.jpg", "pathology": "genitourinary", "split_class": "val_only"}
@@ -689,7 +636,6 @@
 {"image": "jCw_NtnS6XU_image_a0c0d791-c428-456d-9fe4-d47f4f26daf2.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "jCw_NtnS6XU_image_b2128b39-f5d4-4e06-9b03-c7551e28c457.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "jCw_NtnS6XU_image_df1abb7f-dd4f-479f-bb95-e31f247ef805.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "jCw_NtnS6XU_image_f5e54cf1-ccce-4c8f-b76c-244e5cef9e8c.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "jCw_NtnS6XU_image_ff1dae34-dac7-43c6-910b-fb565bed0cb7.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "jF_pj4-tEC8_image_088feeca-60f6-4698-91d0-5ae20b21c56b.jpg", "pathology": "pulmonary", "split_class": "val_only"}
 {"image": "jF_pj4-tEC8_image_11b767d2-71d3-4717-975a-6596568f5c08.jpg", "pathology": "pulmonary", "split_class": "val_only"}
@@ -707,44 +653,23 @@
 {"image": "jF_pj4-tEC8_image_affe631a-6e95-444d-8583-3ee6d5c86d5a.jpg", "pathology": "pulmonary", "split_class": "val_only"}
 {"image": "jF_pj4-tEC8_image_d5515ecd-7b82-4ad7-b9af-aa77a95d79b7.jpg", "pathology": "pulmonary", "split_class": "val_only"}
 {"image": "jF_pj4-tEC8_image_ff4a6190-b29e-4ea5-b6c0-d1f0dcad5247.jpg", "pathology": "pulmonary", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_09530396-096b-40a1-bf95-ab9fb0af7753.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "j_rG5XPImFQ_image_0af82daf-d012-492a-9f7c-4bf6194b50e5.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "j_rG5XPImFQ_image_1b595d12-71f2-4cca-aaf0-66c219da909f.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_1bb8120e-b909-43ba-ad3c-498a84f35acd.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_34001d79-6952-496d-aba9-176be206cce0.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_42d3c0ea-3b35-4e49-9d75-6135764cb144.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "j_rG5XPImFQ_image_4f92c831-4b76-430f-ad70-77301c2c8b4b.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "j_rG5XPImFQ_image_56c89472-f5a2-431a-b453-0954bef88856.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "j_rG5XPImFQ_image_66bbbbcf-a76b-4e18-a9e3-c41797a40854.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_6db3cb38-d53f-42b9-8f36-25a51704e449.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_7565e228-932e-437d-b1da-4f2e51fcd96c.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "j_rG5XPImFQ_image_91a46718-a2da-4dc2-968c-ddbf9f47082f.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_b9a623a5-4347-4a12-8e1a-0b8a7c7f0bdf.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_e0fceb70-3326-4e6c-a1ff-e6dcf5cb41b3.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "j_rG5XPImFQ_image_fb9873fc-1a1d-4fe9-9e41-2093cf490068.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_1a61a33b-45f7-4cd0-ad75-b3b273693c5c.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_20978b7b-4e25-4735-b02b-2e28d16c5e97.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_323043f7-041e-4f89-a1a6-ce42f1ec1f91.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_37da1864-fff1-425b-ae24-a4eccbea09f8.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_44ba1c2c-961d-42f7-8ae9-19110c72086a.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_465914b1-8f99-4eae-ba07-bf32be1bfa8a.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_4a446da8-deaa-4356-ba68-a6f2aa886a96.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_4c790677-00bf-4279-9ec5-ad71b1283ccf.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_513ebca4-feed-4d26-841a-e722600a4ec0.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_5cd03fd4-4b3c-447a-a14d-1a7ec7fee323.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_5d7e44b9-9e34-474a-bb97-e322481da74e.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_5deacede-eccf-4d18-b206-54aa3a82bb72.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_7054a70b-910f-40bf-aca8-6f970e7c8d7b.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_94fde16d-30de-4979-b512-02590f6a095c.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_97376de8-8aaf-477e-9cd1-8f4080004555.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_a305f519-a267-47f8-bb04-9983ebf9cb01.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_b24cb824-8d77-4b41-86a8-a9d41f8cdbfb.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_c791c0e5-57ad-4c79-8493-6dacad209618.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_d2192bab-2511-475c-a5e4-ead5eb89dc63.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pBR26SS0FX8_image_dc453380-fba6-445d-8210-ec8116d51d6f.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_e4af34da-8507-4e4f-a94a-e1471a8a8a63.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_f5234617-8a03-42b2-9149-41d7636882b0.jpg", "pathology": "soft tissue", "split_class": "val_only"}
-{"image": "pBR26SS0FX8_image_fd4e9ca6-6be2-4df7-a9db-8db056185c0d.jpg", "pathology": "soft tissue", "split_class": "val_only"}
 {"image": "pheenISyPWk_image_2c044314-af92-4919-b85b-4cc89315654e.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "pheenISyPWk_image_3acd1357-e1a7-40f2-9c9a-5f9ef6b4194a.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "pheenISyPWk_image_4c9a000b-3cf7-4534-b4a3-923256553a56.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
@@ -765,7 +690,6 @@
 {"image": "r7OA0Trj5hQ_image_1b73b241-d445-43e9-8505-eef1454916a2.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_1fbacf0d-937c-4aa6-b8a1-2238fd23b41e.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_22186b16-56c4-4741-b254-66011d396c49.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_34c8a6dc-d3c9-4289-b607-67812566ae62.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_421e06a2-6158-4ad4-b890-f2c0737d7041.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_48a6d84f-804f-417e-8a21-0d4a0136ba79.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_4a7224df-be04-4c7f-95eb-7144de15a124.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
@@ -775,35 +699,17 @@
 {"image": "r7OA0Trj5hQ_image_5a42c6e6-ced1-4f6b-84b5-d62eee7afe26.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_6e475846-4067-45d8-954d-6669e87e42ea.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_7031ca2a-b0a8-4ed6-b945-acfea1fed920.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_735fc85e-ad9e-4b43-a14a-897287f5517e.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_7ac36f8d-6446-4fe7-9374-4deb58943b6d.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_7e2c4731-3173-49e4-b534-0ebc6545b2ec.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_86ed6338-51c5-422b-a6d0-cd3200ad9941.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_89087849-ec8f-4550-8740-0151d00b6738.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_895dca69-cfc2-4f99-8dce-f3ce5ad949b0.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_8a2d6c55-bd35-4e4e-a119-ebc49c3d2dec.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_9cf0d198-6979-4be8-9336-cd0a4e79aea8.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_9fbcec52-a629-4ec8-9829-12f07f3c1643.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_b3bf5024-0062-4e43-92b2-f523d1b81de8.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_b83caf3c-ed02-42ff-8327-b3476dfa1ffd.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_b8f810d8-5ff6-4a25-a86a-b925edff4eca.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_b9efe1f8-280c-4c9c-a16a-9e0db8d17850.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_ba0204fe-74f3-4de7-883a-70f79613c8aa.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "r7OA0Trj5hQ_image_c3ce125e-9524-46f3-845b-0b6d2ea80105.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_d9e85d14-a764-4f58-a638-2e35703cb776.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_e2ce55e5-3a83-4935-847c-b97095003106.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_ec8f410d-d0d4-4cc3-87fc-aca034db3c4d.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "r7OA0Trj5hQ_image_f8f4f165-dfc5-444a-aee9-4b250293f489.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_25fa5011-5525-4cb3-90ef-4d137a97cdf4.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_455b21a9-74fe-4f55-ab61-cc311152366c.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_4da42332-ea0e-459f-ad45-bb9a81063049.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_5a98d1bb-8e9b-416c-b4c4-443d02fcb85c.jpg", "pathology": "cardiac", "split_class": "val_only"}
-{"image": "rHSTVT91c8Q_image_78f8e3ee-ea3d-402a-b8b5-1e5aefb33f99.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_7bfab428-b2f9-4691-9bf4-6a3338bd1ae5.jpg", "pathology": "cardiac", "split_class": "val_only"}
-{"image": "rHSTVT91c8Q_image_8dadccfa-83b6-4a64-88f0-3a3b04afe5fe.jpg", "pathology": "cardiac", "split_class": "val_only"}
-{"image": "rHSTVT91c8Q_image_9f41b6f8-c102-42df-a684-135a510d9e6a.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_dab159c1-81c2-4049-992d-e21deef5f959.jpg", "pathology": "cardiac", "split_class": "val_only"}
-{"image": "rHSTVT91c8Q_image_e74ed2b5-158c-4db5-84f1-90c332f37816.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "rHSTVT91c8Q_image_f35a50fc-88c0-417e-bed0-ff5f9935aa63.jpg", "pathology": "cardiac", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_0b2f37b6-3575-4730-916b-a741dd4dcc19.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_0c2fb254-aaee-4556-a7aa-bdfb9f65e78f.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
@@ -822,14 +728,12 @@
 {"image": "sDFjOtMAYrk_image_4505e5f8-8d5f-4ace-9e27-e50990dd4a27.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_4b3deab9-67fb-4227-965f-f1bbf0095a37.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_4c518c51-7ba0-469b-bf27-ada67608e34f.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_4f3f71d8-f73e-420f-ab0a-c6f3621e067a.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_5529f87a-83bf-4a98-8abb-ba4779967880.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_5bee0251-23c7-4b87-a7a6-a5516bd83d23.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_5f794584-80f7-4a7b-8899-f6d8aee7770f.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_60943b1d-f9b2-4b6d-a8af-81566b72862f.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_6252c8c0-4105-4f86-bd66-05509d2e88fe.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_6782e6f6-84a5-4d49-b18e-be3ee70ab630.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_69eb0aca-b4b2-4f8d-ac9a-34e96d93b9d7.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_790395a2-f6d4-4781-b409-be1b05217dc9.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_79ec7720-49b6-4130-8ef8-a60bfd42bbce.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_7f221170-5b53-42b5-8cfc-253f5cd6c01c.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
@@ -837,21 +741,17 @@
 {"image": "sDFjOtMAYrk_image_85cd4c34-5dfb-4a7c-95b3-42e525befd55.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_8e206f3e-ba1a-4979-8525-3252b86b4252.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_94407ed8-ce52-480f-b70d-0192ab49a160.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_969c9ed3-9085-47b3-97d5-59a960ec91fb.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_99283b95-f143-43e7-a425-3847c5763d66.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_9d6a571f-bedd-431d-8d24-2387f705fffd.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_9f155b53-bf56-44b0-8afd-95d4f50f8333.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_a43010d4-8725-43c7-8787-1eea919f0d77.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b160162b-0932-4789-aa2e-db9ae9181fe4.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b1ca7798-352e-47c7-a52c-745d00b2041e.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b22931c4-e35b-4f7b-8840-a861d97d0060.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b43dee9e-cd13-414a-9f48-ffe94080ce4b.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_b53cd53a-c6c5-4426-9fad-46dc7b74858a.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b6b165d1-990b-48de-8abb-5cb812b95085.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b6ff6710-5d10-4b2c-9224-ffe58d374107.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_b6fff9b0-fcc6-4f64-9d86-d564469daca6.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_c049bac0-3512-49cf-b749-ae9fdde9d709.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_c349f8b8-d567-4ceb-abc0-085ad1d06be2.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_c3751a91-2078-443e-a092-c3c4939684fe.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_c42afaaa-b4a7-4ead-8841-159a20a0e74d.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_c86586d5-e77d-444e-8358-f229f66dc968.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
@@ -859,8 +759,6 @@
 {"image": "sDFjOtMAYrk_image_c9585eaa-b468-466e-a20d-1a47ac0fc2ba.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_cf5fa51e-0e37-4795-bf00-5098b1bb5669.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_dbb55e5b-acbf-4660-9bc4-525721662a45.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_e67297e0-2b96-476d-a1d7-03396fc9983f.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
-{"image": "sDFjOtMAYrk_image_eac7e3f0-6ebb-47e8-8575-0605cddbc2d3.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_f3cd4d91-d0b6-40d9-8a4a-56e644bd4fdd.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "sDFjOtMAYrk_image_fc3798f2-c75c-4304-833d-e2760c9cb166.jpg", "pathology": "gastrointestinal", "split_class": "val_only"}
 {"image": "thWl623HaHI_image_24ad3bf0-5b5c-4658-9418-291ab449b241.jpg", "pathology": "endocrine", "split_class": "val_only"}
@@ -868,7 +766,6 @@
 {"image": "thWl623HaHI_image_c785c9e4-54c9-49f1-ae7b-d174b1126efc.jpg", "pathology": "endocrine", "split_class": "val_only"}
 {"image": "thWl623HaHI_image_d3748231-695c-4a96-ab83-8b16732fa10f.jpg", "pathology": "endocrine", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_0726133c-7c60-4809-bd9d-6625e958ec5f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "udoW6VSqsm4_image_0e5feb89-b84d-4a35-90c0-197804c808d4.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_10f1e59c-526f-45f9-9d88-cc22c8463445.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_11e5b442-198e-4770-9275-ab9a5f55d9a2.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_12bb2c58-8282-4798-850e-d8dd31cc2e2f.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
@@ -890,12 +787,9 @@
 {"image": "udoW6VSqsm4_image_565fc693-fde4-4afb-a993-88edf8e96cde.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_567b4ad4-5971-40b7-b6b0-29f5b8b86053.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_573ffb23-f4ba-4f8c-ab2c-dbcae2f38110.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "udoW6VSqsm4_image_5eb902b4-b910-478c-a348-b199dd7263a1.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_6569eab7-5ff3-481d-836f-474f0d393218.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_666c7728-28d3-484f-b895-1787b2fd7b2a.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "udoW6VSqsm4_image_694d5da0-3302-4849-81f9-4e3d32821361.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_69c5ce5d-fdbf-40c6-86e9-a30ad6c4883a.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "udoW6VSqsm4_image_6aadcbfa-6b43-4e65-851d-23e86806962a.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_6ebc159a-0ba0-417a-9a0f-699630875b4c.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_6f8b09d3-0b63-4ad7-b0a9-acf69e1eb6f5.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_73ee6627-c4ef-4043-864e-d1bd58954a72.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
@@ -913,8 +807,6 @@
 {"image": "udoW6VSqsm4_image_d3b7d20d-bd25-4ede-8f42-4c2f388337bb.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_ddb5b280-358f-4d3d-b73b-216866e139fa.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_e2d66c5d-d922-42a3-aa39-833d468a66e0.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "udoW6VSqsm4_image_e80cfe19-0998-4980-a739-eeafe89f9fee.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
-{"image": "udoW6VSqsm4_image_f2077425-da36-4dae-8911-1dd9871713b8.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "udoW6VSqsm4_image_ff95a945-03af-4e3c-9ce3-eaa616c29fc0.jpg", "pathology": "dermatopathology", "split_class": "val_only"}
 {"image": "wEavxXWY1mg_image_32f61b74-3d43-4325-9430-86c796c52b71.jpg", "pathology": "pulmonary", "split_class": "val_only"}
 {"image": "wEavxXWY1mg_image_3ed97b22-218c-4c3b-9712-42cd810b5748.jpg", "pathology": "pulmonary", "split_class": "val_only"}

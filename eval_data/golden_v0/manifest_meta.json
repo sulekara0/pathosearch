@@ -1,27 +1,27 @@
 {
   "rule": "val_only_on_disk",
-  "images": 928,
+  "images": 820,
   "disk_images_scanned": 65322,
   "per_category": {
-    "bone": 6,
-    "cardiac": 11,
-    "dermatopathology": 161,
+    "bone": 3,
+    "cardiac": 7,
+    "dermatopathology": 137,
     "endocrine": 4,
-    "gastrointestinal": 107,
-    "genitourinary": 31,
+    "gastrointestinal": 80,
+    "genitourinary": 26,
     "gynecologic": 3,
     "head and neck": 2,
-    "hematopathology": 10,
-    "neuropathology": 5,
+    "hematopathology": 7,
+    "neuropathology": 2,
     "ophthalmic": 4,
     "pediatric": 1,
     "pulmonary": 22,
-    "renal": 18,
-    "soft tissue": 72,
-    "unknown": 471
+    "renal": 13,
+    "soft tissue": 45,
+    "unknown": 464
   },
   "split_classes": {
-    "val_only": 928
+    "val_only": 820
   },
   "sources": {
     "csv": {
@@ -35,5 +35,18 @@
       "mtime_utc": "2026-06-02T22:52:00+00:00"
     }
   },
-  "command": "uv run python scripts/build_golden_corpus.py --rule val_only_on_disk --out eval_data\\golden_v0"
+  "command": "uv run python scripts/build_golden_corpus.py --rule val_only_on_disk --out eval_data\\golden_v0 --exclude-near-dup 0.99 --dedup-within 0.99",
+  "candidates_before_filters": 928,
+  "near_dup_exclusion": {
+    "tau": 0.99,
+    "rule": "cos >= tau to main corpus in any of: clip,quilt",
+    "n_excluded": 37,
+    "list": "excluded_near_dup.jsonl"
+  },
+  "dedup_within": {
+    "tau": 0.99,
+    "rule": "one representative per cluster, smallest file name",
+    "n_dropped": 71,
+    "list": "dedup_within_dropped.jsonl"
+  }
 }
