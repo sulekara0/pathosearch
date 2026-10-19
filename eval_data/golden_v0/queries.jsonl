@@ -1,0 +1,20 @@
+{"qid": "q001", "text": "basal cell carcinoma", "category": "dermatopathology", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q002", "text": "malignant melanoma", "category": "dermatopathology", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q003", "text": "seborrheic keratosis", "category": "dermatopathology", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q004", "text": "actinic keratosis", "category": "dermatopathology", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q005", "text": "colonic adenocarcinoma", "category": "gastrointestinal", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q006", "text": "tubular adenoma of the colon", "category": "gastrointestinal", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q007", "text": "normal colonic mucosa", "category": "gastrointestinal", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q008", "text": "helicobacter pylori gastritis", "category": "gastrointestinal", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q009", "text": "lipoma", "category": "soft tissue", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q010", "text": "liposarcoma", "category": "soft tissue", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q011", "text": "schwannoma", "category": "soft tissue", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q012", "text": "nodular fasciitis", "category": "soft tissue", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q013", "text": "prostate adenocarcinoma", "category": "genitourinary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q014", "text": "clear cell renal cell carcinoma", "category": "genitourinary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q015", "text": "normal kidney glomerulus", "category": "genitourinary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q016", "text": "urothelial carcinoma of the bladder", "category": "genitourinary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q017", "text": "lung adenocarcinoma", "category": "pulmonary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q018", "text": "small cell lung carcinoma", "category": "pulmonary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q019", "text": "normal lung alveoli", "category": "pulmonary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
+{"qid": "q020", "text": "pulmonary emphysema", "category": "pulmonary", "provenance": "pilot, standart patoloji kavramlarından, golden set'e bakılmadan seçildi"}
