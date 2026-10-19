@@ -4,10 +4,43 @@ Tarih: 2026-10-14 · Kapsam: `v0-prototype` etiketli kod (commit `d123df5` + `5e
 
 > Kural: Bu belgede "bulunamadı" yazan şey repoda yoktur. Tahmin ayrıca **(tahmin)** diye işaretlendi.
 
+## Güncel özet
+
+Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar; ayrıntı ve uyarılar ilgili bölümdedir. Durum değerleri: **doğrulandı** (repodaki kod/veriden doğrudan görüldü), **rapordan aktarıldı** (bitirme raporunda yazıyor, ham çıktı repoda yok, tekrar üretilemiyor), **tahmin** (çıkarım, doğrulanmadı), **bulunamadı** (repoda yok). Kaynak değerleri: `analyze_corpus` komutu (§7.8; tekrar üretilebilir), kod okuması, artifact okuması (komutsuz), rapor (§3 HTML raporları veya §7.9 bitirme raporu), makale.
+
+| Bulgu | Durum | Kaynak | Bölüm |
+|---|---|---|---|
+| Korpus 114,222 görsel; CLIP ve QuiltNet `ids.json` kümesi ve sırası aynı | doğrulandı | artifact okuması (komutsuz) | §7.1 |
+| 114,222 görselin CSV'ye göre dağılımı: 114,186 saf `train` + 36 `train`/`val` karışık (eski "%100 train" JSONL'daki yazılan değere dayanıyordu) | doğrulandı | `analyze_corpus` komutu | §7.2, §7.7.2 |
+| JSONL 168,739 satır / 114,222 görsel; 35,605 görselde birden fazla farklı caption | doğrulandı | `analyze_corpus` komutu | §7.3 |
+| `unknown` oranı %21.89 (görsel bazında); eski "~%33" korpusla örtüşmüyor | doğrulandı | `analyze_corpus` komutu | §7.4, §4 risk 6 |
+| Mevcut JSONL `balanced` modla üretilmiş (komut kaydı yok, yüksek güven) | tahmin | `analyze_corpus` karşılaştırma tablosu + kod okuması | §7.7.5 |
+| `data/images` altında 65,322 görsel; `ids.json`'dakilerden 38,096 var, 76,126 eksik | doğrulandı | `analyze_corpus` komutu | §7.7.3 |
+| Eksik görsellerin nedeni: part-2/3 dosyalarının başka ortamda kalması | tahmin | rapor | §7.9.4 |
+| Çok-caption'lı görselde kullanılan caption: JSONL'daki son satır (seed'e bağlı) | doğrulandı | kod okuması | §7.6 (b) |
+| P@10 relevance tanımı: `pathology ∈ expected` (kategori düzeyi, ikili) | doğrulandı | kod okuması | §4 |
+| "0.539 → 0.609" = V4 → V5b; 0.539 rerank'siz QuiltNet, 0.609 V5b | rapordan aktarıldı | bitirme raporu (ham çıktı yok) | §7.9.2, §4 |
+| V1–V7 sürüm tablosu (P@10) | rapordan aktarıldı | bitirme raporu (ham çıktı yok) | §7.9.1 |
+| `comparison_*.html` raporlarındaki P@10/mAP/nDCG değerleri | rapordan aktarıldı | `reports/*.html` | §3 |
+| "64,052 görsel" ifadesinin kaynağı: V1-V3'ün 64K alt kümeyle koşulması olabilir | tahmin | rapor | §7.9.3, §3 |
+| Dolaylı sızıntı: reranker caption sözcüklerine bakıyor, etiket aynı satırın kategorisi; γ=0 yalnız doğrudan sızıntıyı kapatır | tahmin (risk) | kod okuması + rapor | §4 risk 1, 10 |
+| QuiltNet bu görselleri eğitimde görmüş olabilir (korpus train); `val`'in eğitimde kullanılmadığı hiçbir kaynakta doğrulanmadı | tahmin (risk) | artifact okuması + makale | §7.2, §7.8.3, §4 risk 5, 9 |
+| CSV `val` = QuiltNet retrieval holdout'u (13,559 sayısal örtüşmesi) | tahmin | makale | §7.8.3 |
+| Yalnız-`val` 928 görsel, %50.75 `unknown`, ≥20 geçen 5 kategori | doğrulandı | `analyze_corpus` komutu | §7.8.1 |
+| `stratified_sample` top-up hatası (tekrar eden satır) | doğrulandı | `tests/test_prepare_quilt.py` (`xfail(strict=True)`) | §7.7.6 |
+| Domain gate: 12 çıpa, top-3 ortalama, eşik 0.80, 10 sorguluk öz-test; ROC/PR yok | doğrulandı | kod okuması | §2, §5 |
+| Domain gate 10/10 ve 0.8015 vs 0.8026 kıl payı vakalar | rapordan aktarıldı | bitirme raporu | §7.9.5 |
+| V6 cross-encoder CPU'da sorgu başına ~26 sn; demo V5b ~200 ms | rapordan aktarıldı | bitirme raporu | §7.9.5 |
+| Görsel→Görsel modu nicel ölçülmemiş | rapordan aktarıldı | bitirme raporu | §7.9.5 |
+| FAISS indeksi Flat (dosya boyutu düz depolamayla uyumlu) | tahmin | artifact okuması (indeks açılmadı) | §7.5 |
+| `test_thresholds.py` ve `visualize_search.py` çalışmaz durumda | doğrulandı | kod okuması (çalıştırılmadı) | §2 |
+| Golden set, qrels, kaynak/video bazlı split, metrik testi, Recall@k/Hit@k/MRR, HNSW | bulunamadı | kod okuması | §5 |
+| "Literatürde eşdeğeri yok", "0.45-0.65 tipik aralık" iddiaları | bulunamadı (repoda doğrulama yok) | bitirme raporu | §7.9.6 (d), §4 risk 12 |
+
 ## 0. Önce bilinmesi gerekenler
 
-1. **İlk keşif oturumunda `artifacts/` ve `data/` erişilebilir değildi** (`.gitignore`'da; `E:\Multisearch_data` de erişilebilir değildi). Embedding, FAISS indeksi, `captions_quilt.jsonl`, `eval_queries*.json` ve `benchmark_*.json` dosyalarının hiçbiri incelenemedi. Hiçbir metrik o oturumda yeniden üretilemedi; aşağıdaki sayılar sadece `reports/*.html` içinde yazanlardır.
-2. **"P@10 0.539 → 0.609" iddiası doğrulanamıyor.** Ayrıntı §4.
+1. **İlk keşif oturumunda `artifacts/` ve `data/` erişilebilir değildi** (`.gitignore`'da; `E:\Multisearch_data` de erişilebilir değildi). Embedding, FAISS indeksi, `captions_quilt.jsonl`, `eval_queries*.json` ve `benchmark_*.json` dosyalarının hiçbiri incelenemedi. Hiçbir metrik o oturumda yeniden üretilemedi; aşağıdaki sayılar sadece `reports/*.html` içinde yazanlardır. **Güncelleme:** `artifacts/` ve `data/` sonradan okundu (§7); bu madde yalnızca ilk keşif oturumunun durumunu anlatır.
+2. **"P@10 0.539 → 0.609" iddiası doğrulanamıyor.** Ayrıntı §4. **Güncelleme:** bitirme raporuna göre bu V4 → V5b geçişidir (§7.9.2); kaynak rapor, ham çıktı repoda yok, bu yüzden iddia hâlâ repodan tekrar üretilemiyor.
 3. `scripts/` içinde iki dosya **çalışmaz durumda** (§2, "Kırık").
 
 ## 1. Repo haritası
@@ -59,7 +92,7 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 ## 4. "Precision@10 0.539 → 0.609" iddiası
 
 **Kaynak**
-- Tek geçtiği yer: `app.py:235` (sidebar `help` metni). Kodda, JSON'da, raporda **0.609 hiç geçmiyor**. 0.609'un nasıl hesaplandığı **bulunamadı**.
+- Tek geçtiği yer: `app.py:235` (sidebar `help` metni). Kodda, JSON'da, raporda **0.609 hiç geçmiyor**. 0.609'un nasıl hesaplandığı **bulunamadı**. (Güncelleme: bitirme raporuna göre 0.609 V5b'dir, bkz. §7.9.2; ham çıktı ve komut repoda yok.)
 - **0.539**, `reports/comparison_114k.html`'de **QuiltNet'in rerank'siz P@10'u** olarak geçiyor. Yani "0.539" muhtemelen ham QuiltNet taban çizgisi, "0.609" ise rerank'li sonuç **(tahmin)**; rerank'li koşunun raporu/çıktısı repoda yok.
 - `compare_models.py` rerank varsayılanı `α=.6, β=.4, pool=50`; uygulama `α=.75, β=.25, pool=topk×5`. Rapordaki/ iddiadaki sayının hangi ağırlıklarla çıktığı **bulunamadı**; uygulamadaki ayar bu sayıyla bağlanamıyor.
 - Komut, seed, config yok → CLAUDE.md'nin "tekrar üretilebilir komut + config + seed" kuralını karşılamıyor.
@@ -77,7 +110,7 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 | 2 | **Rerank fiilen sözcüksel yeniden sıralama.** Havuzda cosine ~0.32 ve neredeyse düz (kodun kendi notu), `α·cos≈0.24`; Jaccard ∈[0,1] ile `β·J` en fazla 0.25. Sıralamayı Jaccard belirliyor | `thresholds.py` docstring, `reranker.py` | Orta (yorum) |
 | 3 | **Tek set üzerinde ayar, ayrı split yok.** V1→V2'de zayıf kategorilerin sorguları sonuçlara bakılarak yeniden yazıldı ("Weak categories fully rewritten"); α/β de aynı sorgularda. Dev/test ayrımı yok | `make_queries_v2.py:1-8` | Yüksek |
 | 4 | **Değerlendirmede `unknown` sonuçları etiketle atılıyor** (`--filter_unknown`): retrieval aşamasında etiket kullanılıyor. Uygulama bunu yapmıyor → rapor ≠ uygulama davranışı | `compare_models.py:42-57` | Orta |
-| 5 | **Eğitim/test sızıntısı (QuiltNet adil mi?).** `00_prepare` varsayılan split `train`; QuiltNet Quilt-1M üzerinde eğitildi. Hangi split'in gerçekten kullanıldığı **bulunamadı** (artifact yok). Eğer `train` ise QuiltNet kendi eğitim verisinde ölçülmüş olur | `00_prepare_quilt.py:48` | Yüksek (doğrulanmalı) |
+| 5 | **Eğitim/test sızıntısı (QuiltNet adil mi?).** `00_prepare` varsayılan split `train`; QuiltNet Quilt-1M üzerinde eğitildi. Hangi split'in gerçekten kullanıldığı **bulunamadı** (artifact yok). Eğer `train` ise QuiltNet kendi eğitim verisinde ölçülmüş olur (güncelleme: korpusun `train` olduğu §7.2 ve §7.7.2'de doğrulandı) | `00_prepare_quilt.py:48` | Yüksek (doğrulanmalı) |
 | 6 | **Etiket gürültüsü ve kaba ilgi.** Etiket otomatik/metadata kaynaklı; ilk eleman alınıyor; `unknown` korpusta **%21.89** (görsel bazında, §7.4; eski "~%33" rapor notu korpusla örtüşmüyordu). Kategori düzeyi P@10 hastalık düzeyi doğruluğu değil | `make_comparison_report.py` metodoloji | Orta |
 | 7 | **nDCG'nin IDCG'si her kategoride ≥K ilgili belge olduğunu varsayıyor**; küçük kategorilerde (Ophthalmic 1 sorgu) şişirir/saptırır | `compare_models.py:130`, rapor dipnotu | Düşük-Orta |
 | 8 | **İstatistiksel güç düşük**: kategori başına 1-10 sorgu, güven aralığı/seed yok, kategori ağırlığı eşit değil (makro yerine sorgu ortalaması) | rapor tabloları | Orta |
@@ -86,7 +119,7 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 | 11 | **Sorgular sonuçlara bakılarak yeniden yazılmış (V2), ayar-test ayrımı yok.** Sürümler arası artış (V1 → V2 → V3) kısmen sorgu ayarından gelebilir (risk 3 ile aynı kök) | §7.9, `make_queries_v2.py:1-8` | Yüksek |
 | 12 | **Doğrulanmamış dış iddialar.** Raporda "literatürde eşdeğeri yok" gibi özgünlük iddiaları ve "0.45-0.65 tipik aralık" karşılaştırması var; bu repoda doğrulanmadı | §7.9 | Düşük-Orta |
 
-**Sonuç:** İddia, şu haliyle bağımsız ölçüm sayılamaz. 0.539 rerank'siz QuiltNet ölçümü olarak raporda var, 0.609 hiçbir yerde yok. Rerank kazancı büyük olasılıkla (1)'in etkisiyle şişkin. Arayüzdeki metin R2'ye kadar kaldırılmalı ya da "doğrulanmadı" denmeli (karar açık, §8-3).
+**Sonuç:** İddia, şu haliyle bağımsız ölçüm sayılamaz. 0.539 rerank'siz QuiltNet ölçümü olarak raporda var, 0.609 repodaki hiçbir dosyada yok (bitirme raporuna göre V5b, bkz. §7.9.2; ham çıktı yok). Rerank kazancı büyük olasılıkla (1)'in etkisiyle şişkin. Arayüzdeki metin R2'ye kadar kaldırılmalı ya da "doğrulanmadı" denmeli (karar açık, §8-3).
 
 ## 5. PLAN.md §1 tablosundaki ❓ satırları
 
@@ -109,7 +142,7 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 
 ## 7. Artifact incelemesi (2026-10-14)
 
-Yöntem: `data/captions_quilt.jsonl` ve `artifacts/{clip,quilt}/*/` dosyaları **sadece okundu**, hiçbiri değiştirilmedi. Geçici analiz betikleri repo dışında tutuldu. Görsel sayısı kontrolü yapılmadı (zip'ler henüz çıkarılmadı). Bu bölüm §0 madde 1'i (artifact yok) ve §4'teki 2. sorusunu yanıtlar.
+Yöntem: `data/captions_quilt.jsonl` ve `artifacts/{clip,quilt}/*/` dosyaları **sadece okundu**, hiçbiri değiştirilmedi. Geçici analiz betikleri repo dışında tutuldu. Görsel sayısı kontrolü bu bölümde yapılmadı (zip'ler henüz çıkarılmamıştı; diskteki görseller sonradan §7.7.3'te sayıldı). Bu bölüm §0 madde 1'i (artifact yok) ve §4'teki 2. sorusunu yanıtlar.
 
 ### 7.1 Korpus boyutu: CLIP ve QuiltNet aynı mı?
 
@@ -122,7 +155,7 @@ Yöntem: `data/captions_quilt.jsonl` ve `artifacts/{clip,quilt}/*/` dosyaları *
 | `embeddings.npy` şekli (başlıktan) | (114222, 512) float32 | (114222, 512) float32 |
 | `faiss_meta.json` `n` | 114,222 | 114,222 |
 
-İki `ids.json` kümesi aynı ve **sıraları da aynı** (fark 0). Sonuç: korpus **114k**; `comparison_114k.html` dosya adı doğru, ama içindeki "64,052 görsel" ifadesi bu korpusla uyuşmuyor, nedeni **bulunamadı** (§3'teki tutarsızlık sürüyor).
+İki `ids.json` kümesi aynı ve **sıraları da aynı** (fark 0). Sonuç: korpus **114k**; `comparison_114k.html` dosya adı doğru, ama içindeki "64,052 görsel" ifadesi bu korpusla uyuşmuyor, nedeni **bulunamadı** (§3'teki tutarsızlık sürüyor). Bitirme raporuna göre olası açıklama: V1-V3 64K alt kümeyle, V4 ve sonrası 114,222 görselle koşulmuş (§7.9.3, tahmin).
 
 ### 7.2 Split dağılımı (`ids.json`'da olan satırlar)
 
@@ -133,7 +166,9 @@ Yöntem: `data/captions_quilt.jsonl` ve `artifacts/{clip,quilt}/*/` dosyaları *
 | `train` | 168,739 | 100% |
 | `test` / `val` / diğer | 0 | 0% |
 
-Korpus **tamamen `train`**. Dosyanın tamamı da `train`; yani dışarıda bırakılmış test satırı yok. §4 risk 5 ("QuiltNet kendi eğitim verisinde ölçülmüş olabilir") artık **sadece varsayım değil, veriyle destekli**: korpus `train` etiketli. Tek belirsizlik: `split` alanının Quilt-1M CSV'sinden mi geldiği kodda doğrulanmalı, ve QuiltNet'in eğitim kümesiyle tam örtüşme derecesi **bulunamadı** (kontrol edilmedi).
+> **Düzeltme (§7.7.2):** Aşağıdaki "%100 `train`" JSONL'daki yazılan `split` değerine dayanır. CSV'ye göre 114,222 görselin 114,186'sı saf `train`, 36'sı `train`/`val` karışıktır. Bulgu silinmedi, bu not ile birlikte okunmalıdır.
+
+Korpus **tamamen `train`** (JSONL değerine göre; yukarıdaki düzeltmeye bakın). Dosyanın tamamı da `train`; yani dışarıda bırakılmış test satırı yok. §4 risk 5 ("QuiltNet kendi eğitim verisinde ölçülmüş olabilir") artık **sadece varsayım değil, veriyle destekli**: korpus `train` etiketli. Tek belirsizlik: `split` alanının Quilt-1M CSV'sinden mi geldiği kodda doğrulanmalı, ve QuiltNet'in eğitim kümesiyle tam örtüşme derecesi **bulunamadı** (kontrol edilmedi).
 
 ### 7.3 Caption satırı ≠ görsel sayısı
 
@@ -145,7 +180,7 @@ Korpus **tamamen `train`**. Dosyanın tamamı da `train`; yani dışarıda bıra
 
 - 35,605 görselin birden fazla **farklı** caption'ı var. Aynı görselin satırları arasında `pathology` farkı **0** (etiket görsel başına tutarlı).
 - Tam yinelenen (path+caption+pathology) satır yok.
-- **Etki (doğrulanmadı):** Reranker ve CE caption kullanıyor; çok-caption'lı görselde hangisinin seçildiği kodda net değil (`src/` içinde captions yükleyen bir yer bulunamadı, grep sonucu `config.py` dışında yok). Birleştirme/ilk satır/son satır hangisi ise Jaccard skoru buna bağlı; **R2 öncesi incelenmeli**.
+- **Etki (doğrulanmadı):** Reranker ve CE caption kullanıyor; çok-caption'lı görselde hangisinin seçildiği kodda net değil (`src/` içinde captions yükleyen bir yer bulunamadı, grep sonucu `config.py` dışında yok). Birleştirme/ilk satır/son satır hangisi ise Jaccard skoru buna bağlı; **R2 öncesi incelenmeli** (güncelleme: kod okunarak çözüldü, bkz. §7.6 (b)).
 - `config.py` captions varsayılanı `<artifacts>/captions_quilt.jsonl` idi, dosya `data/` altında. **Düzeltildi** (`f14bb9b`): varsayılan artık `<data>/captions_quilt.jsonl`.
 - Hangi caption'ın kullanıldığı kod okunarak çözüldü: §7.6 (b).
 
@@ -216,9 +251,9 @@ Yöntem: sadece kod okundu, artifact/CSV açılmadı, hiçbir şey çalıştır�
 **(c) Kategori başına satır kotası var mı?** Evet, iki modda da, birim **satır** (görsel değil).
 - `stratified` (varsayılan): kategori başına `quota = max(1, round(n * count / total))`, `count/total` satır sayısı. Orantılı; `--n` toplam satır hedefi.
 - `balanced`: `BALANCED_TARGETS` kategori başına en fazla `min(hedef, havuz)` satır alır; `--n` yok sayılır. Kategori başına yuvarlak tavanlar (`unknown` 25000, `dermatopathology` 20000, ...) buradan geliyor.
-- Mevcut `captions_quilt.jsonl` hangi modla üretildi: **bulunamadı** (komut ve `subset_stats.json` incelenmedi). §7.4'teki yuvarlak satır sayıları `balanced` ile tutarlı **(tahmin)**; `artifacts/subset_stats.json` (`category_distribution`) bunu doğrular.
+- Mevcut `captions_quilt.jsonl` hangi modla üretildi: **bulunamadı** (komut ve `subset_stats.json` incelenmedi; güncelleme: satır sayıları `BALANCED_TARGETS` ile karşılaştırılarak `balanced` sonucuna varıldı, bkz. §7.7.5). §7.4'teki yuvarlak satır sayıları `balanced` ile tutarlı **(tahmin)**; `artifacts/subset_stats.json` (`category_distribution`) bunu doğrular.
 - Sonuç: `balanced` ise dağılım Quilt-1M'in doğal dağılımı değil, hedef tablosunun ürünü; kategori oranlarından korpus temsiliyeti çıkarılamaz.
-- Okurken görülen, doğrulanmamış şüphe: `stratified_sample` içinde `remaining = df[~df.index.isin(result.index)]` satırında `result` `ignore_index=True` ile yeniden indekslenmiş; indeksler `df` ile eşleşmediği için doldurma (`len(result) < n`) yanlış satırları dışlayıp tekrar eden satır ekleyebilir. Çalıştırılıp test edilmedi.
+- Okurken görülen, doğrulanmamış şüphe: `stratified_sample` içinde `remaining = df[~df.index.isin(result.index)]` satırında `result` `ignore_index=True` ile yeniden indekslenmiş; indeksler `df` ile eşleşmediği için doldurma (`len(result) < n`) yanlış satırları dışlayıp tekrar eden satır ekleyebilir. Çalıştırılıp test edilmedi. (Güncelleme: test ile doğrulandı, bkz. §7.7.6.)
 
 **Bu bölümle birlikte yapılan kod değişiklikleri**
 - `f14bb9b`: captions varsayılan yolu `data/captions_quilt.jsonl`.
@@ -443,8 +478,8 @@ Bunlar §4 risk tablosuna 9-12 olarak eklendi:
 
 ## 8. Açık sorular ve kararlar
 
-1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) proje sahibinin bildiği bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası nedir?
+1. §4'teki yorum (0.539 = rerank'siz QuiltNet, 0.609 kaynağı yok) proje sahibinin bildiği bilgiyle uyuşuyor mu? Varsa 0.609'un çıktığı koşunun komutu/dosyası nedir? (Güncelleme: bitirme raporuna göre 0.539 = V4, 0.609 = V5b, bkz. §7.9.2; açık kalan kısım ham çıktı ve komutun repoda bulunmamasıdır.)
 2. ~~Gerçek korpus train mi test mi, 64k mı 114k mı?~~ **Yanıtlandı (§7.1-7.2):** 114,222 görsel, %100 `train`. Karar: "QuiltNet'in train verisi üzerinde ölçüm" sonucu R2'de nasıl ele alınacak (ayrı held-out korpus mu, mevcut korpusta dürüstlük notu mu)?
 3. Uygulamadaki iddia metni R1'de nötrlenip R2'de yeniden hesaplansın mı? (Not: git geçmişine göre iddia metni zaten değiştirilmiş görünüyor: `76b5bbc`; uygulama durumu elle doğrulanmadı.)
 4. §7.3: Çok-caption'lı görseller için reranker hangi caption'ı kullanmalı? Karar R2'den önce gerekli. (Mevcut davranış §7.6 (b): JSONL'daki son satır, seed'e bağlı.)
-5. Açık soru: `comparison_114k.html` içindeki "64,052 görsel" ifadesi nereden geldi? (§3, §7.1)
+5. Açık soru: `comparison_114k.html` içindeki "64,052 görsel" ifadesi nereden geldi? (§3, §7.1; olası açıklama §7.9.3, tahmin)
