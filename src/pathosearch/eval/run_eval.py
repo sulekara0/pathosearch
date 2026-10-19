@@ -62,6 +62,7 @@ BOOTSTRAP_SEED = 42
 CI_LEVEL = 0.95
 # Fixed before looking at any data: |rho| above this flags label/caption dependence.
 SPEARMAN_WARN = 0.5
+EXCLUDED_WARN = 0.30  # max share of judged pairs removed before warning
 REFERENCE_ANNOTATOR = "A"
 CAVEATS = (
     "QuiltNet held-out status of CSV val split: unverified (STATUS §7.8.3).",
@@ -138,15 +139,31 @@ def per_query_metrics(
     }
 
 
-def score_runs(runs: Mapping[str, Mapping[str, Sequence[str]]], qrels: Qrels, k: int) -> Table:
-    """Per-query metric values; NaN where a query has no relevant judged image."""
+def score_runs(
+    runs: Mapping[str, Mapping[str, Sequence[str]]],
+    qrels: Qrels,
+    k: int,
+    excluded: Mapping[str, set[str]] | None = None,
+) -> Table:
+    """Per-query metric values; NaN where a query has no relevant judged image.
+
+    ``excluded`` images are removed from the ranked lists before scoring (condensed lists),
+    so they count neither as relevant nor as non-relevant. A list that shrinks is scored at
+    its remaining length (``min(k, len)``); a query left with no results gets NaN.
+    """
     table: Table = {}
     for thr, min_rel in THRESHOLDS.items():
         table[thr] = {}
         for system, per_query in runs.items():
             cols: dict[str, dict[str, float]] = {m: {} for m in METRIC_NAMES}
             for qid, ranked in per_query.items():
-                vals = per_query_metrics(ranked, qrels.get(qid, {}), k, min_rel)
+                if excluded:
+                    ranked = [d for d in ranked if d not in excluded.get(qid, ())]
+                k_q = min(k, len(ranked))
+                if k_q == 0:
+                    vals = {m: math.nan for m in METRIC_NAMES}
+                else:
+                    vals = per_query_metrics(ranked, qrels.get(qid, {}), k_q, min_rel)
                 for m, v in vals.items():
                     cols[m][qid] = v
             table[thr][system] = cols
@@ -231,19 +248,27 @@ def _by_category(
 # --- circularity checks --------------------------------------------------------------
 
 
-def caption_unseen_qrels(qrels: Qrels, judgments: Sequence[Judgment]) -> Qrels:
-    """Keep only pairs whose reference annotator never opened the caption.
+def caption_seen_exclusions(
+    qrels: Qrels, judgments: Sequence[Judgment]
+) -> tuple[Qrels, dict[str, set[str]]]:
+    """Split qrels into pairs kept for the circularity check and pairs to exclude.
 
-    Pairs without a reference judgment are dropped too: their caption exposure is unknown.
+    A pair is excluded when the reference annotator opened its caption, or when there is
+    no reference judgment (caption exposure unknown). Excluded pairs are removed from the
+    qrels *and* from the ranked lists (see :func:`score_runs`): they are treated as if
+    never judged, not as non-relevant.
     """
     latest = latest_judgments(judgments)
-    out: Qrels = {}
+    kept: Qrels = {}
+    excluded: dict[str, set[str]] = {}
     for qid, per_image in qrels.items():
         for image, grade in per_image.items():
             j = latest.get((qid, image))
             if j is not None and not j.caption_seen:
-                out.setdefault(qid, {})[image] = grade
-    return out
+                kept.setdefault(qid, {})[image] = grade
+            else:
+                excluded.setdefault(qid, set()).add(image)
+    return kept, excluded
 
 
 def _ranks(x: np.ndarray) -> np.ndarray:
@@ -360,7 +385,13 @@ def run_eval(
     runs = {s.name: {q: runners[s.name](queries[q].text) for q in qids} for s in specs}
     names = [s.name for s in specs]
     categories = {q: queries[q].category for q in qids}
-    unseen = caption_unseen_qrels(qrels, reference)
+    unseen, excluded = caption_seen_exclusions(qrels, reference)
+    n_total = sum(len(v) for v in qrels.values())
+    n_excluded = sum(len(v) for v in excluded.values())
+    share = n_excluded / n_total if n_total else 0.0
+    unseen_summary = summarize(
+        score_runs(runs, unseen, k, excluded), names, categories, n_boot, seed
+    )
 
     return {
         "golden": golden.root.name,
@@ -384,10 +415,23 @@ def run_eval(
         "unsure_pairs": unsure,
         "metrics": summarize(score_runs(runs, qrels, k), names, categories, n_boot, seed),
         "metrics_caption_unseen": {
-            "note": "pairs the reference annotator judged after opening the caption (or whose "
-            "exposure is unknown) are treated as unjudged",
-            "n_pairs": sum(len(v) for v in unseen.values()),
-            **summarize(score_runs(runs, unseen, k), names, categories, n_boot, seed),
+            "note": "pairs whose caption the reference annotator opened (or whose exposure is "
+            "unknown) are removed from qrels and from ranked lists, i.e. treated as unjudged",
+            "pairs_total": n_total,
+            "pairs_removed": n_excluded,
+            "share_removed": round(share, 4),
+            "warning": (
+                f"{share:.0%} of judged pairs removed (> {EXCLUDED_WARN:.0%}); "
+                "the caption-unseen estimate rests on a small, possibly biased subset"
+                if share > EXCLUDED_WARN
+                else None
+            ),
+            "queries_total": len(qids),
+            "queries_with_relevant_remaining": {
+                thr: len(qids) - unseen_summary[thr]["n_queries_without_relevant"]["ndcg"]
+                for thr in THRESHOLDS
+            },
+            **unseen_summary,
         },
         "circularity": label_caption_correlation(qrels, queries, captions),
         "caveats": list(CAVEATS),
@@ -425,6 +469,17 @@ def render_markdown(report: Mapping[str, Any]) -> str:
 
     table(report["metrics"], "Metrics")
     table(report["metrics_caption_unseen"], "Metrics, caption-unseen pairs only")
+    cu = report["metrics_caption_unseen"]
+    lines.extend(
+        [
+            f"Caption-unseen: {cu['pairs_removed']} of {cu['pairs_total']} judged pairs removed "
+            f"({cu['share_removed']:.1%}); queries with a relevant image remaining: "
+            f"{cu['queries_with_relevant_remaining']} of {cu['queries_total']}.",
+            "",
+        ]
+    )
+    if cu["warning"]:
+        lines.extend([f"**Warning:** {cu['warning']}", ""])
     circ = report["circularity"]
     lines += [
         "## Circularity check",

@@ -78,7 +78,7 @@ uv run python scripts/run_eval.py --golden eval_data/golden_v0 --split dev --sys
 - Çıktı: `reports/eval_<golden>_<split>_<sha>.json` ve `.md` (komut, config, seed, git SHA, paket sürümleri, strict/lenient Hit/Recall/MRR/nDCG/P, kategori kırılımı, seed'li paired bootstrap %95 GA, `caveats`).
 - Domain gate değerlendirmede kapalıdır. Rerank, uygulamayla aynı α/β/havuz değerlerini kullanır.
 - **Test split koruması:** `--split test` yalnızca `--i-know-this-is-test` ile koşar ve rapora TEST damgası basılır. α/β ve havuz ayarı yalnızca dev'de yapılır; test R2 sonunda bir kez koşar.
-- **Döngüsellik kontrolü:** tüm sistemler ayrıca yalnızca `caption_seen=false` çiftler üzerinden skorlanır (caption açılan çiftler etiketsiz sayılır). Etiket ile sorgu–caption sözcük örtüşmesi arasındaki Spearman korelasyonu raporlanır; |ρ| ≥ 0.5 ise uyarı çıkar (eşik veriye bakmadan sabitlenmiştir).
+- **Döngüsellik kontrolü:** tüm sistemler ayrıca yalnızca `caption_seen=false` çiftler üzerinden skorlanır. Caption'ı açılan (veya açılıp açılmadığı bilinmeyen) çiftler qrels'ten **ve** sistemlerin sıralı listelerinden çıkarılır; ilgisiz sayılmazlar. Liste kısalırsa kalan uzunlukta skorlanır. Rapor çıkarılan çift sayısını/oranını ve kalan sorgu sayısını yazar; oran %30'u aşarsa uyarı verir. Etiket ile sorgu–caption sözcük örtüşmesi arasındaki Spearman korelasyonu raporlanır; |ρ| ≥ 0.5 ise uyarı çıkar (eşik veriye bakmadan sabitlenmiştir).
 
 ## 4. Dosya şeması
 

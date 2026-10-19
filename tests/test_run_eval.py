@@ -16,13 +16,14 @@ from pathosearch.eval.golden import (
     write_trec_qrels,
 )
 from pathosearch.eval.run_eval import (
-    caption_unseen_qrels,
+    caption_seen_exclusions,
     check_split_allowed,
     label_caption_correlation,
     make_runner,
     parse_system,
     render_markdown,
     run_eval,
+    score_runs,
     spearman,
     write_report,
 )
@@ -126,9 +127,12 @@ def test_run_eval_end_to_end(tmp_path: Path) -> None:
     lenient = report["metrics"]["lenient"]["systems"]["clip"]
     assert lenient["p"]["n"] == 2  # q1 and q2 have a grade >= 1 image
     assert set(strict["by_category"]) == {"dermatopathology", "gastrointestinal", "pulmonary"}
-    # caption-unseen: the (q1, img0) pair (caption opened) is dropped, q1 loses its grade-2 image
+    # caption-unseen: the (q1, img0) pair (caption opened) is removed, q1 loses its grade-2 image
     unseen = report["metrics_caption_unseen"]
-    assert unseen["n_pairs"] == 5  # 6 dev pairs minus the caption-opened one
+    assert (unseen["pairs_total"], unseen["pairs_removed"]) == (6, 1)
+    assert unseen["share_removed"] == pytest.approx(1 / 6, abs=1e-4) and unseen["warning"] is None
+    assert unseen["queries_total"] == 3
+    assert unseen["queries_with_relevant_remaining"] == {"strict": 1, "lenient": 2}
     assert unseen["strict"]["n_queries_without_relevant"]["p"] == 2
     assert report["circularity"]["n_pairs"] == 6
 
@@ -186,13 +190,40 @@ def test_write_report_names_and_content(tmp_path: Path) -> None:
     assert "cmd" in m.read_text(encoding="utf-8")
 
 
-def test_caption_unseen_qrels() -> None:
+def test_caption_seen_exclusions() -> None:
     qrels = {"q": {"a": 2, "b": 1, "c": 0}}
     js = [
         Judgment("q", "a", 2, "A", True, "t"),
         Judgment("q", "b", 1, "A", False, "t"),
-    ]  # c has no reference judgment -> dropped
-    assert caption_unseen_qrels(qrels, js) == {"q": {"b": 1}}
+    ]  # c has no reference judgment -> exposure unknown -> excluded
+    kept, excluded = caption_seen_exclusions(qrels, js)
+    assert kept == {"q": {"b": 1}} and excluded == {"q": {"a", "c"}}
+
+
+def test_excluded_images_leave_the_ranked_list_instead_of_counting_as_misses() -> None:
+    runs = {"s": {"q": ["a", "b"]}}
+    qrels = {"q": {"b": 2}}
+    plain = score_runs(runs, qrels, 2)["strict"]["s"]
+    condensed = score_runs(runs, qrels, 2, excluded={"q": {"a"}})["strict"]["s"]
+    assert plain["p"]["q"] == 0.5 and plain["mrr"]["q"] == 0.5
+    assert condensed["p"]["q"] == 1.0 and condensed["mrr"]["q"] == 1.0  # list is [b], scored at 1
+    emptied = score_runs(runs, qrels, 2, excluded={"q": {"a", "b"}})["strict"]["s"]
+    assert all(v["q"] != v["q"] for v in emptied.values())  # NaN: nothing left to score
+
+
+def test_warns_when_too_many_pairs_are_removed(tmp_path: Path) -> None:
+    g = make_golden(tmp_path)
+    for qid, image in [
+        ("q1", "img0.jpg"),
+        ("q1", "img1.jpg"),
+        ("q2", "img3.jpg"),
+        ("q2", "img4.jpg"),
+    ]:
+        append_judgment(g.judgments("A"), Judgment(qid, image, 1, "A", True, "t"))  # caption opened
+    report = run_eval(g, "dev", ["clip"], 3, runners(), {}, "c", n_boot=50, sha="x", packages={})
+    cu = report["metrics_caption_unseen"]
+    assert cu["pairs_removed"] == 4 and cu["share_removed"] > 0.30 and "removed" in cu["warning"]
+    assert "**Warning:**" in render_markdown(report)
 
 
 def test_spearman() -> None:
