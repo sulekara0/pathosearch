@@ -69,6 +69,8 @@ CAVEATS = (
     "Judgments are pooled: unjudged images count as non-relevant (see the random control "
     "sample of the pool for how often this is wrong).",
     "Annotators are not pathologists; grades are noisy (see the agreement report).",
+    "The golden set passed the 0.99 near-duplicate exclusion; it is not clean at the 0.95 "
+    "criterion (ADR-0003).",
 )
 
 Runner = Callable[[str], list[str]]  # query text -> ranked image ids

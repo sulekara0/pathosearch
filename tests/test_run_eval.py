@@ -112,6 +112,7 @@ def test_run_eval_end_to_end(tmp_path: Path) -> None:
     assert report["command"] == "cmd x" and report["git_sha"] == "abc1234"
     assert report["unsure_pairs"] == 1
     assert any("unverified" in c and "QuiltNet" in c for c in report["caveats"])
+    assert any("0.99" in c and "0.95" in c and "ADR-0003" in c for c in report["caveats"])
 
     strict = report["metrics"]["strict"]
     assert strict["n_queries_without_relevant"]["p"] == 1  # q3 has no grade-2 image
