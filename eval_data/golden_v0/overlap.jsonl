@@ -1,0 +1,111 @@
+{"qid": "q001", "image": "iklRyY1nBIE_image_927af67d-722b-4641-8bd6-630e17a89c1a.jpg", "order": 1, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q001", "image": "00004000046633.jpg", "order": 4, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q001", "image": "pheenISyPWk_image_4c9a000b-3cf7-4534-b4a3-923256553a56.jpg", "order": 5, "source": "pooled", "systems": ["clip"]}
+{"qid": "q001", "image": "QDb68_G1HR4_image_71fc4c72-1681-462d-bf6b-3fdef87d70ed.jpg", "order": 22, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q001", "image": "b283ddea-898e-4942-bb77-d116027c1884_0.jpg", "order": 28, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q001", "image": "3n3qWxn3Q4M_image_44e48028-2e91-431b-bc62-945dc6941964.jpg", "order": 30, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q002", "image": "c16d8ae6-2a79-468e-93c9-c7b06de8cf5b_1.jpg", "order": 2, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q002", "image": "jCw_NtnS6XU_image_b2128b39-f5d4-4e06-9b03-c7551e28c457.jpg", "order": 7, "source": "pooled", "systems": ["clip+rerank"]}
+{"qid": "q002", "image": "udoW6VSqsm4_image_4acaf616-1a3a-4ed9-9fe3-b2e04775e31a.jpg", "order": 8, "source": "pooled", "systems": ["clip"]}
+{"qid": "q002", "image": "8S4LeiO6Bbk_image_a7e10d09-4695-4ab5-94d5-0729c138ff60.jpg", "order": 10, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q002", "image": "jCw_NtnS6XU_image_84cfabcd-cf9e-431b-8216-e9fb221612ce.jpg", "order": 19, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q002", "image": "1604484663778873344_2.png", "order": 25, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q003", "image": "iklRyY1nBIE_image_ceddecec-4cfa-41f7-b046-dba4ffa55505.jpg", "order": 6, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q003", "image": "udoW6VSqsm4_image_291dd1e4-5e70-4e69-ba16-3182c42e2a94.jpg", "order": 14, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q003", "image": "iklRyY1nBIE_image_804783fa-15aa-42df-b863-4efd49e35d8f.jpg", "order": 16, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q003", "image": "1603468488059850752_1.jpg", "order": 19, "source": "random", "systems": []}
+{"qid": "q003", "image": "89e649d7-d86a-48bc-84f1-58f5a72d0268_0.jpg", "order": 21, "source": "pooled", "systems": ["clip", "clip+rerank", "quilt", "quilt+rerank"]}
+{"qid": "q004", "image": "sDFjOtMAYrk_image_b160162b-0932-4789-aa2e-db9ae9181fe4.jpg", "order": 4, "source": "random", "systems": []}
+{"qid": "q004", "image": "iklRyY1nBIE_image_804783fa-15aa-42df-b863-4efd49e35d8f.jpg", "order": 5, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q004", "image": "8S4LeiO6Bbk_image_96db8195-9fd3-493b-af2d-cae6a387df27.jpg", "order": 7, "source": "pooled", "systems": ["quilt"]}
+{"qid": "q004", "image": "sDFjOtMAYrk_image_94407ed8-ce52-480f-b70d-0192ab49a160.jpg", "order": 19, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q004", "image": "j_rG5XPImFQ_image_0af82daf-d012-492a-9f7c-4bf6194b50e5.jpg", "order": 23, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q005", "image": "df7a6046-06ef-4432-ad58-ec2046c6c948_0.jpg", "order": 6, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q005", "image": "udoW6VSqsm4_image_6ebc159a-0ba0-417a-9a0f-699630875b4c.jpg", "order": 10, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q005", "image": "85609ad7-6ae2-467c-8eeb-d6806f581966.jpg", "order": 16, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q005", "image": "1608581674287370240_0.jpg", "order": 19, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q005", "image": "1606380690030923786_0.jpg", "order": 24, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q006", "image": "udoW6VSqsm4_image_20f1e057-5253-4e27-9018-a00d47fb0cf2.jpg", "order": 7, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q006", "image": "89e649d7-d86a-48bc-84f1-58f5a72d0268_0.jpg", "order": 8, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q006", "image": "1597770265693679616_0.jpg", "order": 9, "source": "pooled", "systems": ["clip+rerank", "quilt", "quilt+rerank"]}
+{"qid": "q006", "image": "udoW6VSqsm4_image_6f8b09d3-0b63-4ad7-b0a9-acf69e1eb6f5.jpg", "order": 16, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q006", "image": "sDFjOtMAYrk_image_cf5fa51e-0e37-4795-bf00-5098b1bb5669.jpg", "order": 20, "source": "pooled", "systems": ["quilt"]}
+{"qid": "q006", "image": "0acbc197-01ba-4dbf-9e54-f08d1a39be3b_0.jpg", "order": 24, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q007", "image": "1593085374573969409_0.jpg", "order": 0, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q007", "image": "34d0d094-6cd5-4957-889f-b746826fd054_0.jpg", "order": 3, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q007", "image": "udoW6VSqsm4_image_567b4ad4-5971-40b7-b6b0-29f5b8b86053.jpg", "order": 4, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q007", "image": "00010000103021.jpg", "order": 14, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q007", "image": "sDFjOtMAYrk_image_b6fff9b0-fcc6-4f64-9d86-d564469daca6.jpg", "order": 15, "source": "pooled", "systems": ["clip"]}
+{"qid": "q007", "image": "00035000359719.jpg", "order": 16, "source": "pooled", "systems": ["quilt"]}
+{"qid": "q008", "image": "7ec7204f-f756-4c3e-bcba-ed33a0da5f24.jpg", "order": 0, "source": "random", "systems": []}
+{"qid": "q008", "image": "e921f606-f04b-4064-998d-ce9ef5bd427e_1.jpg", "order": 3, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q008", "image": "00004000044095.jpg", "order": 6, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q008", "image": "00004000048078.jpg", "order": 9, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q008", "image": "1604521878965452800_1.jpg", "order": 12, "source": "pooled", "systems": ["clip", "clip+rerank", "quilt", "quilt+rerank"]}
+{"qid": "q009", "image": "j_rG5XPImFQ_image_4f92c831-4b76-430f-ad70-77301c2c8b4b.jpg", "order": 0, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q009", "image": "1613592513448935425_0.jpg", "order": 2, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q009", "image": "00010000100994.jpg", "order": 3, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q009", "image": "QDb68_G1HR4_image_7228117a-7566-4287-aa7d-eefef7b88dd8.jpg", "order": 23, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q009", "image": "2PDZ9Qr6xyU_image_2557b199-2e82-44dc-a602-86afcc11f4c2.jpg", "order": 24, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q010", "image": "pBR26SS0FX8_image_4a446da8-deaa-4356-ba68-a6f2aa886a96.jpg", "order": 3, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q010", "image": "QDb68_G1HR4_image_58733c53-2917-48ff-9e89-5e60a990067c.jpg", "order": 7, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q010", "image": "c16d8ae6-2a79-468e-93c9-c7b06de8cf5b_1.jpg", "order": 8, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q010", "image": "QDb68_G1HR4_image_7228117a-7566-4287-aa7d-eefef7b88dd8.jpg", "order": 9, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q010", "image": "081d308e-b2b6-43e2-95c9-1ad9b7cbd1c5_2.jpg", "order": 21, "source": "pooled", "systems": ["clip"]}
+{"qid": "q011", "image": "QDb68_G1HR4_image_ec952f0b-3c0e-4252-a55d-b6ffa3d02ba1.jpg", "order": 1, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q011", "image": "1593085374573969409_0.jpg", "order": 8, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q011", "image": "jCw_NtnS6XU_image_ff1dae34-dac7-43c6-910b-fb565bed0cb7.jpg", "order": 9, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q011", "image": "85609ad7-6ae2-467c-8eeb-d6806f581966.jpg", "order": 15, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q011", "image": "sDFjOtMAYrk_image_b6fff9b0-fcc6-4f64-9d86-d564469daca6.jpg", "order": 23, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q012", "image": "d08e2d61-6c60-4181-8e7d-688f966978fe_2.jpg", "order": 6, "source": "pooled", "systems": ["clip"]}
+{"qid": "q012", "image": "89e649d7-d86a-48bc-84f1-58f5a72d0268_0.jpg", "order": 8, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q012", "image": "1606034888767188992_3.jpg", "order": 9, "source": "random", "systems": []}
+{"qid": "q012", "image": "QDb68_G1HR4_image_b7ad4079-e03d-46ac-a576-ab61cc56dfa5.jpg", "order": 10, "source": "random", "systems": []}
+{"qid": "q012", "image": "7810e877-2f47-403c-9cdd-a61786034f4b.jpg", "order": 19, "source": "pooled", "systems": ["clip"]}
+{"qid": "q012", "image": "1604282351625936896_0.jpg", "order": 24, "source": "random", "systems": []}
+{"qid": "q013", "image": "iklRyY1nBIE_image_5b0ad93d-afea-4b34-9971-f890eee96412.jpg", "order": 0, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q013", "image": "WhnEXkBN4D8_image_97dad2c0-cd88-4fe2-b2f1-21c299b9e330.jpg", "order": 1, "source": "pooled", "systems": ["quilt"]}
+{"qid": "q013", "image": "rHSTVT91c8Q_image_f35a50fc-88c0-417e-bed0-ff5f9935aa63.jpg", "order": 10, "source": "pooled", "systems": ["clip"]}
+{"qid": "q013", "image": "iklRyY1nBIE_image_78b5c820-6a07-46a6-9393-f8f13ce837b9.jpg", "order": 14, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q013", "image": "udoW6VSqsm4_image_85cc3236-b4a7-4328-b15c-8fd96c92e3a9.jpg", "order": 19, "source": "random", "systems": []}
+{"qid": "q013", "image": "7c4dff69-2acc-41d4-9f5d-7e253894f7f5.jpg", "order": 25, "source": "random", "systems": []}
+{"qid": "q014", "image": "pBR26SS0FX8_image_dc453380-fba6-445d-8210-ec8116d51d6f.jpg", "order": 0, "source": "pooled", "systems": ["clip"]}
+{"qid": "q014", "image": "iklRyY1nBIE_image_026392ec-24c5-4e2a-807f-b554cf36412a.jpg", "order": 1, "source": "random", "systems": []}
+{"qid": "q014", "image": "7ec7204f-f756-4c3e-bcba-ed33a0da5f24.jpg", "order": 4, "source": "random", "systems": []}
+{"qid": "q014", "image": "pBR26SS0FX8_image_20978b7b-4e25-4735-b02b-2e28d16c5e97.jpg", "order": 22, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q014", "image": "thWl623HaHI_image_c785c9e4-54c9-49f1-ae7b-d174b1126efc.jpg", "order": 23, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q014", "image": "85609ad7-6ae2-467c-8eeb-d6806f581966.jpg", "order": 25, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q015", "image": "8c233a6c-ead1-4c4f-a63b-d819833c55b7.jpg", "order": 5, "source": "pooled", "systems": ["clip+rerank", "quilt", "quilt+rerank"]}
+{"qid": "q015", "image": "WhnEXkBN4D8_image_e00615d1-70f8-47b8-abef-4711544e48b4.jpg", "order": 6, "source": "pooled", "systems": ["clip", "clip+rerank", "quilt+rerank"]}
+{"qid": "q015", "image": "00038000386654.jpg", "order": 7, "source": "pooled", "systems": ["clip"]}
+{"qid": "q015", "image": "85609ad7-6ae2-467c-8eeb-d6806f581966.jpg", "order": 16, "source": "pooled", "systems": ["clip"]}
+{"qid": "q015", "image": "00027000270077.jpg", "order": 17, "source": "random", "systems": []}
+{"qid": "q015", "image": "WhnEXkBN4D8_image_27eadb3c-ce49-4591-857f-e4fccb4d1353.jpg", "order": 24, "source": "pooled", "systems": ["clip+rerank"]}
+{"qid": "q016", "image": "3n3qWxn3Q4M_image_44e48028-2e91-431b-bc62-945dc6941964.jpg", "order": 15, "source": "pooled", "systems": ["quilt+rerank"]}
+{"qid": "q016", "image": "f1b627a9-e680-443e-9586-790ce555d108.jpg", "order": 16, "source": "random", "systems": []}
+{"qid": "q016", "image": "QDb68_G1HR4_image_cfac16f4-b5e6-4165-822a-a2735f6db6d0.jpg", "order": 25, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q016", "image": "7ec7204f-f756-4c3e-bcba-ed33a0da5f24.jpg", "order": 26, "source": "random", "systems": []}
+{"qid": "q016", "image": "00001000011906.jpg", "order": 28, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q016", "image": "1595499828020236289_3.jpg", "order": 30, "source": "random", "systems": []}
+{"qid": "q017", "image": "gcLu6sNtYoc_image_18949083-5ec6-4b60-a77a-cdf77a977dcb.jpg", "order": 2, "source": "random", "systems": []}
+{"qid": "q017", "image": "WhnEXkBN4D8_image_825587c6-736e-44ff-bdac-f98d65e7e418.jpg", "order": 3, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q017", "image": "886298d9-d480-4120-b6c9-1dcb00ae5908_0.jpg", "order": 11, "source": "pooled", "systems": ["clip+rerank", "quilt+rerank"]}
+{"qid": "q017", "image": "WhnEXkBN4D8_image_3c9a6ae2-6f62-4ae5-9c55-656506388b8c.jpg", "order": 22, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q017", "image": "LlPaENuqzVQ_image_4574d8c1-a6b8-4522-aae1-77636f590452.jpg", "order": 23, "source": "random", "systems": []}
+{"qid": "q017", "image": "iklRyY1nBIE_image_27eb32f0-f4c5-433c-a8c2-0391c7ec9b53.jpg", "order": 25, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q018", "image": "iklRyY1nBIE_image_78b5c820-6a07-46a6-9393-f8f13ce837b9.jpg", "order": 0, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q018", "image": "00010000103068.jpg", "order": 1, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q018", "image": "00007000078693.jpg", "order": 3, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q018", "image": "iklRyY1nBIE_image_51bd3baa-f2f0-4c8e-821f-53203092f628.jpg", "order": 8, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q018", "image": "1613203851858903041_1.jpg", "order": 11, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q018", "image": "QDb68_G1HR4_image_cfac16f4-b5e6-4165-822a-a2735f6db6d0.jpg", "order": 15, "source": "pooled", "systems": ["clip"]}
+{"qid": "q019", "image": "WhnEXkBN4D8_image_825587c6-736e-44ff-bdac-f98d65e7e418.jpg", "order": 4, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q019", "image": "1613307232887652354_1.jpg", "order": 6, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q019", "image": "1603028559286923269_3.jpg", "order": 7, "source": "random", "systems": []}
+{"qid": "q019", "image": "WhnEXkBN4D8_image_a6039e23-f8fc-46f5-98ae-1c2eb4fc5363.jpg", "order": 12, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q019", "image": "00006000062356.jpg", "order": 24, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q020", "image": "1606216151234924545_2.jpg", "order": 0, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q020", "image": "1602815635045511168_0.jpg", "order": 5, "source": "pooled", "systems": ["clip", "clip+rerank"]}
+{"qid": "q020", "image": "sDFjOtMAYrk_image_0ef3378b-346c-44e7-ba1a-913bcc31d37c.jpg", "order": 10, "source": "random", "systems": []}
+{"qid": "q020", "image": "1604521878965452800_1.jpg", "order": 11, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
+{"qid": "q020", "image": "WhnEXkBN4D8_image_1b1e41fa-b1f2-4879-aafd-08bff7fb07b7.jpg", "order": 24, "source": "pooled", "systems": ["quilt", "quilt+rerank"]}
