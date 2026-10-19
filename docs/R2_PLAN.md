@@ -12,7 +12,9 @@ Bu belge onaylanmış R2 planıdır. Yol haritası için [PLAN.md](PLAN.md), gü
 | A4 pooling + rastgele kontrol örneklemi | ✅ | `335e415` |
 | A5 Cohen kappa + uzlaştırma | ✅ | `c3abc0d` |
 | A6 Streamlit etiketleme arayüzü | ✅ | `04a27f4` |
-| A7–A9 | ⏳ sonraki oturum | – |
+| A7 run_eval | ✅ | `73eae1f` |
+| A8 held-out seçimi ve sızıntı kontrolleri | ✅ | `687a9a5` |
+| A9 golden set protokolü | ✅ | `f33c032` |
 | B1–B9 (veri gerektiren) | ⏳ | – |
 
 > **Onay ekleri (2026-10-15):**
