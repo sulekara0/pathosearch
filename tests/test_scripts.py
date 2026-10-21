@@ -10,9 +10,9 @@ from pathosearch.eval.golden import (
     GoldenPaths,
     Judgment,
     append_judgment,
+    read_jsonl,
     read_trec_qrels,
 )
-from pathosearch.eval.pooling import load_pool
 
 SCRIPTS = Path(__file__).resolve().parent.parent / "scripts"
 
@@ -36,8 +36,10 @@ def test_make_splits_writes_once_and_refuses_overwrite(tmp_path: Path) -> None:
 def test_agreement_report_and_qrels_gate(tmp_path: Path) -> None:
     fake = make_fake_golden(tmp_path, n_images=30, n_queries=3, depth=3, n_random=1)
     g = GoldenPaths(fake.golden_dir)
-    pairs = [(it.qid, it.image) for it in load_pool(g.pool)][:4]
-    for (qid, image), (a, b) in zip(pairs, [(2, 2), (1, 1), (0, 0), (2, 0)], strict=True):
+    # kappa is computed on exactly the overlap pairs, so both sides judge all of them
+    pairs = sorted((r["qid"], r["image"]) for r in read_jsonl(g.overlap))
+    assert len(pairs) == 3
+    for (qid, image), (a, b) in zip(pairs, [(2, 2), (0, 0), (2, 0)], strict=True):
         append_judgment(g.judgments("A"), Judgment(qid, image, a, "A", False, "t"))
         append_judgment(g.judgments("B"), Judgment(qid, image, b, "B", False, "t"))
     out = tmp_path / "reports"
@@ -47,10 +49,11 @@ def test_agreement_report_and_qrels_gate(tmp_path: Path) -> None:
     )
     assert res.returncode != 0 and "not adjudicated" in res.stderr  # one open disagreement
     report = json.loads((out / f"agreement_{g.root.name}.json").read_text(encoding="utf-8"))
-    assert report["pairs"] == 4 and report["unresolved_disagreements"] == 1
+    assert report["pairs"] == 3 and report["unresolved_disagreements"] == 1
+    assert (out / f"agreement_{g.root.name}.md").is_file()
     assert not g.qrels.exists()
 
-    qid, image = pairs[3]
+    qid, image = pairs[2]
     append_judgment(g.adjudication, Judgment(qid, image, 1, "adjudicated", False, "t"))
     res = run(
         "agreement_report.py", "--golden", str(g.root), "--out-dir", str(out), "--write_qrels"
