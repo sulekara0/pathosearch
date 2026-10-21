@@ -369,8 +369,8 @@ def agreement_limitations(
         "marginals, so the same raw agreement can give quite different kappa values; read "
         "it together with the raw agreement and the confusion matrix.",
         f"Unsure exclusion is not random: {u['a']} unsure by {a}, {u['b']} by {b} "
-        f"({u['both']} by both), {u['excluded_total']} excluded in total. The hardest pairs "
-        "are therefore missing from kappa, which biases it upwards.",
+        f"({u['both']} by both), {u['excluded_total']} excluded in total. If unsure marks "
+        "the harder pairs (plausible, not verified), kappa is biased upwards.",
         "Computed before adjudication on raw labels; it measures reproducibility of the "
         "grading guideline, not correctness of the labels.",
         *extra,
