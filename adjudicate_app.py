@@ -16,6 +16,7 @@ from pathosearch.eval.adjudication import (
     adjudication_store,
     decide,
     load_disagreements,
+    load_note_seen,
 )
 from pathosearch.eval.golden import GoldenPaths
 from pathosearch.eval.labeling import LabelStore, build_image_index, resolve_image
@@ -54,8 +55,9 @@ def shown(grade: int | None) -> str:
     return "Emin değilim" if grade is None else str(grade)
 
 
-def on_decide(item: DisagreementItem, grade: int | None, n_items: int) -> None:
-    decide(st.session_state.store, item, grade)
+def on_decide(item: DisagreementItem, grade: int | None, n_items: int, meta_path: Path) -> None:
+    note_seen = item.key in st.session_state.notes_shown
+    decide(st.session_state.store, meta_path, item, grade, note_seen)
     st.session_state.cursor = min(st.session_state.cursor + 1, n_items - 1)
 
 
@@ -63,7 +65,13 @@ def on_move(step: int, n_items: int) -> None:
     st.session_state.cursor = max(0, min(st.session_state.cursor + step, n_items - 1))
 
 
-def overview(items: list[DisagreementItem], store: LabelStore) -> None:
+def on_show_note(key: tuple[str, str]) -> None:
+    st.session_state.notes_shown.add(key)
+
+
+def overview(
+    items: list[DisagreementItem], store: LabelStore, shown_notes: set[tuple[str, str]]
+) -> None:
     rows = []
     for i, it in enumerate(items, 1):
         j = store.get(it.key)
@@ -77,7 +85,7 @@ def overview(items: list[DisagreementItem], store: LabelStore) -> None:
                 "claude": it.b,
                 "karar": "" if j is None else shown(j.grade),
                 "görsel": it.image,
-                "not": it.note or "",
+                "not": (it.note or "") if it.key in shown_notes else "(gizli)",
             }
         )
     st.dataframe(rows, hide_index=True, width="stretch")
@@ -107,7 +115,11 @@ def main() -> None:
         st.session_state.store = adjudication_store(golden)
         st.session_state.store_key = str(golden.adjudication)
         st.session_state.cursor = 0
+        # a note seen in an earlier decision stays seen; it is not hidden again
+        prior = load_note_seen(golden.adjudication_meta)
+        st.session_state.notes_shown = {k for k, seen in prior.items() if seen}
     store: LabelStore = st.session_state.store
+    notes_shown: set[tuple[str, str]] = st.session_state.notes_shown
     n = len(items)
     item = items[st.session_state.cursor]
     n_done = sum(1 for it in items if store.is_done(it.key))
@@ -135,7 +147,16 @@ def main() -> None:
         b_col.metric("claude", item.b)
         d_col.metric("|fark|", item.abs_diff)
         st.markdown("**claude notu**")
-        st.info(item.note or "(bu çift için not bulunamadı)")
+        if item.key in notes_shown:
+            st.info(item.note or "(bu çift için not bulunamadı)")
+        else:
+            st.button(
+                "Notu göster",
+                key="show_note",
+                on_click=on_show_note,
+                args=(item.key,),
+                help="Notu açmak karara 'note_seen=true' olarak kaydedilir.",
+            )
         previous = store.get(item.key)
         if previous is not None:
             st.success(f"Mevcut karar: **{shown(previous.grade)}** (yeni karar bunun yerine geçer)")
@@ -146,7 +167,7 @@ def main() -> None:
                 label,
                 key=f"decide_{'unsure' if grade is None else grade}",
                 on_click=on_decide,
-                args=(item, grade, n),
+                args=(item, grade, n, golden.adjudication_meta),
                 width="stretch",
                 type="primary" if grade is not None else "secondary",
             )
@@ -169,9 +190,10 @@ def main() -> None:
         )
 
     with st.expander(f"Tüm uyuşmazlıklar ({n}, |fark|'a göre sıralı)"):
-        overview(items, store)
+        overview(items, store, notes_shown)
     st.caption(
-        f"Kararlar `{golden.adjudication.as_posix()}` dosyasına eklenir; A ve claude etiket "
+        f"Kararlar `{golden.adjudication.as_posix()}` dosyasına, notun görülüp görülmediği "
+        f"`{golden.adjudication_meta.as_posix()}` dosyasına eklenir; A ve claude etiket "
         "dosyalarına yazılmaz. Eğitim/araştırma aracıdır; klinik teşhis aracı değildir."
     )
 

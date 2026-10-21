@@ -15,6 +15,7 @@ import argparse
 import json
 from pathlib import Path
 
+from pathosearch.eval.adjudication import load_note_seen, note_visibility_summary
 from pathosearch.eval.agreement import (
     BOOTSTRAP_N,
     BOOTSTRAP_SEED,
@@ -81,6 +82,9 @@ def main() -> None:
         "annotators": {"a": args.a, "b": args.b},
         "adjudicated_pairs": len(adjudication),
         "unresolved_disagreements": len(todo),
+        "adjudication_notes": note_visibility_summary(
+            adjudication, load_note_seen(golden.adjudication_meta), args.b
+        ),
         "pairs": report.pairs,
         **detail,
         "limitations": agreement_limitations(detail, args.a, args.b, ANNOTATOR_CAVEATS),

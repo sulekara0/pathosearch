@@ -11,6 +11,7 @@ Layout (see :class:`GoldenPaths`):
     overlap.jsonl          subset of the pool judged by a second annotator
     judgments/<id>.jsonl   append-only Judgment log per annotator
     adjudication.jsonl     resolved disagreements (Judgment, annotator="adjudicated")
+    adjudication_meta.jsonl  per-decision side log (e.g. whether B's note was shown)
     qrels.tsv              final graded qrels, TREC format ``qid 0 image grade``
 
 Grades: 0 = not relevant, 1 = partially relevant, 2 = relevant; ``None`` = unsure
@@ -113,6 +114,10 @@ class GoldenPaths:
     @property
     def adjudication(self) -> Path:
         return self.root / "adjudication.jsonl"
+
+    @property
+    def adjudication_meta(self) -> Path:
+        return self.root / "adjudication_meta.jsonl"
 
     @property
     def qrels(self) -> Path:

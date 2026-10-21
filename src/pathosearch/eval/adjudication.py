@@ -5,6 +5,11 @@ the second annotator's one-sentence notes, never writes to either annotator's lo
 decisions go to ``adjudication.jsonl`` through :class:`LabelStore` (i.e.
 :func:`append_judgment`) as ``annotator="adjudicated"``, ``caption_seen=False``.
 
+B's note is hidden by default and shown on request. Whether it was shown is logged per
+decision in ``adjudication_meta.jsonl`` (``qid, image, note_seen, ts``), a side file so
+the :class:`Judgment` schema stays unchanged. A note counts as seen for a pair once any
+decision on that pair was made with it shown.
+
 The report is checked against the current judgment logs: if a label changed after the
 report was written, loading fails instead of showing stale labels.
 """
@@ -12,7 +17,7 @@ report was written, loading fails instead of showing stale labels.
 from __future__ import annotations
 
 import json
-from collections.abc import Mapping
+from collections.abc import Iterable, Mapping
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -24,7 +29,7 @@ from pathosearch.eval.golden import (
     load_judgments,
     read_jsonl,
 )
-from pathosearch.eval.labeling import LabelStore
+from pathosearch.eval.labeling import LabelStore, now_iso
 
 ADJUDICATOR = "adjudicated"
 
@@ -110,6 +115,42 @@ def adjudication_store(golden: GoldenPaths) -> LabelStore:
     return LabelStore(golden.adjudication, ADJUDICATOR)
 
 
-def decide(store: LabelStore, item: DisagreementItem, grade: int | None) -> Judgment:
-    """Record the final grade (``None`` = unsure); captions are never shown here."""
-    return store.record(item.key, grade, caption_seen=False)
+def load_note_seen(path: Path) -> dict[tuple[str, str], bool]:
+    """``(qid, image) -> True`` if any decision on the pair was made with the note shown."""
+    seen: dict[tuple[str, str], bool] = {}
+    if not path.is_file():
+        return seen
+    for row in read_jsonl(path):
+        key = (row["qid"], row["image"])
+        seen[key] = seen.get(key, False) or bool(row["note_seen"])
+    return seen
+
+
+def decide(
+    store: LabelStore, meta_path: Path, item: DisagreementItem, grade: int | None, note_seen: bool
+) -> Judgment:
+    """Record the final grade (``None`` = unsure) and whether B's note was shown.
+
+    The side-log row is written first: if the second write fails, the pair is at worst
+    over-reported as "note seen", never under-reported.
+    """
+    ts = now_iso()
+    meta_path.parent.mkdir(parents=True, exist_ok=True)
+    row = {"qid": item.qid, "image": item.image, "note_seen": note_seen, "ts": ts}
+    with meta_path.open("a", encoding="utf-8", newline="\n") as fh:
+        fh.write(json.dumps(row, ensure_ascii=False) + "\n")
+    return store.record(item.key, grade, caption_seen=False, ts=ts)
+
+
+def note_visibility_summary(
+    adjudication: Iterable[Judgment], note_seen: Mapping[tuple[str, str], bool], note_source: str
+) -> dict[str, object]:
+    """Counts for the report: adjudicated pairs, notes shown, pairs with no side-log row."""
+    pairs = latest_judgments(adjudication).keys()
+    return {
+        "note_source": note_source,
+        "policy": "hidden by default, shown on request",
+        "adjudicated_pairs": len(pairs),
+        "note_shown_pairs": sum(1 for k in pairs if note_seen.get(k, False)),
+        "note_seen_unknown_pairs": sum(1 for k in pairs if k not in note_seen),
+    }

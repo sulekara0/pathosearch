@@ -402,6 +402,17 @@ def render_agreement_markdown(doc: Mapping[str, Any]) -> str:
         f"{boot['ci']:.0%} percentile CI; units: pair (independent pairs) and query "
         "(whole queries resampled)",
         "- labels as recorded, before adjudication; no qrels written",
+    ]
+    if "adjudication_notes" in doc:
+        n = doc["adjudication_notes"]
+        line = (
+            f"- adjudication: {n['note_source']} notes were optional ({n['policy']}); "
+            f"opened for {n['note_shown_pairs']} of {n['adjudicated_pairs']} adjudicated pairs"
+        )
+        if n["note_seen_unknown_pairs"]:
+            line += f" ({n['note_seen_unknown_pairs']} pairs have no note_seen record)"
+        lines.append(line)
+    lines += [
         "",
         "## 1. Pairs",
         "",

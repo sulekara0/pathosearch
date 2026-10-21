@@ -55,8 +55,15 @@ def test_agreement_report_and_qrels_gate(tmp_path: Path) -> None:
 
     qid, image = pairs[2]
     append_judgment(g.adjudication, Judgment(qid, image, 1, "adjudicated", False, "t"))
+    meta_row = {"qid": qid, "image": image, "note_seen": True, "ts": "t"}
+    g.adjudication_meta.write_text(json.dumps(meta_row) + "\n", encoding="utf-8")
     res = run(
         "agreement_report.py", "--golden", str(g.root), "--out-dir", str(out), "--write_qrels"
     )
     assert res.returncode == 0, res.stderr
+    report = json.loads((out / f"agreement_{g.root.name}.json").read_text(encoding="utf-8"))
+    notes = report["adjudication_notes"]
+    assert (notes["note_shown_pairs"], notes["adjudicated_pairs"]) == (1, 1)
+    md = (out / f"agreement_{g.root.name}.md").read_text(encoding="utf-8")
+    assert "opened for 1 of 1 adjudicated pairs" in md
     assert read_trec_qrels(g.qrels)[qid][image] == 1  # adjudication overrides A
