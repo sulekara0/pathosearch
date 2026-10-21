@@ -1,0 +1,498 @@
+{
+  "golden": "golden_v0",
+  "command": "uv run python scripts/agreement_report.py --golden eval_data/golden_v0 --b claude",
+  "git_sha": "32e8e7f",
+  "annotators": {
+    "a": "A",
+    "b": "claude"
+  },
+  "adjudicated_pairs": 0,
+  "unresolved_disagreements": 27,
+  "pairs": 94,
+  "overlap_pairs": 111,
+  "unsure": {
+    "a": 6,
+    "b": 15,
+    "both": 4,
+    "a_only": 2,
+    "b_only": 11,
+    "excluded_total": 17
+  },
+  "comparable_pairs": 94,
+  "comparable_queries": 20,
+  "ordinal": {
+    "observed_agreement": {
+      "value": 0.7127659574468085,
+      "ci_pair": [
+        0.6170212765957447,
+        0.8085106382978723
+      ],
+      "ci_query": [
+        0.5625,
+        0.8387525737817433
+      ],
+      "nan_resamples_pair": 0,
+      "nan_resamples_query": 0
+    },
+    "kappa": {
+      "value": 0.44741998693664264,
+      "ci_pair": [
+        0.30341531332416666,
+        0.5950992157979654
+      ],
+      "ci_query": [
+        0.262508648549722,
+        0.6373519184634393
+      ],
+      "nan_resamples_pair": 0,
+      "nan_resamples_query": 0
+    },
+    "kappa_linear": {
+      "value": 0.506006006006006,
+      "ci_pair": [
+        0.36869086269185364,
+        0.6371793756623308
+      ],
+      "ci_query": [
+        0.3359858820782748,
+        0.6767621459290101
+      ],
+      "nan_resamples_pair": 0,
+      "nan_resamples_query": 0
+    }
+  },
+  "binary": {
+    "lenient": {
+      "threshold": 1,
+      "confusion_rows_a_cols_b": [
+        [
+          51,
+          14
+        ],
+        [
+          3,
+          26
+        ]
+      ],
+      "observed_agreement": {
+        "value": 0.8191489361702128,
+        "ci_pair": [
+          0.7446808510638298,
+          0.8936170212765957
+        ],
+        "ci_query": [
+          0.7065057544757034,
+          0.9204629837983798
+        ],
+        "nan_resamples_pair": 0,
+        "nan_resamples_query": 0
+      },
+      "kappa": {
+        "value": 0.6164186269803169,
+        "ci_pair": [
+          0.4591597497130477,
+          0.768415322864824
+        ],
+        "ci_query": [
+          0.3947129806381238,
+          0.8169841513953995
+        ],
+        "nan_resamples_pair": 0,
+        "nan_resamples_query": 0
+      }
+    },
+    "strict": {
+      "threshold": 2,
+      "confusion_rows_a_cols_b": [
+        [
+          82,
+          2
+        ],
+        [
+          9,
+          1
+        ]
+      ],
+      "observed_agreement": {
+        "value": 0.8829787234042553,
+        "ci_pair": [
+          0.8085106382978723,
+          0.9468085106382979
+        ],
+        "ci_query": [
+          0.7646920088790232,
+          0.9785003431708991
+        ],
+        "nan_resamples_pair": 0,
+        "nan_resamples_query": 0
+      },
+      "kappa": {
+        "value": 0.11015490533562833,
+        "ci_pair": [
+          -0.06472491909385103,
+          0.41975308641975295
+        ],
+        "ci_query": [
+          -0.0730593607305936,
+          0.5576923076923077
+        ],
+        "nan_resamples_pair": 0,
+        "nan_resamples_query": 2
+      }
+    }
+  },
+  "confusion_rows_a_cols_b": [
+    [
+      51,
+      14,
+      0
+    ],
+    [
+      2,
+      15,
+      2
+    ],
+    [
+      1,
+      8,
+      1
+    ]
+  ],
+  "marginals_comparable": {
+    "a": {
+      "0": 65,
+      "1": 19,
+      "2": 10,
+      "unsure": 0
+    },
+    "b": {
+      "0": 54,
+      "1": 37,
+      "2": 3,
+      "unsure": 0
+    }
+  },
+  "marginals_overlap": {
+    "a": {
+      "0": 72,
+      "1": 22,
+      "2": 11,
+      "unsure": 6
+    },
+    "b": {
+      "0": 55,
+      "1": 38,
+      "2": 3,
+      "unsure": 15
+    }
+  },
+  "disagreements": [
+    {
+      "qid": "q001",
+      "query": "basal cell carcinoma",
+      "category": "dermatopathology",
+      "image": "QDb68_G1HR4_image_71fc4c72-1681-462d-bf6b-3fdef87d70ed.jpg",
+      "a": 2,
+      "b": 0,
+      "abs_diff": 2
+    },
+    {
+      "qid": "q001",
+      "query": "basal cell carcinoma",
+      "category": "dermatopathology",
+      "image": "3n3qWxn3Q4M_image_44e48028-2e91-431b-bc62-945dc6941964.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q001",
+      "query": "basal cell carcinoma",
+      "category": "dermatopathology",
+      "image": "b283ddea-898e-4942-bb77-d116027c1884_0.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q001",
+      "query": "basal cell carcinoma",
+      "category": "dermatopathology",
+      "image": "iklRyY1nBIE_image_927af67d-722b-4641-8bd6-630e17a89c1a.jpg",
+      "a": 1,
+      "b": 2,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q002",
+      "query": "malignant melanoma",
+      "category": "dermatopathology",
+      "image": "8S4LeiO6Bbk_image_a7e10d09-4695-4ab5-94d5-0729c138ff60.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q002",
+      "query": "malignant melanoma",
+      "category": "dermatopathology",
+      "image": "jCw_NtnS6XU_image_84cfabcd-cf9e-431b-8216-e9fb221612ce.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q002",
+      "query": "malignant melanoma",
+      "category": "dermatopathology",
+      "image": "jCw_NtnS6XU_image_b2128b39-f5d4-4e06-9b03-c7551e28c457.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q002",
+      "query": "malignant melanoma",
+      "category": "dermatopathology",
+      "image": "udoW6VSqsm4_image_4acaf616-1a3a-4ed9-9fe3-b2e04775e31a.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q003",
+      "query": "seborrheic keratosis",
+      "category": "dermatopathology",
+      "image": "89e649d7-d86a-48bc-84f1-58f5a72d0268_0.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q003",
+      "query": "seborrheic keratosis",
+      "category": "dermatopathology",
+      "image": "udoW6VSqsm4_image_291dd1e4-5e70-4e69-ba16-3182c42e2a94.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q004",
+      "query": "actinic keratosis",
+      "category": "dermatopathology",
+      "image": "8S4LeiO6Bbk_image_96db8195-9fd3-493b-af2d-cae6a387df27.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q005",
+      "query": "colonic adenocarcinoma",
+      "category": "gastrointestinal",
+      "image": "1608581674287370240_0.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q005",
+      "query": "colonic adenocarcinoma",
+      "category": "gastrointestinal",
+      "image": "85609ad7-6ae2-467c-8eeb-d6806f581966.jpg",
+      "a": 1,
+      "b": 0,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q007",
+      "query": "normal colonic mucosa",
+      "category": "gastrointestinal",
+      "image": "00010000103021.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q007",
+      "query": "normal colonic mucosa",
+      "category": "gastrointestinal",
+      "image": "00035000359719.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q007",
+      "query": "normal colonic mucosa",
+      "category": "gastrointestinal",
+      "image": "34d0d094-6cd5-4957-889f-b746826fd054_0.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q007",
+      "query": "normal colonic mucosa",
+      "category": "gastrointestinal",
+      "image": "sDFjOtMAYrk_image_b6fff9b0-fcc6-4f64-9d86-d564469daca6.jpg",
+      "a": 1,
+      "b": 2,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q008",
+      "query": "helicobacter pylori gastritis",
+      "category": "gastrointestinal",
+      "image": "00004000048078.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q008",
+      "query": "helicobacter pylori gastritis",
+      "category": "gastrointestinal",
+      "image": "1604521878965452800_1.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q008",
+      "query": "helicobacter pylori gastritis",
+      "category": "gastrointestinal",
+      "image": "e921f606-f04b-4064-998d-ce9ef5bd427e_1.jpg",
+      "a": 1,
+      "b": 0,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q009",
+      "query": "lipoma",
+      "category": "soft tissue",
+      "image": "1613592513448935425_0.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q009",
+      "query": "lipoma",
+      "category": "soft tissue",
+      "image": "QDb68_G1HR4_image_7228117a-7566-4287-aa7d-eefef7b88dd8.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q009",
+      "query": "lipoma",
+      "category": "soft tissue",
+      "image": "j_rG5XPImFQ_image_4f92c831-4b76-430f-ad70-77301c2c8b4b.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q010",
+      "query": "liposarcoma",
+      "category": "soft tissue",
+      "image": "QDb68_G1HR4_image_58733c53-2917-48ff-9e89-5e60a990067c.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q010",
+      "query": "liposarcoma",
+      "category": "soft tissue",
+      "image": "QDb68_G1HR4_image_7228117a-7566-4287-aa7d-eefef7b88dd8.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q014",
+      "query": "clear cell renal cell carcinoma",
+      "category": "genitourinary",
+      "image": "thWl623HaHI_image_c785c9e4-54c9-49f1-ae7b-d174b1126efc.jpg",
+      "a": 2,
+      "b": 1,
+      "abs_diff": 1
+    },
+    {
+      "qid": "q015",
+      "query": "normal kidney glomerulus",
+      "category": "genitourinary",
+      "image": "85609ad7-6ae2-467c-8eeb-d6806f581966.jpg",
+      "a": 0,
+      "b": 1,
+      "abs_diff": 1
+    }
+  ],
+  "disagreement_counts": {
+    "diff_2": 1,
+    "diff_1": 26
+  },
+  "by_category": {
+    "dermatopathology": {
+      "pairs": 22,
+      "unsure_excluded": 4,
+      "comparable": 18,
+      "agree": 7,
+      "diff_1": 10,
+      "diff_2": 1
+    },
+    "gastrointestinal": {
+      "pairs": 22,
+      "unsure_excluded": 2,
+      "comparable": 20,
+      "agree": 11,
+      "diff_1": 9,
+      "diff_2": 0
+    },
+    "genitourinary": {
+      "pairs": 24,
+      "unsure_excluded": 6,
+      "comparable": 18,
+      "agree": 16,
+      "diff_1": 2,
+      "diff_2": 0
+    },
+    "pulmonary": {
+      "pairs": 22,
+      "unsure_excluded": 4,
+      "comparable": 18,
+      "agree": 18,
+      "diff_1": 0,
+      "diff_2": 0
+    },
+    "soft tissue": {
+      "pairs": 21,
+      "unsure_excluded": 1,
+      "comparable": 20,
+      "agree": 15,
+      "diff_1": 5,
+      "diff_2": 0
+    }
+  },
+  "bootstrap": {
+    "n": 1000,
+    "seed": 42,
+    "ci": 0.95,
+    "units": [
+      "pair",
+      "query"
+    ]
+  },
+  "limitations": [
+    "Small sample: 94 comparable pairs from 111 overlap pairs over 20 queries. Kappa CI width is 0.29 (pair) and 0.37 (query); the point estimate alone should not be quoted.",
+    "Pairs are not independent: each query contributes several images judged with the same understanding of that query. The query-clustered CI accounts for this and is the more honest interval.",
+    "Marginals differ (grade shares on comparable pairs, A: 0: 69% / 1: 20% / 2: 11%; claude: 0: 57% / 1: 39% / 2: 3%). Kappa depends on prevalence and on each annotator's marginals, so the same raw agreement can give quite different kappa values; read it together with the raw agreement and the confusion matrix.",
+    "Unsure exclusion is not random: 6 unsure by A, 15 by claude (4 by both), 17 excluded in total. If unsure marks the harder pairs (plausible, not verified), kappa is biased upwards.",
+    "Computed before adjudication on raw labels; it measures reproducibility of the grading guideline, not correctness of the labels.",
+    "Neither annotator is a pathologist. High agreement means the two read the grading guideline the same way, not that the grades are clinically correct.",
+    "Annotator 'claude' is an LLM judging blind (caption_seen=false). Agreement with it is human-model agreement, not inter-human agreement: a model can share systematic errors with the human or have its own consistent bias, so it is not a substitute for a second human annotator."
+  ]
+}
