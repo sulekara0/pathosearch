@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 import torch
-from transformers import CLIPConfig, CLIPModel
+from transformers import CLIPModel
 
 from pathosearch.train.model import (
     LoraSettings,
@@ -19,42 +19,6 @@ from pathosearch.train.model import (
 )
 
 TARGETS = ("q_proj", "v_proj")
-
-
-def tiny_config() -> CLIPConfig:
-    return CLIPConfig(
-        text_config={
-            "hidden_size": 32,
-            "intermediate_size": 64,
-            "num_hidden_layers": 2,
-            "num_attention_heads": 2,
-            "vocab_size": 100,
-            "max_position_embeddings": 16,
-            "bos_token_id": 0,
-            "eos_token_id": 1,
-            "pad_token_id": 1,
-        },
-        vision_config={
-            "hidden_size": 32,
-            "intermediate_size": 64,
-            "num_hidden_layers": 2,
-            "num_attention_heads": 2,
-            "image_size": 32,
-            "patch_size": 8,
-        },
-        projection_dim=16,
-    )
-
-
-@pytest.fixture
-def base_dir(tmp_path: Path) -> Path:
-    torch.manual_seed(0)
-    model = CLIPModel(tiny_config())
-    with torch.no_grad():
-        model.logit_scale.fill_(2.5)  # distinct from the default so the init is checked
-    d = tmp_path / "base"
-    model.save_pretrained(d)
-    return d
 
 
 def batch(n: int = 3) -> dict[str, torch.Tensor]:
@@ -92,8 +56,8 @@ def perturb_lora(model) -> None:
                 p.normal_(std=0.5)
 
 
-def test_only_lora_and_temperature_are_trainable(base_dir: Path) -> None:
-    model = build_lora_clip(str(base_dir), LoraSettings(r=4, alpha=8))
+def test_only_lora_and_temperature_are_trainable(tiny_base_dir: Path) -> None:
+    model = build_lora_clip(str(tiny_base_dir), LoraSettings(r=4, alpha=8))
     names = trainable_parameter_names(model)
     assert "temperature.log_scale" in names
     lora = [n for n in names if n != "temperature.log_scale"]
@@ -108,22 +72,22 @@ def test_only_lora_and_temperature_are_trainable(base_dir: Path) -> None:
     assert not any(n.endswith("logit_scale") for n in names)
 
 
-def test_identity_at_init(base_dir: Path) -> None:
+def test_identity_at_init(tiny_base_dir: Path) -> None:
     b = batch()
-    img, txt = embed(build_lora_clip(str(base_dir), LoraSettings(r=4, alpha=8)), b)
-    ref_img, ref_txt = base_embed(base_dir, b)
+    img, txt = embed(build_lora_clip(str(tiny_base_dir), LoraSettings(r=4, alpha=8)), b)
+    ref_img, ref_txt = base_embed(tiny_base_dir, b)
     assert torch.allclose(img, ref_img, atol=1e-6) and torch.allclose(txt, ref_txt, atol=1e-6)
 
 
-def test_temperature_starts_from_base_logit_scale(base_dir: Path) -> None:
-    model = build_lora_clip(str(base_dir), LoraSettings(r=4, alpha=8))
+def test_temperature_starts_from_base_logit_scale(tiny_base_dir: Path) -> None:
+    model = build_lora_clip(str(tiny_base_dir), LoraSettings(r=4, alpha=8))
     assert model.temperature.log_scale.item() == pytest.approx(2.5)
 
 
-def test_optimizer_step_leaves_base_weights_unchanged(base_dir: Path) -> None:
+def test_optimizer_step_leaves_base_weights_unchanged(tiny_base_dir: Path) -> None:
     from pathosearch.train.loss import clip_infonce
 
-    model = build_lora_clip(str(base_dir), LoraSettings(r=4, alpha=8))
+    model = build_lora_clip(str(tiny_base_dir), LoraSettings(r=4, alpha=8))
     frozen = {n: p.detach().clone() for n, p in model.named_parameters() if not p.requires_grad}
     opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=1e-2)
     b = batch(4)
@@ -144,15 +108,15 @@ def test_optimizer_step_leaves_base_weights_unchanged(base_dir: Path) -> None:
     assert any(p.abs().sum() > 0 for n, p in model.named_parameters() if "lora_B" in n)
 
 
-def test_save_load_round_trip(base_dir: Path, tmp_path: Path) -> None:
+def test_save_load_round_trip(tiny_base_dir: Path, tmp_path: Path) -> None:
     settings = LoraSettings(r=4, alpha=8)
-    model = build_lora_clip(str(base_dir), settings)
+    model = build_lora_clip(str(tiny_base_dir), settings)
     perturb_lora(model)
     with torch.no_grad():
         model.temperature.log_scale.fill_(3.0)
     b = batch()
     before = embed(model, b)
-    assert not torch.allclose(before[0], base_embed(base_dir, b)[0], atol=1e-4)
+    assert not torch.allclose(before[0], base_embed(tiny_base_dir, b)[0], atol=1e-4)
 
     out = tmp_path / "adapter"
     save_lora_clip(model, out)
@@ -163,11 +127,11 @@ def test_save_load_round_trip(base_dir: Path, tmp_path: Path) -> None:
         assert torch.allclose(after[1], before[1], atol=1e-5), merge
         assert loaded.temperature.log_scale.item() == pytest.approx(3.0)
     meta = loaded.lora_meta
-    assert meta["base_model"] == str(base_dir) and meta["lora"]["r"] == 4
+    assert meta["base_model"] == str(tiny_base_dir) and meta["lora"]["r"] == 4
 
 
-def test_eval_mode_is_deterministic_despite_dropout(base_dir: Path) -> None:
-    model = build_lora_clip(str(base_dir), LoraSettings(r=4, alpha=8, dropout=0.5))
+def test_eval_mode_is_deterministic_despite_dropout(tiny_base_dir: Path) -> None:
+    model = build_lora_clip(str(tiny_base_dir), LoraSettings(r=4, alpha=8, dropout=0.5))
     perturb_lora(model)
     b = batch()
     assert torch.equal(embed(model, b)[0], embed(model, b)[0])

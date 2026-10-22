@@ -12,6 +12,7 @@ LoRA settings, learned log-scale, package versions); the base weights are not co
 from __future__ import annotations
 
 import json
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from importlib import metadata
 from pathlib import Path
@@ -102,14 +103,18 @@ def _versions() -> dict[str, str]:
     return {n: metadata.version(n) for n in ("torch", "transformers", "peft")}
 
 
-def save_lora_clip(model: LoraCLIP, out_dir: Path) -> None:
-    """Write the adapter and ``lora_meta.json`` (base weights are not saved)."""
+def save_lora_clip(model: LoraCLIP, out_dir: Path, extra: Mapping[str, Any] | None = None) -> None:
+    """Write the adapter and ``lora_meta.json`` (base weights are not saved).
+
+    ``extra`` (e.g. epoch, run name) is merged into the meta file.
+    """
     if not isinstance(model.clip, PeftModel):
         raise TypeError("only an unmerged LoRA model can be saved as an adapter")
     out_dir.mkdir(parents=True, exist_ok=True)
     model.clip.save_pretrained(str(out_dir))
     meta = {
         **model.lora_meta,
+        **(extra or {}),
         "log_scale": float(model.temperature.log_scale.detach().item()),
         "versions": _versions(),
     }
