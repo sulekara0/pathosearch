@@ -19,6 +19,7 @@ from pathlib import Path
 from pathosearch.config import load_settings, require_file
 from pathosearch.eval.labeling import build_image_index
 from pathosearch.eval.run_eval import git_sha
+from pathosearch.keep_awake import keep_awake
 from pathosearch.train.bundle import BUNDLE_SIZE, JPEG_QUALITY, build_bundle
 from pathosearch.train.manifest import load_image_meta
 from pathosearch.train.runner import file_sha256, load_manifest
@@ -44,14 +45,16 @@ def main() -> None:
     csv = require_file(s.csv_path, "Set PATHOSEARCH_CSV_PATH in .env")
     print(f"{len(names)} images; reading captions from the CSV ...")
     meta = load_image_meta(csv, names)
-    result = build_bundle(
-        names,
-        build_image_index(s.images_dir),
-        {n: meta[n].captions for n in names},
-        out,
-        args.size,
-        args.quality,
-    )
+    with keep_awake() as awake:
+        print(f"sleep block: {'on' if awake else 'unavailable'}", flush=True)
+        result = build_bundle(
+            names,
+            build_image_index(s.images_dir),
+            {n: meta[n].captions for n in names},
+            out,
+            args.size,
+            args.quality,
+        )
     info = {
         **result,
         "manifest": args.manifest.as_posix(),
