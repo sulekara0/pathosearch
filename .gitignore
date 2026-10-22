@@ -25,6 +25,7 @@ Thumbs.db
 *.bin
 *.onnx
 *.ckpt
+*.safetensors
 *.zip
 *.7z
 *.tar

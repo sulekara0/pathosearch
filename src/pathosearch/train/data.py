@@ -119,7 +119,8 @@ class ClipCollator:
 
     def __call__(self, items: Sequence[Item]) -> Batch:
         texts = [it.caption for it in items]
-        lengths = [len(ids) for ids in self.processor.tokenizer(texts)["input_ids"]]
+        # untruncated lengths, only to count cut captions (the count goes to run.json)
+        lengths = [len(ids) for ids in self.processor.tokenizer(texts, verbose=False)["input_ids"]]
         enc = self.processor(
             images=[it.image for it in items],
             text=texts,
