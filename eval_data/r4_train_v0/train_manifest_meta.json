@@ -1,0 +1,235 @@
+{
+  "name": "r4_train_v0",
+  "command": "uv run python scripts/build_train_manifest.py --golden eval_data/golden_v0 --out eval_data/r4_train_v0",
+  "git_sha": "12f747a",
+  "created_utc": "2026-10-22T18:06:10+00:00",
+  "seed": 42,
+  "near_dup_tau": 0.99,
+  "near_dup_encoders": [
+    "clip",
+    "quilt"
+  ],
+  "val_size": 2000,
+  "inputs": {
+    "csv": {
+      "path": "data/quilt_1M_lookup.csv",
+      "size_bytes": 2238624042,
+      "mtime_utc": "2026-06-10T13:47:58+00:00"
+    },
+    "images_dir": "data/images/images_part_1",
+    "main_ids": {
+      "path": "artifacts/clip/ids.json",
+      "size_bytes": 6573339,
+      "mtime_utc": "2026-06-02T22:52:00+00:00"
+    },
+    "golden_corpus": {
+      "path": "eval_data/golden_v0/corpus_manifest.jsonl",
+      "size_bytes": 90159,
+      "mtime_utc": "2026-10-19T19:02:33+00:00",
+      "sha256": "d25b6b56190d893640f5f6a4bb47e2553e220ad9202d7c6ec8d6f615e1c62357"
+    },
+    "golden_candidates_ids": {
+      "path": "artifacts/golden_v0_candidates/clip/ids.json",
+      "size_bytes": 46977,
+      "mtime_utc": "2026-10-19T18:21:58+00:00",
+      "sha256": "d54da7d06d64640eb1262ab6d992a6673cb5e639f5c9fbdfd50845b71de5a77f"
+    },
+    "golden_excluded_near_dup": {
+      "path": "eval_data/golden_v0/excluded_near_dup.jsonl",
+      "size_bytes": 8744,
+      "mtime_utc": "2026-10-19T19:02:33+00:00",
+      "sha256": "8009c39ad52c4241c794d88feab14f55212d37b469d52cdfbe04ebeb120be193"
+    }
+  },
+  "candidates": 64369,
+  "exclusion_steps": [
+    {
+      "step": "no_embedding",
+      "removed": 26285,
+      "remaining": 38084,
+      "examples": [
+        "-2beFTPqWIA_image_3e01adab-24c6-4037-b6d1-f70aec97d3aa.jpg",
+        "-2beFTPqWIA_image_4acde72f-9c87-47e2-8778-38b656be44e2.jpg",
+        "-2beFTPqWIA_image_6d087471-4028-41db-a2ee-18b4e69cf0c9.jpg",
+        "-2beFTPqWIA_image_d04e4cfb-f01e-499e-a67d-487c6082c173.jpg",
+        "-6p9M6fWjGM_image_50884290-48d4-469d-b333-6a9e8c25c744.jpg"
+      ]
+    },
+    {
+      "step": "golden_ids",
+      "removed": 0,
+      "remaining": 38084,
+      "examples": []
+    },
+    {
+      "step": "golden_nearest",
+      "removed": 7,
+      "remaining": 38077,
+      "examples": [
+        "0HcMuZN-pYo_image_ae57649b-b2c2-4053-a9d5-fbbddb1be586.jpg",
+        "1501906232512233480_1.jpg",
+        "1560990161516826625_0.jpg",
+        "1562500154791727106_1.jpg",
+        "LTHBkzxbgj0_image_1d9f7a57-9c09-45f9-b57b-422ad18c04ab.jpg"
+      ]
+    },
+    {
+      "step": "near_dup_golden",
+      "removed": 35,
+      "remaining": 38042,
+      "examples": [
+        "04ktJuzyNfk_image_efedbea8-2ddc-4a36-a24a-2c13626dbd42.jpg",
+        "0HcMuZN-pYo_image_a4f2c45e-f46a-493b-872b-16f79afc31af.jpg",
+        "0HcMuZN-pYo_image_bf5b81d6-c207-44ba-97b4-d1221e3a7255.jpg",
+        "1Vs0jiAb7UI_image_df5e36ba-e8b5-425c-a6e7-4197c38f37a2.jpg",
+        "2kvbQwJPWUs_image_c1645ede-7b9a-455e-8a0c-64b29cef78c0.jpg"
+      ]
+    },
+    {
+      "step": "source_group",
+      "removed": 10,
+      "remaining": 38032,
+      "examples": [
+        "081d308e-b2b6-43e2-95c9-1ad9b7cbd1c5_1.jpg",
+        "0efdd357-7308-4aeb-b8dc-b80ddec1de24_2.jpg",
+        "122aff8e-7927-482a-a150-21a779e903bf_0.jpg",
+        "59e8fdcb-2c82-4833-ae0d-3f7e0febdda6_0.jpg",
+        "845f8768-d9e7-4576-bc26-a3490666ebc4.jpg"
+      ]
+    },
+    {
+      "step": "caption_equal",
+      "removed": 164,
+      "remaining": 37868,
+      "examples": [
+        "1112548871748476928_1.jpg",
+        "1114049447330177024_0.jpg",
+        "1137154449342787584_2.jpg",
+        "1339136553432436736_2.jpg",
+        "1462768353186045952_0.jpg"
+      ]
+    },
+    {
+      "step": "no_caption",
+      "removed": 0,
+      "remaining": 37868,
+      "examples": []
+    }
+  ],
+  "after_exclusion": 37868,
+  "val": {
+    "images": 1929,
+    "groups": 713,
+    "dropped_near_dup_train": 71,
+    "dropped_examples": [
+      "1556684125830094850_2.jpg",
+      "3x10aYC_rGY_image_30b69125-54e3-4416-9e61-52266a8fa36d.jpg",
+      "3x10aYC_rGY_image_3861401e-8e7f-4ae9-870b-56a7cc0ddd8c.jpg",
+      "8H9MLqaI0kw_image_0f87481e-b59f-4f04-982e-e7c6a21061e5.jpg",
+      "8H9MLqaI0kw_image_56bfe372-ea1f-4139-9ffc-7bcf21d7cd76.jpg"
+    ],
+    "categories": {
+      "bone": 81,
+      "breast": 58,
+      "cardiac": 23,
+      "cytopathology": 18,
+      "dermatopathology": 278,
+      "endocrine": 54,
+      "gastrointestinal": 163,
+      "genitourinary": 16,
+      "gynecologic": 187,
+      "head and neck": 27,
+      "hematopathology": 150,
+      "hepatopathology": 5,
+      "neuropathology": 55,
+      "ophthalmic": 2,
+      "pediatric": 6,
+      "pulmonary": 121,
+      "renal": 83,
+      "soft tissue": 78,
+      "unknown": 524
+    }
+  },
+  "train": 35868,
+  "scales": {
+    "10k": 10000,
+    "30k": 30000,
+    "full": 35868
+  },
+  "categories_by_scale": {
+    "10k": {
+      "bone": 375,
+      "breast": 268,
+      "cardiac": 160,
+      "cytopathology": 66,
+      "dermatopathology": 1544,
+      "endocrine": 257,
+      "gastrointestinal": 1052,
+      "genitourinary": 427,
+      "gynecologic": 638,
+      "head and neck": 261,
+      "hematopathology": 519,
+      "hepatopathology": 99,
+      "neuropathology": 301,
+      "ophthalmic": 111,
+      "pediatric": 28,
+      "pulmonary": 702,
+      "renal": 367,
+      "soft tissue": 637,
+      "unknown": 2188
+    },
+    "30k": {
+      "bone": 1089,
+      "breast": 913,
+      "cardiac": 479,
+      "cytopathology": 232,
+      "dermatopathology": 4544,
+      "endocrine": 780,
+      "gastrointestinal": 3154,
+      "genitourinary": 1332,
+      "gynecologic": 1958,
+      "head and neck": 770,
+      "hematopathology": 1395,
+      "hepatopathology": 297,
+      "neuropathology": 887,
+      "ophthalmic": 307,
+      "pediatric": 86,
+      "pulmonary": 2166,
+      "renal": 1111,
+      "soft tissue": 1973,
+      "unknown": 6527
+    },
+    "full": {
+      "bone": 1293,
+      "breast": 1096,
+      "cardiac": 547,
+      "cytopathology": 287,
+      "dermatopathology": 5416,
+      "endocrine": 932,
+      "gastrointestinal": 3772,
+      "genitourinary": 1593,
+      "gynecologic": 2353,
+      "head and neck": 911,
+      "hematopathology": 1654,
+      "hepatopathology": 350,
+      "neuropathology": 1064,
+      "ophthalmic": 369,
+      "pediatric": 108,
+      "pulmonary": 2598,
+      "renal": 1334,
+      "soft tissue": 2370,
+      "unknown": 7821
+    }
+  },
+  "captions_per_image": {
+    "1": 19822,
+    "2": 8511,
+    "3": 4827,
+    "4": 1935,
+    "5": 579,
+    "6": 150,
+    "7": 33,
+    "8": 10,
+    "9": 1
+  }
+}
