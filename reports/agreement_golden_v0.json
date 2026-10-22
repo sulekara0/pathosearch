@@ -1,13 +1,20 @@
 {
   "golden": "golden_v0",
   "command": "uv run python scripts/agreement_report.py --golden eval_data/golden_v0 --b claude",
-  "git_sha": "32e8e7f",
+  "git_sha": "c9e5296",
   "annotators": {
     "a": "A",
     "b": "claude"
   },
-  "adjudicated_pairs": 0,
-  "unresolved_disagreements": 27,
+  "adjudicated_pairs": 32,
+  "unresolved_disagreements": 0,
+  "adjudication_notes": {
+    "note_source": "claude",
+    "policy": "hidden by default, shown on request",
+    "adjudicated_pairs": 27,
+    "note_shown_pairs": 0,
+    "note_seen_unknown_pairs": 0
+  },
   "pairs": 94,
   "overlap_pairs": 111,
   "unsure": {

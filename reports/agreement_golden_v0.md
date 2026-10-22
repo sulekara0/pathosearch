@@ -1,8 +1,9 @@
 # Agreement: golden_v0 overlap, A vs claude
 
 - command: `uv run python scripts/agreement_report.py --golden eval_data/golden_v0 --b claude`
-- git: `32e8e7f` · bootstrap n=1000, seed=42, 95% percentile CI; units: pair (independent pairs) and query (whole queries resampled)
+- git: `c9e5296` · bootstrap n=1000, seed=42, 95% percentile CI; units: pair (independent pairs) and query (whole queries resampled)
 - labels as recorded, before adjudication; no qrels written
+- adjudication: claude notes were optional (hidden by default, shown on request); opened for 0 of 27 adjudicated pairs
 
 ## 1. Pairs
 
