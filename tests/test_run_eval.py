@@ -138,6 +138,27 @@ def test_run_eval_end_to_end(tmp_path: Path) -> None:
     assert report["circularity"]["n_pairs"] == 6
 
 
+def test_report_lists_excluded_queries_and_marks_lenient_primary(tmp_path: Path) -> None:
+    g = make_golden(tmp_path)
+    report = run_eval(
+        g, "dev", ["clip", "quilt"], 3, runners(), {}, "c", n_boot=50, sha="x", packages={}
+    )
+    assert report["primary_threshold"] == "lenient"
+    # q3 has only a grade-0 pair; q1/q2 have a grade-2 image
+    for thr, expected in (("lenient", ["q3"]), ("strict", ["q3"])):
+        ex = report["metrics"][thr]["excluded_qids"]
+        assert all(ex[m] == expected for m in ex)
+    md = render_markdown(report)
+    assert md.index("— lenient (grade >= 1, primary)") < md.index(
+        "— strict (grade >= 2, secondary)"
+    )
+    assert "2 sorgu üzerinden, 1 sorgu dışlandı (q3)" in md
+    # caption-unseen block: q1 loses its caption-seen pair, q3 stays without relevant
+    unseen = report["metrics_caption_unseen"]["strict"]["excluded_qids"]["p"]
+    assert unseen == ["q1", "q3"]
+    assert "1 sorgu üzerinden, 2 sorgu dışlandı (q1, q3)" in md
+
+
 def test_bootstrap_is_seeded_and_ci_contains_mean(tmp_path: Path) -> None:
     g = make_golden(tmp_path)
     kwargs = dict(n_boot=300, sha="x", packages={})

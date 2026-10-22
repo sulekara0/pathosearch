@@ -55,7 +55,8 @@ from pathosearch.pipeline import (
 from pathosearch.reranker import caption_overlap, rerank_results
 
 ENCODERS = ("clip", "quilt")
-THRESHOLDS = {"strict": 2, "lenient": 1}
+THRESHOLDS = {"lenient": 1, "strict": 2}
+PRIMARY_THRESHOLD = "lenient"  # ADR-0001: fixed before any metric was seen
 METRIC_NAMES = ("p", "hit", "recall", "mrr", "ndcg")
 BOOTSTRAP_N = 1000
 BOOTSTRAP_SEED = 42
@@ -209,12 +210,19 @@ def summarize(
     lo_q, hi_q = (1 - CI_LEVEL) / 2 * 100, (1 + CI_LEVEL) / 2 * 100
     out: dict[str, Any] = {}
     for thr, per_system in table.items():
-        out[thr] = {"systems": {s: {} for s in systems}, "n_queries_without_relevant": {}}
+        out[thr] = {
+            "systems": {s: {} for s in systems},
+            "n_queries_without_relevant": {},
+            "excluded_qids": {},
+        }
         for metric in METRIC_NAMES:
             qids = sorted(per_system[systems[0]][metric])
             mat = np.array([[per_system[s][metric][q] for q in qids] for s in systems])
             keep = ~np.isnan(mat).any(axis=0)  # NaN depends on qrels only, so equal for all
             out[thr]["n_queries_without_relevant"][metric] = int((~keep).sum())
+            out[thr]["excluded_qids"][metric] = [
+                q for q, k in zip(qids, keep, strict=True) if not k
+            ]
             mat = mat[:, keep]
             n = mat.shape[1]
             if n == 0:
@@ -422,6 +430,7 @@ def run_eval(
         "split_stamp": "TEST" if split == "test" else "dev",
         "k": k,
         "systems": names,
+        "primary_threshold": PRIMARY_THRESHOLD,
         "first_system_is_reference_for_differences": names[0],
         "command": command,
         "config": {
@@ -461,6 +470,15 @@ def run_eval(
     }
 
 
+def exclusion_line(block: Mapping[str, Any], n_queries: int) -> str:
+    """ADR-0001 line: queries without a relevant pair are excluded (NaN), not scored as 0."""
+    excluded = block["excluded_qids"]["p"]
+    return (
+        f"{n_queries - len(excluded)} sorgu üzerinden, {len(excluded)} sorgu dışlandı "
+        f"({', '.join(excluded) or '-'}). Dışlanan: havuzda ilgili bulunmadı (ADR-0001)."
+    )
+
+
 def render_markdown(report: Mapping[str, Any]) -> str:
     stamp = " — **TEST SPLIT**" if report["split"] == "test" else ""
     lines = [
@@ -475,7 +493,8 @@ def render_markdown(report: Mapping[str, Any]) -> str:
 
     def table(block: Mapping[str, Any], title: str) -> None:
         for thr in THRESHOLDS:
-            lines.extend([f"## {title} — {thr} (grade >= {THRESHOLDS[thr]})", ""])
+            role = "primary" if thr == PRIMARY_THRESHOLD else "secondary"
+            lines.extend([f"## {title} — {thr} (grade >= {THRESHOLDS[thr]}, {role})", ""])
             lines.extend(["| system | " + " | ".join(METRIC_NAMES) + " |"])
             lines.extend(["|---|" + "---|" * len(METRIC_NAMES)])
             for s, per_metric in block[thr]["systems"].items():
@@ -488,7 +507,7 @@ def render_markdown(report: Mapping[str, Any]) -> str:
                         else f"{e['mean']:.3f} [{e['ci'][0]:.3f}, {e['ci'][1]:.3f}]"
                     )
                 lines.append(f"| {s} | " + " | ".join(cells) + " |")
-            lines.append("")
+            lines.extend(["", exclusion_line(block[thr], report["n_queries"]), ""])
 
     table(report["metrics"], "Metrics")
     table(report["metrics_caption_unseen"], "Metrics, caption-unseen pairs only")
