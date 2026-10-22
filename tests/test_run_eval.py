@@ -295,3 +295,28 @@ def test_make_runner_uses_index_and_clamps_pool() -> None:
     assert make_runner(enc, idx, False, 2)("squamous carcinoma")[0] == "a.jpg"
     reranked = make_runner(enc, idx, True, 2)("squamous carcinoma")  # pool 10 > ntotal 4
     assert len(reranked) == 2 and reranked[0] == "b.jpg"  # caption overlap lifts b above a
+
+
+def test_paired_comparisons_reuse_report_bootstrap(tmp_path: Path) -> None:
+    from pathosearch.eval.run_eval import default_comparisons
+
+    names = ["clip", "quilt", "clip+rerank", "quilt+rerank"]
+    assert default_comparisons(names) == [
+        ("quilt", "clip"),
+        ("clip+rerank", "clip"),
+        ("quilt+rerank", "quilt"),
+    ]
+    g = make_golden(tmp_path)
+    r = {**runners(), "clip+rerank": lambda q: runners()["quilt"](q)}
+    report = run_eval(
+        g, "dev", ["clip", "quilt", "clip+rerank"], 3, r, {}, "c", n_boot=100, sha="x", packages={}
+    )
+    comps = report["metrics"]["lenient"]["comparisons"]["ndcg"]
+    assert [(c["system"], c["baseline"]) for c in comps] == [
+        ("quilt", "clip"),
+        ("clip+rerank", "clip"),
+    ]
+    # quilt vs first system must equal the existing diff_vs_first entry
+    first = report["metrics"]["lenient"]["systems"]["quilt"]["ndcg"]["diff_vs_first"]
+    assert comps[0]["mean"] == first["mean"] and comps[0]["ci"] == first["ci"]
+    assert "quilt − clip" in render_markdown(report)

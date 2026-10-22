@@ -198,6 +198,18 @@ def _num(x: float) -> float | None:
     return None if math.isnan(x) else round(float(x), 4)
 
 
+def default_comparisons(systems: Sequence[str]) -> list[tuple[str, str]]:
+    """(system, baseline) pairs: ``X+rerank`` vs ``X``, other systems vs the first."""
+    pairs: list[tuple[str, str]] = []
+    for s in systems:
+        base, plus, _ = s.partition("+")
+        if plus and base in systems:
+            pairs.append((s, base))
+        elif not plus and s != systems[0]:
+            pairs.append((s, systems[0]))
+    return pairs
+
+
 def summarize(
     table: Table,
     systems: Sequence[str],
@@ -214,6 +226,7 @@ def summarize(
             "systems": {s: {} for s in systems},
             "n_queries_without_relevant": {},
             "excluded_qids": {},
+            "comparisons": {},
         }
         for metric in METRIC_NAMES:
             qids = sorted(per_system[systems[0]][metric])
@@ -228,6 +241,7 @@ def summarize(
             if n == 0:
                 for s in systems:
                     out[thr]["systems"][s][metric] = {"mean": None, "ci": None, "n": 0}
+                out[thr]["comparisons"][metric] = []
                 continue
             idx = rng.integers(0, n, size=(n_boot, n))
             boot = mat[:, idx].mean(axis=2)  # (systems, n_boot), same resamples for all systems
@@ -246,6 +260,21 @@ def summarize(
                         "excludes_zero": bool(dlo > 0 or dhi < 0),
                     }
                 out[thr]["systems"][s][metric] = entry
+            # extra paired differences reuse the same resamples (no extra random draws)
+            out[thr]["comparisons"][metric] = []
+            for sys_a, sys_b in default_comparisons(systems):
+                d = boot[systems.index(sys_a)] - boot[systems.index(sys_b)]
+                dlo, dhi = np.percentile(d, lo_q), np.percentile(d, hi_q)
+                mean_diff = mat[systems.index(sys_a)].mean() - mat[systems.index(sys_b)].mean()
+                out[thr]["comparisons"][metric].append(
+                    {
+                        "system": sys_a,
+                        "baseline": sys_b,
+                        "mean": _num(mean_diff),
+                        "ci": [_num(dlo), _num(dhi)],
+                        "excludes_zero": bool(dlo > 0 or dhi < 0),
+                    }
+                )
         out[thr]["by_category"] = _by_category(per_system, systems, categories)
     return out
 
@@ -508,6 +537,22 @@ def render_markdown(report: Mapping[str, Any]) -> str:
                     )
                 lines.append(f"| {s} | " + " | ".join(cells) + " |")
             lines.extend(["", exclusion_line(block[thr], report["n_queries"]), ""])
+            comps = block[thr]["comparisons"]
+            first: list[dict[str, Any]] = next(iter(comps.values()), [])
+            if first:
+                lines.extend(["Paired differences (mean [95% CI]; * = CI excludes 0):", ""])
+                lines.extend(["| comparison | " + " | ".join(METRIC_NAMES) + " |"])
+                lines.extend(["|---|" + "---|" * len(METRIC_NAMES)])
+                for i, c in enumerate(first):
+                    cells = []
+                    for m in METRIC_NAMES:
+                        e = comps[m][i]
+                        star = "*" if e["excludes_zero"] else ""
+                        cells.append(
+                            f"{e['mean']:+.3f} [{e['ci'][0]:+.3f}, {e['ci'][1]:+.3f}]{star}"
+                        )
+                    lines.append(f"| {c['system']} − {c['baseline']} | " + " | ".join(cells) + " |")
+                lines.append("")
 
     table(report["metrics"], "Metrics")
     table(report["metrics_caption_unseen"], "Metrics, caption-unseen pairs only")
