@@ -28,6 +28,7 @@ from pathosearch.eval.agreement import (
 )
 from pathosearch.eval.golden import (
     GoldenPaths,
+    latest_judgments,
     load_judgments,
     load_queries,
     read_jsonl,
@@ -80,7 +81,7 @@ def main() -> None:
         "command": command_line(),
         "git_sha": git_sha(),
         "annotators": {"a": args.a, "b": args.b},
-        "adjudicated_pairs": len(adjudication),
+        "adjudicated_pairs": len(latest_judgments(adjudication)),  # unique pairs, not log rows
         "unresolved_disagreements": len(todo),
         "adjudication_notes": note_visibility_summary(
             adjudication, load_note_seen(golden.adjudication_meta), args.b

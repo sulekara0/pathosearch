@@ -54,7 +54,10 @@ def test_agreement_report_and_qrels_gate(tmp_path: Path) -> None:
     assert not g.qrels.exists()
 
     qid, image = pairs[2]
-    append_judgment(g.adjudication, Judgment(qid, image, 1, "adjudicated", False, "t"))
+    append_judgment(g.adjudication, Judgment(qid, image, 0, "adjudicated", False, "t0"))
+    append_judgment(
+        g.adjudication, Judgment(qid, image, 1, "adjudicated", False, "t")
+    )  # re-decided
     meta_row = {"qid": qid, "image": image, "note_seen": True, "ts": "t"}
     g.adjudication_meta.write_text(json.dumps(meta_row) + "\n", encoding="utf-8")
     res = run(
@@ -62,6 +65,7 @@ def test_agreement_report_and_qrels_gate(tmp_path: Path) -> None:
     )
     assert res.returncode == 0, res.stderr
     report = json.loads((out / f"agreement_{g.root.name}.json").read_text(encoding="utf-8"))
+    assert report["adjudicated_pairs"] == 1  # two log rows, one unique pair
     notes = report["adjudication_notes"]
     assert (notes["note_shown_pairs"], notes["adjudicated_pairs"]) == (1, 1)
     md = (out / f"agreement_{g.root.name}.md").read_text(encoding="utf-8")
