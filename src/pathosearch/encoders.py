@@ -20,6 +20,7 @@ Yeni model eklemek için:
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -114,6 +115,59 @@ class CLIPEncoder(BaseEncoder):
 
 
 # =============================================================================
+# CLIP + LoRA adapter (R4)
+# =============================================================================
+
+
+def _clip_processor(base_model: str):
+    from transformers import CLIPProcessor
+
+    return CLIPProcessor.from_pretrained(base_model)
+
+
+class LoRACLIPEncoder(BaseEncoder):
+    """A HF CLIP with an R4 LoRA adapter merged in; same preprocessing as ``CLIPEncoder``.
+
+    ``get_encoder("lora:<adapter dir>")`` builds one. The processor of the adapter's base
+    model is used unless one is passed (tests).
+    """
+
+    def __init__(self, adapter_dir: str | Path, device: str | None = None, processor=None):
+        from pathosearch.train.model import load_lora_clip
+
+        adapter_dir = Path(adapter_dir)
+        self.device = _pick_device(device)
+        self.model = load_lora_clip(adapter_dir, merge=True).to(self.device).eval()
+        self.meta = self.model.lora_meta
+        self.processor = processor or _clip_processor(self.meta["base_model"])
+        self.name = f"lora:{adapter_dir.as_posix()}"
+        self.embed_dim = int(self.model.clip.config.projection_dim)
+        print(f"[INFO] Loaded {self.name} on {self.device} (dim={self.embed_dim})")
+
+    @torch.inference_mode()
+    def encode_images(self, images: list[Image.Image]) -> np.ndarray:
+        inputs = self.processor(images=images, return_tensors="pt")
+        feats = self.model.encode_image(inputs["pixel_values"].to(self.device))
+        return _l2_normalize(feats).cpu().numpy().astype(np.float32)
+
+    @torch.inference_mode()
+    def encode_texts(self, texts: list[str]) -> np.ndarray:
+        inputs = self.processor(text=texts, return_tensors="pt", padding=True, truncation=True)
+        feats = self.model.encode_text(
+            inputs["input_ids"].to(self.device), inputs["attention_mask"].to(self.device)
+        )
+        return _l2_normalize(feats).cpu().numpy().astype(np.float32)
+
+    def info(self) -> dict:
+        return {
+            **super().info(),
+            "base_model": self.meta.get("base_model"),
+            "epoch": self.meta.get("epoch"),
+            "config_hash": self.meta.get("config_hash"),
+        }
+
+
+# =============================================================================
 # OpenCLIP (QuiltNet, BiomedCLIP, PLIP, vs.)
 # =============================================================================
 
@@ -193,6 +247,10 @@ def get_encoder(name: str = "clip", device: str | None = None) -> BaseEncoder:
         BaseEncoder instance
     """
     name_lower = name.lower().strip()
+
+    # R4 LoRA adapter: "lora:<adapter dir>"
+    if name.startswith("lora:"):
+        return LoRACLIPEncoder(name[len("lora:") :], device=device)
 
     # Registry'de varsa direkt döndür
     if name_lower in ENCODER_REGISTRY:

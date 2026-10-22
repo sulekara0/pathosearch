@@ -21,7 +21,7 @@ import json
 import math
 import subprocess
 import sys
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from importlib import metadata
 from pathlib import Path
@@ -88,11 +88,40 @@ class SystemSpec:
     rerank: bool
 
 
-def parse_system(name: str) -> SystemSpec:
+def parse_system(name: str, extra_encoders: Collection[str] = ()) -> SystemSpec:
+    """``<encoder>[+rerank]``; ``extra_encoders`` are adapter names registered for this run."""
+    shadow = set(extra_encoders) & set(ENCODERS)
+    if shadow:
+        raise ValueError(f"adapter names must not shadow built-in encoders: {sorted(shadow)}")
+    known = (*ENCODERS, *sorted(extra_encoders))
     encoder, plus, suffix = name.partition("+")
-    if encoder not in ENCODERS or (plus and suffix != "rerank"):
-        raise ValueError(f"unknown system {name!r}; use <{'|'.join(ENCODERS)}>[+rerank]")
+    if encoder not in known or (plus and suffix != "rerank"):
+        raise ValueError(f"unknown system {name!r}; use <{'|'.join(known)}>[+rerank]")
     return SystemSpec(name, encoder, bool(plus))
+
+
+def encoder_arg(encoder: str, adapters: Mapping[str, Path]) -> str:
+    """Argument for ``get_encoder``: ``lora:<dir>`` for a registered adapter name."""
+    return f"lora:{Path(adapters[encoder]).as_posix()}" if encoder in adapters else encoder
+
+
+def adapter_summary(adapter_dir: Path) -> dict[str, Any]:
+    """Provenance of an R4 adapter for the report: its meta plus the training ``run.json``."""
+    meta = json.loads(require_file(adapter_dir / "lora_meta.json").read_text(encoding="utf-8"))
+    run_path = adapter_dir.parent / "run.json"
+    run = json.loads(run_path.read_text(encoding="utf-8")) if run_path.is_file() else {}
+    prov = run.get("provenance", {})
+    return {
+        "dir": adapter_dir.as_posix(),
+        "base_model": meta.get("base_model"),
+        "epoch": meta.get("epoch"),
+        "config_hash": meta.get("config_hash"),
+        "lora": meta.get("lora"),
+        "train_git_sha": prov.get("git_sha"),
+        "train_dirty": prov.get("dirty"),
+        "best_val_loss": run.get("best_val_loss"),
+        "train_status": run.get("status"),
+    }
 
 
 def make_runner(encoder: TextEncoder, idx: SearchIndex, rerank: bool, k: int) -> Runner:
@@ -109,9 +138,16 @@ def make_runner(encoder: TextEncoder, idx: SearchIndex, rerank: bool, k: int) ->
 
 
 def build_runners(
-    specs: Sequence[SystemSpec], k: int, art_root: Path, captions: Mapping[str, dict]
+    specs: Sequence[SystemSpec],
+    k: int,
+    art_root: Path,
+    captions: Mapping[str, dict],
+    adapters: Mapping[str, Path] | None = None,
 ) -> dict[str, Runner]:
-    """Load each encoder and its golden index (``art_root/<encoder>/``) once; one runner per spec."""
+    """Load each encoder and its golden index (``art_root/<encoder>/``) once; one runner per spec.
+
+    ``adapters`` maps adapter system names to LoRA adapter directories.
+    """
     from pathosearch.config import require_dir
     from pathosearch.encoders import get_encoder
     from pathosearch.faiss_search import load_embeddings, load_index
@@ -122,7 +158,7 @@ def build_runners(
         index, metric = load_index(str(art_dir))
         _, ids = load_embeddings(str(art_dir))
         idx = SearchIndex(index, metric, ids, dict(captions))
-        encoder = get_encoder(enc_name)
+        encoder = get_encoder(encoder_arg(enc_name, adapters or {}))
         for sp in specs:
             if sp.encoder == enc_name:
                 runners[sp.name] = make_runner(encoder, idx, sp.rerank, k)
@@ -210,14 +246,38 @@ def default_comparisons(systems: Sequence[str]) -> list[tuple[str, str]]:
     return pairs
 
 
+def judged_at_k(
+    runs: Mapping[str, Mapping[str, Sequence[str]]],
+    judged: Mapping[str, set[str]],
+    k: int,
+) -> dict[str, dict[str, Any]]:
+    """Share of each top-k list that a human judged (pool coverage; no bootstrap)."""
+    out: dict[str, dict[str, Any]] = {}
+    for system, per_query in runs.items():
+        vals = {
+            q: (sum(d in judged.get(q, set()) for d in ranked[:k]) / k)
+            for q, ranked in per_query.items()
+        }
+        out[system] = {
+            "mean": _num(float(np.mean(list(vals.values())))) if vals else None,
+            "per_query": {q: _num(v) for q, v in vals.items()},
+        }
+    return out
+
+
 def summarize(
     table: Table,
     systems: Sequence[str],
     categories: Mapping[str, str],
     n_boot: int = BOOTSTRAP_N,
     seed: int = BOOTSTRAP_SEED,
+    comparisons: Sequence[tuple[str, str]] | None = None,
 ) -> dict[str, Any]:
-    """Means, bootstrap CIs, differences to ``systems[0]`` and a per-category breakdown."""
+    """Means, bootstrap CIs, differences to ``systems[0]`` and a per-category breakdown.
+
+    ``comparisons`` (system, baseline) pairs default to :func:`default_comparisons`.
+    """
+    pairs = list(comparisons) if comparisons is not None else default_comparisons(systems)
     rng = np.random.default_rng(seed)
     lo_q, hi_q = (1 - CI_LEVEL) / 2 * 100, (1 + CI_LEVEL) / 2 * 100
     out: dict[str, Any] = {}
@@ -262,7 +322,7 @@ def summarize(
                 out[thr]["systems"][s][metric] = entry
             # extra paired differences reuse the same resamples (no extra random draws)
             out[thr]["comparisons"][metric] = []
-            for sys_a, sys_b in default_comparisons(systems):
+            for sys_a, sys_b in pairs:
                 d = boot[systems.index(sys_a)] - boot[systems.index(sys_b)]
                 dlo, dhi = np.percentile(d, lo_q), np.percentile(d, hi_q)
                 mean_diff = mat[systems.index(sys_a)].mean() - mat[systems.index(sys_b)].mean()
@@ -421,12 +481,22 @@ def run_eval(
     seed: int = BOOTSTRAP_SEED,
     sha: str | None = None,
     packages: Mapping[str, str] | None = None,
+    comparisons: Sequence[tuple[str, str]] | None = None,
+    adapters: Mapping[str, Mapping[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Evaluate ``systems`` on ``split`` of the golden set and return the report dict."""
+    """Evaluate ``systems`` on ``split`` of the golden set and return the report dict.
+
+    ``adapters`` maps adapter system names to their provenance (:func:`adapter_summary`);
+    it registers the names as encoders and is recorded under ``config.adapters``.
+    """
     check_split_allowed(split, i_know_this_is_test)
     if not systems or len(set(systems)) != len(systems):
         raise ValueError("systems must be a non-empty list without duplicates")
-    specs = [parse_system(s) for s in systems]
+    specs = [parse_system(s, extra_encoders=set(adapters or {})) for s in systems]
+    pairs = list(comparisons) if comparisons is not None else default_comparisons(systems)
+    unknown_sys = sorted({s for pair in pairs for s in pair} - set(systems))
+    if unknown_sys:
+        raise ValueError(f"comparison refers to unknown system(s) {unknown_sys}")
     missing = [s.name for s in specs if s.name not in runners]
     if missing:
         raise ValueError(f"no runner provided for {missing}")
@@ -450,8 +520,23 @@ def run_eval(
     n_excluded = sum(len(v) for v in excluded.values())
     share = n_excluded / n_total if n_total else 0.0
     unseen_summary = summarize(
-        score_runs(runs, unseen, k, excluded), names, categories, n_boot, seed
+        score_runs(runs, unseen, k, excluded), names, categories, n_boot, seed, pairs
     )
+    # pool coverage: graded pairs plus pairs the reference annotator marked unsure
+    judged: dict[str, set[str]] = {q: set(g) for q, g in qrels.items()}
+    for j in latest_judgments(reference).values():
+        if j.qid in set(qids):
+            judged.setdefault(j.qid, set()).add(j.image)
+    config: dict[str, Any] = {
+        "alpha": RERANK_ALPHA,
+        "beta": RERANK_BETA,
+        "rerank_pool_factor": RERANK_POOL_FACTOR,
+        "domain_gate": "off",
+        "thresholds": THRESHOLDS,
+        "bootstrap": {"n": n_boot, "seed": seed, "ci": CI_LEVEL, "paired": True},
+    }
+    if adapters:
+        config["adapters"] = {n: dict(v) for n, v in adapters.items()}
 
     return {
         "golden": golden.root.name,
@@ -462,19 +547,14 @@ def run_eval(
         "primary_threshold": PRIMARY_THRESHOLD,
         "first_system_is_reference_for_differences": names[0],
         "command": command,
-        "config": {
-            "alpha": RERANK_ALPHA,
-            "beta": RERANK_BETA,
-            "rerank_pool_factor": RERANK_POOL_FACTOR,
-            "domain_gate": "off",
-            "thresholds": THRESHOLDS,
-            "bootstrap": {"n": n_boot, "seed": seed, "ci": CI_LEVEL, "paired": True},
-        },
+        "config": config,
+        "comparisons": [list(p) for p in pairs],
         "git_sha": sha if sha is not None else git_sha(),
         "packages": dict(packages) if packages is not None else package_versions(),
         "n_queries": len(qids),
         "unsure_pairs": unsure,
-        "metrics": summarize(score_runs(runs, qrels, k), names, categories, n_boot, seed),
+        "judged_at_k": judged_at_k(runs, judged, k),
+        "metrics": summarize(score_runs(runs, qrels, k), names, categories, n_boot, seed, pairs),
         "metrics_caption_unseen": {
             "note": "pairs whose caption the reference annotator opened (or whose exposure is "
             "unknown) are removed from qrels and from ranked lists, i.e. treated as unjudged",
@@ -554,6 +634,18 @@ def render_markdown(report: Mapping[str, Any]) -> str:
                     lines.append(f"| {c['system']} − {c['baseline']} | " + " | ".join(cells) + " |")
                 lines.append("")
 
+    jk = report.get("judged_at_k")
+    if jk:
+        lines += [
+            f"## Pool coverage (judged@{report['k']})",
+            "",
+            "Share of each top-k list judged by a human (graded or unsure); unjudged images "
+            "count as non-relevant.",
+            "",
+            "| system | judged@k |",
+            "|---|---|",
+        ]
+        lines += [f"| {s} | {v['mean']:.3f} |" for s, v in jk.items()] + [""]
     table(report["metrics"], "Metrics")
     table(report["metrics_caption_unseen"], "Metrics, caption-unseen pairs only")
     cu = report["metrics_caption_unseen"]
