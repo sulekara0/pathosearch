@@ -1,7 +1,7 @@
 """Symmetric InfoNCE (CLIP loss) with a learnable temperature and a same-pair mask.
 
 For a batch of N (image, text) pairs with L2-normalised embeddings, ``logits = s * I @ T^T``
-where ``s = exp(log_scale)`` clamped to ``MAX_LOGIT_SCALE`` (CLIP's 100). The loss is the
+where ``s = exp(log_scale)`` and ``log_scale`` is capped at ln(``MAX_LOGIT_SCALE``) (CLIP's 100). The loss is the
 mean of the image->text and text->image cross-entropies with the diagonal as target.
 
 ``same[i, j]`` marks off-diagonal pairs that must not act as negatives (the same image, or
@@ -25,14 +25,25 @@ CLIP_INIT_LOG_SCALE = math.log(100.0)  # pretrained CLIP logit_scale value
 
 
 class LearnableTemperature(nn.Module):
-    """``exp(log_scale)`` clamped to ``MAX_LOGIT_SCALE``; at the cap the gradient is zero."""
+    """``exp(log_scale)``, with ``log_scale`` capped at ``ln(MAX_LOGIT_SCALE)``.
+
+    The cap is applied to the parameter (at construction and by :meth:`clamp_` after each
+    optimizer step, as in OpenCLIP), not inside ``forward``: a clamp in the forward pass
+    has zero gradient at the cap, and CLIP's pretrained value sits exactly there, which
+    would freeze the temperature.
+    """
 
     def __init__(self, init: float = CLIP_INIT_LOG_SCALE) -> None:
         super().__init__()
         self.log_scale = nn.Parameter(torch.tensor(float(init)))
+        self.clamp_()
+
+    @torch.no_grad()
+    def clamp_(self) -> None:
+        self.log_scale.clamp_(max=math.log(MAX_LOGIT_SCALE))
 
     def forward(self) -> torch.Tensor:
-        return self.log_scale.float().exp().clamp(max=MAX_LOGIT_SCALE)
+        return self.log_scale.float().exp()
 
 
 def same_pair_mask(image_ids: Sequence[str], captions: Sequence[str]) -> torch.Tensor:

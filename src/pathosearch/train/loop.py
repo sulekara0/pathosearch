@@ -282,6 +282,7 @@ def train(
             clip_grad_norm_(list(params.values()), cfg.grad_clip)
             scaler.step(opt)
             scaler.update()
+            model.temperature.clamp_()  # cap on the parameter keeps its gradient alive
             sched.step()
             global_step += 1
             truncated += b.truncated

@@ -172,6 +172,7 @@ def test_run_record_and_artifacts(tiny_base_dir: Path, data, tmp_path: Path) -> 
     for h in rec["history"]:
         assert math.isfinite(h["train_loss"]) and math.isfinite(h["val_loss"])
         assert {"i2t_r1", "t2i_r1", "i2t_r5", "t2i_r5", "logit_scale", "lr"} <= set(h)
+        assert h["logit_scale"] <= 100.0 + 1e-3
     best = min(rec["history"], key=lambda h: h["val_loss"])
     assert rec["best_epoch"] == best["epoch"] and rec["best_val_loss"] == best["val_loss"]
     assert rec["config_hash"] == config_hash(cfg(tiny_base_dir))
@@ -183,6 +184,7 @@ def test_run_record_and_artifacts(tiny_base_dir: Path, data, tmp_path: Path) -> 
 def test_training_moves_the_model(tiny_base_dir: Path, data, tmp_path: Path) -> None:
     rec = run(cfg(tiny_base_dir, epochs=4, lora_dropout=0.0), data, tmp_path / "run")
     assert rec["history"][-1]["train_loss"] < rec["history"][0]["train_loss"]
+    assert rec["history"][-1]["logit_scale"] != pytest.approx(math.exp(2.5), abs=1e-6)  # learned
 
 
 def test_max_steps_stops_early(tiny_base_dir: Path, data, tmp_path: Path) -> None:

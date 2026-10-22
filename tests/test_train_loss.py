@@ -116,12 +116,29 @@ def test_temperature_init_and_clamp() -> None:
     temp = LearnableTemperature()  # CLIP's pretrained value ln(100)
     assert temp.log_scale.requires_grad
     assert temp().item() == pytest.approx(100.0, rel=1e-5)
+    # an init above the cap is clamped at construction
+    assert LearnableTemperature(init=math.log(1000.0))().item() == pytest.approx(MAX_LOGIT_SCALE)
+    # after an optimizer step pushes it above the cap, clamp_() pulls it back
     with torch.no_grad():
         temp.log_scale.fill_(math.log(1000.0))
+    temp.clamp_()
     assert temp().item() == pytest.approx(MAX_LOGIT_SCALE)
-    hot = LearnableTemperature(init=math.log(1000.0))
-    hot().backward()
-    assert hot.log_scale.grad is not None and hot.log_scale.grad.item() == 0.0  # clamped
+    assert temp.log_scale.item() <= math.log(MAX_LOGIT_SCALE) + 1e-6  # float32 rounding
+
+
+def test_temperature_learns_at_the_cap() -> None:
+    """Regression: CLIP's stored logit_scale is a hair above ln(100) (exp = 100.0000064).
+
+    Clamping inside forward() zeroed the gradient there, freezing the temperature; the cap
+    is applied to the parameter instead, so the gradient must be non-zero at init.
+    """
+    temp = LearnableTemperature(init=4.605170249938965)
+    temp().backward()
+    assert temp.log_scale.grad is not None and temp.log_scale.grad.item() != 0.0
+    img, txt = rand()
+    temp.log_scale.grad = None
+    clip_infonce(t(img), t(txt), temp()).backward()
+    assert temp.log_scale.grad is not None and temp.log_scale.grad.item() != 0.0
 
 
 def test_half_precision_inputs_compute_in_float32() -> None:
