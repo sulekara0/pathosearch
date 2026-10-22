@@ -26,6 +26,9 @@ Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar
 | Dolaylı sızıntı: reranker caption sözcüklerine bakıyor, etiket aynı satırın kategorisi; γ=0 yalnız doğrudan sızıntıyı kapatır | tahmin (risk) | kod okuması + rapor | §4 risk 1, 10 |
 | QuiltNet bu görselleri eğitimde görmüş olabilir (korpus train); `val`'in eğitimde kullanılmadığı hiçbir kaynakta doğrulanmadı | tahmin (risk) | artifact okuması + makale | §7.2, §7.8.3, §4 risk 5, 9 |
 | CSV `val` = QuiltNet retrieval holdout'u (13,559 sayısal örtüşmesi) | tahmin | makale | §7.8.3 |
+| CSV split'i `quilt` videolarında ve openpath tweet'lerinde kaynak bazında (karışık grup 0); pubmed figürlerinde değil (1,343 karışık figür) | doğrulandı (anahtarlar dosya adından) | `analyze_source_groups` komutu | §7.10 |
+| Golden'ın 37 videosu / 185 tweet'i hiçbir train görseliyle kaynak paylaşmıyor | doğrulandı | `analyze_source_groups` komutu | §7.10 |
+| Golden'ın 175 pubmed görselinden 123'ünün CSV'de aynı figürden `train` kardeşi var; diskte 32 train adayı golden ile figür paylaşıyor | doğrulandı (figür = UUID varsayımı tahmin) | `analyze_source_groups` komutu | §7.10 |
 | Yalnız-`val` 928 görsel, %50.75 `unknown`, ≥20 geçen 5 kategori | doğrulandı | `analyze_corpus` komutu | §7.8.1 |
 | `stratified_sample` top-up hatası (tekrar eden satır) | doğrulandı | `tests/test_prepare_quilt.py` (`xfail(strict=True)`) | §7.7.6 |
 | Domain gate: 12 çıpa, top-3 ortalama, eşik 0.80, 10 sorguluk öz-test; ROC/PR yok | doğrulandı | kod okuması | §2, §5 |
@@ -475,6 +478,54 @@ Bunlar §4 risk tablosuna 9-12 olarak eklendi:
 - **(b)** Reranker caption sözcüklerine bakıyor, relevance etiketi de aynı satırın kategorisinden geliyor. γ=0 yalnızca doğrudan sızıntıyı kapatır; dolaylı korelasyon durur. V5b'nin +0.070 kazancı bu yüzden şişkin olabilir.
 - **(c)** Sorgu setleri sürümler arasında sonuçlara bakılarak yeniden yazılmış (V2) ve ayar-test ayrımı yok.
 - **(d)** Rapordaki "literatürde eşdeğeri yok" gibi özgünlük iddiaları ve "0.45-0.65 tipik aralık" karşılaştırması bu repoda doğrulanmadı.
+
+### 7.10 Kaynak grupları: video, tweet, pubmed figürü (2026-10-22)
+
+Yöntem: salt okuma. CSV'de kaynak sütunu yok. Kaynak, dosya adından çıkarılır (`pathosearch.data.source_groups.source_key`):
+
+| alt küme | dosya adı | anahtar |
+|---|---|---|
+| quilt | `<11 karakter video id>_image_<uuid>.jpg` | `video:<id>` |
+| openpath | `<tweet id>_<k>.jpg/png` | `tweet:<id>` |
+| pubmed | `<uuid>.jpg` veya `<uuid>_<k>.jpg` | `figure:<uuid>` |
+| laion | `<sayı>.jpg` | yok |
+
+Diskte bu eşleme alt kümeyle birebir örtüşüyor (quilt 43,693 → video, openpath 13,414 → tweet, pubmed 5,941 → figür, laion 2,274 → anahtar yok). "Aynı UUID = aynı figürün paneli" ve "aynı tweet id = aynı tweet" yorumları **tahmin**dir; dosya adı biçiminden çıkarıldı, görsellere bakılmadı.
+
+Komut (tek komutla yeniden üretilir, seed yok):
+
+```
+uv run python scripts/analyze_source_groups.py --golden eval_data/golden_v0
+```
+
+Çıktı: [reports/source_groups.json](../reports/source_groups.json).
+
+**CSV split'i kaynak bazında mı?**
+
+| anahtar | grup | yalnız-train | yalnız-val | train+val karışık |
+|---|---|---|---|---|
+| video | 4,475 | 4,435 | 40 | **0** |
+| tweet | 53,727 | 52,844 | 883 | **0** |
+| figür | 29,983 | 28,040 | 600 | **1,343** |
+
+- `quilt` ve openpath'te split kaynak (video/tweet) bazında yapılmış. pubmed'de figür bazında yapılmamış.
+- Video bazında ayrık bir `val`, bilinçli olarak ayrılmış bir holdout ile **uyumlu** (§7.8.3'teki 13,559 örtüşmesiyle birlikte). Bu yine de QuiltNet'in `val`'i eğitimde görmediğini **kanıtlamaz** (tahmin).
+
+**Golden ile train arasında kaynak paylaşımı**
+
+| kontrol | sonuç |
+|---|---|
+| Golden 928 aday: video / tweet / figür / anahtarsız | 457 görsel (37 video) / 210 (191 tweet) / 175 (175 figür) / 86 |
+| Golden 820: video / tweet / figür / anahtarsız | 356 (37 video) / 203 (185 tweet) / 175 / 86 |
+| Diskteki train-only adaylar (64,369) | video 43,236 (4,067 video; video başına medyan 6, en çok 177), tweet 13,204, figür 5,766, anahtarsız 2,163 |
+| Golden ile kaynak paylaşan diskteki train adayı | **32** (hepsi figür, 31 farklı figür; 10'u ana 114K korpusta). Video 0, tweet 0 |
+| Golden ile kaynak paylaşan ana korpus (114,222) görseli | 46 |
+| **CSV'nin tamamında `train` kardeşi olan golden görseli** | **123** (hepsi figür; golden'daki 175 pubmed görselinin %70'i, 820'nin %15'i) |
+
+**Etkisi (yorum):**
+- **QuiltNet karşılaştırması (R3):** QuiltNet CSV `train` ile eğitildiyse, golden'daki 123 pubmed görselinin aynı figürden kardeş panellerini görmüş olabilir. Bu, §4 risk 9'u ve R3 raporundaki "QuiltNet eğitim verisi belirsizliği"ni golden düzeyinde somutlaştırıyor. Video ve tweet kaynaklı golden görselleri (559/820) için kaynak düzeyinde sızıntı yok. Kardeş panelin golden görseline ne kadar benzediği ölçülmedi.
+- **R4 eğitim kümesi:** golden ile kaynak paylaşan 32 train adayı eğitimden çıkarılır. İç doğrulama kümesi kaynak grubu bazında bölünür, çünkü video başına medyan 6 kare var ve görsel bazında bölünürse aynı videonun kareleri train ve val'e dağılır.
+- İlk taramada (yalnız `UUID_k.jpg` biçimi) figür eşleşmesi 19 bulunmuştu. Eksiz `UUID.jpg` adları da anahtara dahil edilince 32 oldu. Geçerli değer komutun ürettiği 32'dir.
 
 ## 8. Açık sorular ve kararlar
 
