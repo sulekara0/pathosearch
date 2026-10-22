@@ -122,6 +122,11 @@ def run_shards(
     return {"shards": len(shards), "written": done, "skipped": skipped}
 
 
+def progress(shards: Sequence[Sequence[str]], out_dir: Path) -> tuple[int, int]:
+    """(finished shards, total shards); a shard is finished when its .json exists."""
+    return sum(1 for i in range(len(shards)) if shard_paths(out_dir, i)[1].is_file()), len(shards)
+
+
 def merge_shards(
     shards: Sequence[Sequence[str]], out_dir: Path, info: Mapping[str, Any]
 ) -> dict[str, Any]:

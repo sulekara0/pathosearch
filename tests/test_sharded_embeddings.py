@@ -10,6 +10,7 @@ from pathosearch.data.sharded_embeddings import (
     encode_names,
     make_shards,
     merge_shards,
+    progress,
     run_shards,
     shard_paths,
 )
@@ -68,6 +69,7 @@ def test_run_resume_and_merge(tmp_path: Path) -> None:
 
     # simulate an interruption after shard 1's .npy was written but before its .json
     shard_paths(out, 1)[1].unlink()
+    assert progress(shards, out) == (2, 3)
     enc2 = FakeEncoder()
     stats = run_shards(shards, paths, enc2, out, batch_size=2, log=lambda _: None)
     assert stats == {"shards": 3, "written": 1, "skipped": 2}

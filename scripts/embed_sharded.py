@@ -7,6 +7,8 @@ Usage (from the repo root; paths come from .env / PATHOSEARCH_* variables):
     uv run python scripts/embed_sharded.py bench --names <txt> --encoder clip --n 500
     uv run python scripts/embed_sharded.py run   --names <txt> --encoder clip
     uv run python scripts/embed_sharded.py merge --names <txt> --encoder clip
+    # 3) one-line progress
+    uv run python scripts/embed_sharded.py progress --names <txt>
 """
 
 from __future__ import annotations
@@ -24,11 +26,13 @@ from pathosearch.data.sharded_embeddings import (
     benchmark,
     make_shards,
     merge_shards,
+    progress,
     run_shards,
 )
 from pathosearch.eval.corpus_analysis import list_image_names, scan_csv, split_class
 from pathosearch.eval.labeling import build_image_index
 from pathosearch.eval.run_eval import git_sha, package_versions
+from pathosearch.keep_awake import keep_awake
 
 
 def read_names(path: Path) -> list[str]:
@@ -84,7 +88,19 @@ def cmd_shards(args: argparse.Namespace) -> None:
         (out_dir / "timing.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
         print(json.dumps(result, indent=2))
         return
-    print(run_shards(shards, paths, encoder, out_dir, args.batch_size))
+    with keep_awake() as awake:
+        print(f"sleep block: {'on' if awake else 'unavailable'}", flush=True)
+        print(run_shards(shards, paths, encoder, out_dir, args.batch_size))
+
+
+def cmd_progress(args: argparse.Namespace) -> None:
+    shards = make_shards(read_names(args.names), args.shard_size)
+    parts = []
+    for enc in args.encoders.split(","):
+        done, total = progress(shards, args.names.parent / enc)
+        merged = (args.names.parent / enc / "model_info.json").is_file()
+        parts.append(f"{enc} {done}/{total}{' merged' if merged else ''}")
+    print(" | ".join(parts))
 
 
 def main() -> None:
@@ -94,6 +110,11 @@ def main() -> None:
     pl.add_argument("--out", type=Path, required=True)
     pl.add_argument("--main-encoder", default="clip", help="artifacts/<encoder>/ids.json")
     pl.set_defaults(func=cmd_list)
+    pp = sub.add_parser("progress", help="one line: finished shards per encoder")
+    pp.add_argument("--names", type=Path, required=True)
+    pp.add_argument("--encoders", default="clip,quilt")
+    pp.add_argument("--shard-size", type=int, default=SHARD_SIZE)
+    pp.set_defaults(func=cmd_progress)
     for name in ("bench", "run", "merge"):
         q = sub.add_parser(name)
         q.add_argument("--names", type=Path, required=True)
