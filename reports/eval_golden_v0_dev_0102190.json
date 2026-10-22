@@ -1,0 +1,2708 @@
+{
+  "golden": "golden_v0",
+  "split": "dev",
+  "split_stamp": "dev",
+  "k": 10,
+  "systems": [
+    "clip",
+    "quilt",
+    "clip+rerank",
+    "quilt+rerank"
+  ],
+  "primary_threshold": "lenient",
+  "first_system_is_reference_for_differences": "clip",
+  "command": "uv run python scripts/run_eval.py --golden eval_data/golden_v0 --split dev --systems clip,quilt,clip+rerank,quilt+rerank --k 10",
+  "config": {
+    "alpha": 0.75,
+    "beta": 0.25,
+    "rerank_pool_factor": 5,
+    "domain_gate": "off",
+    "thresholds": {
+      "lenient": 1,
+      "strict": 2
+    },
+    "bootstrap": {
+      "n": 1000,
+      "seed": 42,
+      "ci": 0.95,
+      "paired": true
+    }
+  },
+  "git_sha": "0102190",
+  "packages": {
+    "numpy": "2.5.4",
+    "faiss-cpu": "1.15.1",
+    "torch": "2.14.1",
+    "open_clip_torch": "3.3.0",
+    "transformers": "5.19.0",
+    "pathosearch": "0.1.0"
+  },
+  "n_queries": 10,
+  "unsure_pairs": 23,
+  "metrics": {
+    "lenient": {
+      "systems": {
+        "clip": {
+          "p": {
+            "mean": 0.2125,
+            "ci": [
+              0.1125,
+              0.3125
+            ],
+            "n": 8
+          },
+          "hit": {
+            "mean": 0.875,
+            "ci": [
+              0.625,
+              1.0
+            ],
+            "n": 8
+          },
+          "recall": {
+            "mean": 0.2172,
+            "ci": [
+              0.1356,
+              0.3032
+            ],
+            "n": 8
+          },
+          "mrr": {
+            "mean": 0.3625,
+            "ci": [
+              0.1833,
+              0.5834
+            ],
+            "n": 8
+          },
+          "ndcg": {
+            "mean": 0.1908,
+            "ci": [
+              0.0969,
+              0.3022
+            ],
+            "n": 8
+          }
+        },
+        "quilt": {
+          "p": {
+            "mean": 0.6125,
+            "ci": [
+              0.475,
+              0.7125
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4,
+              "ci": [
+                0.2875,
+                0.5003
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.125,
+              "ci": [
+                0.0,
+                0.375
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.6733,
+            "ci": [
+              0.565,
+              0.7879
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4561,
+              "ci": [
+                0.3085,
+                0.6262
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.7083,
+            "ci": [
+              0.5,
+              0.9167
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.3458,
+              "ci": [
+                0.1416,
+                0.6
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.6403,
+            "ci": [
+              0.4905,
+              0.7693
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4495,
+              "ci": [
+                0.3022,
+                0.5982
+              ],
+              "excludes_zero": true
+            }
+          }
+        },
+        "clip+rerank": {
+          "p": {
+            "mean": 0.25,
+            "ci": [
+              0.15,
+              0.35
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0375,
+              "ci": [
+                0.0125,
+                0.075
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 0.875,
+            "ci": [
+              0.625,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0,
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.2615,
+            "ci": [
+              0.1747,
+              0.3403
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0443,
+              "ci": [
+                0.0078,
+                0.0885
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.5125,
+            "ci": [
+              0.25,
+              0.775
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.15,
+              "ci": [
+                -0.0083,
+                0.3126
+              ],
+              "excludes_zero": false
+            }
+          },
+          "ndcg": {
+            "mean": 0.2793,
+            "ci": [
+              0.1599,
+              0.396
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0885,
+              "ci": [
+                0.0061,
+                0.2008
+              ],
+              "excludes_zero": true
+            }
+          }
+        },
+        "quilt+rerank": {
+          "p": {
+            "mean": 0.65,
+            "ci": [
+              0.55,
+              0.7625
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4375,
+              "ci": [
+                0.35,
+                0.525
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.125,
+              "ci": [
+                0.0,
+                0.375
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.7376,
+            "ci": [
+              0.6282,
+              0.8575
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.5204,
+              "ci": [
+                0.3757,
+                0.6723
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.9375,
+            "ci": [
+              0.8125,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.575,
+              "ci": [
+                0.3582,
+                0.7833
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.7722,
+            "ci": [
+              0.6787,
+              0.8588
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.5814,
+              "ci": [
+                0.4309,
+                0.7421
+              ],
+              "excludes_zero": true
+            }
+          }
+        }
+      },
+      "n_queries_without_relevant": {
+        "p": 2,
+        "hit": 2,
+        "recall": 2,
+        "mrr": 2,
+        "ndcg": 2
+      },
+      "excluded_qids": {
+        "p": [
+          "q019",
+          "q020"
+        ],
+        "hit": [
+          "q019",
+          "q020"
+        ],
+        "recall": [
+          "q019",
+          "q020"
+        ],
+        "mrr": [
+          "q019",
+          "q020"
+        ],
+        "ndcg": [
+          "q019",
+          "q020"
+        ]
+      },
+      "comparisons": {
+        "p": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.4,
+            "ci": [
+              0.2875,
+              0.5003
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0375,
+            "ci": [
+              0.0125,
+              0.075
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0375,
+            "ci": [
+              -0.0125,
+              0.0875
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "hit": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.125,
+            "ci": [
+              0.0,
+              0.375
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "recall": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.4561,
+            "ci": [
+              0.3085,
+              0.6262
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0443,
+            "ci": [
+              0.0078,
+              0.0885
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0643,
+            "ci": [
+              -0.0294,
+              0.2067
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "mrr": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.3458,
+            "ci": [
+              0.1416,
+              0.6
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.15,
+            "ci": [
+              -0.0083,
+              0.3126
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.2292,
+            "ci": [
+              0.0625,
+              0.4583
+            ],
+            "excludes_zero": true
+          }
+        ],
+        "ndcg": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.4495,
+            "ci": [
+              0.3022,
+              0.5982
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0885,
+            "ci": [
+              0.0061,
+              0.2008
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.1319,
+            "ci": [
+              -0.0201,
+              0.3253
+            ],
+            "excludes_zero": false
+          }
+        ]
+      },
+      "by_category": {
+        "dermatopathology": {
+          "clip": {
+            "p": 0.25,
+            "hit": 1.0,
+            "recall": 0.25,
+            "mrr": 0.75,
+            "ndcg": 0.3144,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.8333,
+            "mrr": 0.75,
+            "ndcg": 0.7862,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.3,
+            "hit": 1.0,
+            "recall": 0.3333,
+            "mrr": 1.0,
+            "ndcg": 0.5484,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.8333,
+            "mrr": 1.0,
+            "ndcg": 0.8851,
+            "n_queries": 2
+          }
+        },
+        "gastrointestinal": {
+          "clip": {
+            "p": 0.35,
+            "hit": 1.0,
+            "recall": 0.316,
+            "mrr": 0.35,
+            "ndcg": 0.2296,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.65,
+            "hit": 1.0,
+            "recall": 0.5521,
+            "mrr": 0.75,
+            "ndcg": 0.6366,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.4,
+            "hit": 1.0,
+            "recall": 0.3472,
+            "mrr": 0.6,
+            "ndcg": 0.3249,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.5833,
+            "mrr": 0.75,
+            "ndcg": 0.6246,
+            "n_queries": 2
+          }
+        },
+        "genitourinary": {
+          "clip": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.1875,
+            "mrr": 0.1833,
+            "ndcg": 0.103,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.4,
+            "hit": 1.0,
+            "recall": 0.625,
+            "mrr": 0.3333,
+            "ndcg": 0.3516,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.15,
+            "hit": 1.0,
+            "recall": 0.25,
+            "mrr": 0.35,
+            "ndcg": 0.1426,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.45,
+            "hit": 1.0,
+            "recall": 0.8125,
+            "mrr": 1.0,
+            "ndcg": 0.8567,
+            "n_queries": 2
+          }
+        },
+        "pulmonary": {
+          "clip": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "clip+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          }
+        },
+        "soft tissue": {
+          "clip": {
+            "p": 0.15,
+            "hit": 0.5,
+            "recall": 0.1154,
+            "mrr": 0.1667,
+            "ndcg": 0.1163,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.6827,
+            "mrr": 1.0,
+            "ndcg": 0.787,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.15,
+            "hit": 0.5,
+            "recall": 0.1154,
+            "mrr": 0.1,
+            "ndcg": 0.1011,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.75,
+            "hit": 1.0,
+            "recall": 0.7212,
+            "mrr": 1.0,
+            "ndcg": 0.7224,
+            "n_queries": 2
+          }
+        }
+      }
+    },
+    "strict": {
+      "systems": {
+        "clip": {
+          "p": {
+            "mean": 0.05,
+            "ci": [
+              0.0167,
+              0.0833
+            ],
+            "n": 6
+          },
+          "hit": {
+            "mean": 0.5,
+            "ci": [
+              0.1667,
+              0.8333
+            ],
+            "n": 6
+          },
+          "recall": {
+            "mean": 0.1435,
+            "ci": [
+              0.0185,
+              0.2917
+            ],
+            "n": 6
+          },
+          "mrr": {
+            "mean": 0.0738,
+            "ci": [
+              0.0167,
+              0.1381
+            ],
+            "n": 6
+          },
+          "ndcg": {
+            "mean": 0.0706,
+            "ci": [
+              0.0113,
+              0.1387
+            ],
+            "n": 6
+          }
+        },
+        "quilt": {
+          "p": {
+            "mean": 0.2167,
+            "ci": [
+              0.0833,
+              0.3833
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1667,
+              "ci": [
+                0.05,
+                0.3167
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 0.8333,
+            "ci": [
+              0.5,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.3333,
+              "ci": [
+                0.0,
+                0.6667
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.6528,
+            "ci": [
+              0.3608,
+              0.9028
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5093,
+              "ci": [
+                0.1759,
+                0.8426
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.6389,
+            "ci": [
+              0.3056,
+              0.9167
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5651,
+              "ci": [
+                0.2484,
+                0.8595
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.572,
+            "ci": [
+              0.3126,
+              0.7916
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5014,
+              "ci": [
+                0.2598,
+                0.7349
+              ],
+              "excludes_zero": true
+            }
+          }
+        },
+        "clip+rerank": {
+          "p": {
+            "mean": 0.0667,
+            "ci": [
+              0.0333,
+              0.1
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.0167,
+              "ci": [
+                0.0,
+                0.05
+              ],
+              "excludes_zero": false
+            }
+          },
+          "hit": {
+            "mean": 0.6667,
+            "ci": [
+              0.3333,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1667,
+              "ci": [
+                0.0,
+                0.5
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.2269,
+            "ci": [
+              0.0556,
+              0.3935
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.0833,
+              "ci": [
+                0.0,
+                0.25
+              ],
+              "excludes_zero": false
+            }
+          },
+          "mrr": {
+            "mean": 0.3727,
+            "ci": [
+              0.0394,
+              0.706
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.2989,
+              "ci": [
+                -0.0356,
+                0.6447
+              ],
+              "excludes_zero": false
+            }
+          },
+          "ndcg": {
+            "mean": 0.1927,
+            "ci": [
+              0.0513,
+              0.3868
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1221,
+              "ci": [
+                -0.0145,
+                0.3344
+              ],
+              "excludes_zero": false
+            }
+          }
+        },
+        "quilt+rerank": {
+          "p": {
+            "mean": 0.2333,
+            "ci": [
+              0.1167,
+              0.3667
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1833,
+              "ci": [
+                0.0833,
+                0.3
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5,
+              "ci": [
+                0.1667,
+                0.8333
+              ],
+              "excludes_zero": true
+            }
+          },
+          "recall": {
+            "mean": 0.8426,
+            "ci": [
+              0.6759,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.6991,
+              "ci": [
+                0.3981,
+                0.9583
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.8889,
+            "ci": [
+              0.6667,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.8151,
+              "ci": [
+                0.5619,
+                0.9833
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.7743,
+            "ci": [
+              0.5432,
+              0.9435
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.7037,
+              "ci": [
+                0.4108,
+                0.9217
+              ],
+              "excludes_zero": true
+            }
+          }
+        }
+      },
+      "n_queries_without_relevant": {
+        "p": 4,
+        "hit": 4,
+        "recall": 4,
+        "mrr": 4,
+        "ndcg": 4
+      },
+      "excluded_qids": {
+        "p": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "hit": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "recall": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "mrr": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "ndcg": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ]
+      },
+      "comparisons": {
+        "p": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.1667,
+            "ci": [
+              0.05,
+              0.3167
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0167,
+            "ci": [
+              0.0,
+              0.05
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0167,
+            "ci": [
+              -0.0333,
+              0.0667
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "hit": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.3333,
+            "ci": [
+              0.0,
+              0.6667
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.1667,
+            "ci": [
+              0.0,
+              0.5
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.1667,
+            "ci": [
+              0.0,
+              0.5
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "recall": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.5093,
+            "ci": [
+              0.1759,
+              0.8426
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0833,
+            "ci": [
+              0.0,
+              0.25
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.1898,
+            "ci": [
+              -0.037,
+              0.5231
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "mrr": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.5651,
+            "ci": [
+              0.2484,
+              0.8595
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.2989,
+            "ci": [
+              -0.0356,
+              0.6447
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.25,
+            "ci": [
+              -0.1667,
+              0.6667
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "ndcg": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.5014,
+            "ci": [
+              0.2598,
+              0.7349
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.1221,
+            "ci": [
+              -0.0145,
+              0.3344
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.2023,
+            "ci": [
+              -0.0973,
+              0.5561
+            ],
+            "excludes_zero": false
+          }
+        ]
+      },
+      "by_category": {
+        "dermatopathology": {
+          "clip": {
+            "p": 0.0,
+            "hit": 0.0,
+            "recall": 0.0,
+            "mrr": 0.0,
+            "ndcg": 0.0,
+            "n_queries": 1
+          },
+          "quilt": {
+            "p": 0.2,
+            "hit": 1.0,
+            "recall": 1.0,
+            "mrr": 0.5,
+            "ndcg": 0.6509,
+            "n_queries": 1
+          },
+          "clip+rerank": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.5,
+            "mrr": 1.0,
+            "ndcg": 0.6131,
+            "n_queries": 1
+          },
+          "quilt+rerank": {
+            "p": 0.2,
+            "hit": 1.0,
+            "recall": 1.0,
+            "mrr": 1.0,
+            "ndcg": 0.9197,
+            "n_queries": 1
+          }
+        },
+        "gastrointestinal": {
+          "clip": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.1111,
+            "mrr": 0.1,
+            "ndcg": 0.0679,
+            "n_queries": 1
+          },
+          "quilt": {
+            "p": 0.6,
+            "hit": 1.0,
+            "recall": 0.6667,
+            "mrr": 1.0,
+            "ndcg": 0.6824,
+            "n_queries": 1
+          },
+          "clip+rerank": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.1111,
+            "mrr": 1.0,
+            "ndcg": 0.235,
+            "n_queries": 1
+          },
+          "quilt+rerank": {
+            "p": 0.5,
+            "hit": 1.0,
+            "recall": 0.5556,
+            "mrr": 1.0,
+            "ndcg": 0.598,
+            "n_queries": 1
+          }
+        },
+        "genitourinary": {
+          "clip": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.125,
+            "mrr": 0.1,
+            "ndcg": 0.0755,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.15,
+            "hit": 0.5,
+            "recall": 0.375,
+            "mrr": 0.1667,
+            "ndcg": 0.2426,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.125,
+            "mrr": 0.0625,
+            "ndcg": 0.0616,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.25,
+            "hit": 1.0,
+            "recall": 1.0,
+            "mrr": 1.0,
+            "ndcg": 0.9108,
+            "n_queries": 2
+          }
+        },
+        "pulmonary": {
+          "clip": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "clip+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          }
+        },
+        "soft tissue": {
+          "clip": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.25,
+            "mrr": 0.0714,
+            "ndcg": 0.1022,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.75,
+            "mrr": 1.0,
+            "ndcg": 0.8066,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.25,
+            "mrr": 0.0556,
+            "ndcg": 0.0923,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.75,
+            "mrr": 0.6667,
+            "ndcg": 0.6533,
+            "n_queries": 2
+          }
+        }
+      }
+    }
+  },
+  "metrics_caption_unseen": {
+    "note": "pairs whose caption the reference annotator opened (or whose exposure is unknown) are removed from qrels and from ranked lists, i.e. treated as unjudged",
+    "pairs_total": 243,
+    "pairs_removed": 0,
+    "share_removed": 0.0,
+    "warning": null,
+    "queries_total": 10,
+    "queries_with_relevant_remaining": {
+      "lenient": 8,
+      "strict": 6
+    },
+    "lenient": {
+      "systems": {
+        "clip": {
+          "p": {
+            "mean": 0.2125,
+            "ci": [
+              0.1125,
+              0.3125
+            ],
+            "n": 8
+          },
+          "hit": {
+            "mean": 0.875,
+            "ci": [
+              0.625,
+              1.0
+            ],
+            "n": 8
+          },
+          "recall": {
+            "mean": 0.2172,
+            "ci": [
+              0.1356,
+              0.3032
+            ],
+            "n": 8
+          },
+          "mrr": {
+            "mean": 0.3625,
+            "ci": [
+              0.1833,
+              0.5834
+            ],
+            "n": 8
+          },
+          "ndcg": {
+            "mean": 0.1908,
+            "ci": [
+              0.0969,
+              0.3022
+            ],
+            "n": 8
+          }
+        },
+        "quilt": {
+          "p": {
+            "mean": 0.6125,
+            "ci": [
+              0.475,
+              0.7125
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4,
+              "ci": [
+                0.2875,
+                0.5003
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.125,
+              "ci": [
+                0.0,
+                0.375
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.6733,
+            "ci": [
+              0.565,
+              0.7879
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4561,
+              "ci": [
+                0.3085,
+                0.6262
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.7083,
+            "ci": [
+              0.5,
+              0.9167
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.3458,
+              "ci": [
+                0.1416,
+                0.6
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.6403,
+            "ci": [
+              0.4905,
+              0.7693
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4495,
+              "ci": [
+                0.3022,
+                0.5982
+              ],
+              "excludes_zero": true
+            }
+          }
+        },
+        "clip+rerank": {
+          "p": {
+            "mean": 0.25,
+            "ci": [
+              0.15,
+              0.35
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0375,
+              "ci": [
+                0.0125,
+                0.075
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 0.875,
+            "ci": [
+              0.625,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0,
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.2615,
+            "ci": [
+              0.1747,
+              0.3403
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0443,
+              "ci": [
+                0.0078,
+                0.0885
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.5125,
+            "ci": [
+              0.25,
+              0.775
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.15,
+              "ci": [
+                -0.0083,
+                0.3126
+              ],
+              "excludes_zero": false
+            }
+          },
+          "ndcg": {
+            "mean": 0.2793,
+            "ci": [
+              0.1599,
+              0.396
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.0885,
+              "ci": [
+                0.0061,
+                0.2008
+              ],
+              "excludes_zero": true
+            }
+          }
+        },
+        "quilt+rerank": {
+          "p": {
+            "mean": 0.65,
+            "ci": [
+              0.55,
+              0.7625
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.4375,
+              "ci": [
+                0.35,
+                0.525
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.125,
+              "ci": [
+                0.0,
+                0.375
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.7376,
+            "ci": [
+              0.6282,
+              0.8575
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.5204,
+              "ci": [
+                0.3757,
+                0.6723
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.9375,
+            "ci": [
+              0.8125,
+              1.0
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.575,
+              "ci": [
+                0.3582,
+                0.7833
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.7722,
+            "ci": [
+              0.6787,
+              0.8588
+            ],
+            "n": 8,
+            "diff_vs_first": {
+              "mean": 0.5814,
+              "ci": [
+                0.4309,
+                0.7421
+              ],
+              "excludes_zero": true
+            }
+          }
+        }
+      },
+      "n_queries_without_relevant": {
+        "p": 2,
+        "hit": 2,
+        "recall": 2,
+        "mrr": 2,
+        "ndcg": 2
+      },
+      "excluded_qids": {
+        "p": [
+          "q019",
+          "q020"
+        ],
+        "hit": [
+          "q019",
+          "q020"
+        ],
+        "recall": [
+          "q019",
+          "q020"
+        ],
+        "mrr": [
+          "q019",
+          "q020"
+        ],
+        "ndcg": [
+          "q019",
+          "q020"
+        ]
+      },
+      "comparisons": {
+        "p": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.4,
+            "ci": [
+              0.2875,
+              0.5003
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0375,
+            "ci": [
+              0.0125,
+              0.075
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0375,
+            "ci": [
+              -0.0125,
+              0.0875
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "hit": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.125,
+            "ci": [
+              0.0,
+              0.375
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0,
+            "ci": [
+              0.0,
+              0.0
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "recall": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.4561,
+            "ci": [
+              0.3085,
+              0.6262
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0443,
+            "ci": [
+              0.0078,
+              0.0885
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0643,
+            "ci": [
+              -0.0294,
+              0.2067
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "mrr": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.3458,
+            "ci": [
+              0.1416,
+              0.6
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.15,
+            "ci": [
+              -0.0083,
+              0.3126
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.2292,
+            "ci": [
+              0.0625,
+              0.4583
+            ],
+            "excludes_zero": true
+          }
+        ],
+        "ndcg": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.4495,
+            "ci": [
+              0.3022,
+              0.5982
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0885,
+            "ci": [
+              0.0061,
+              0.2008
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.1319,
+            "ci": [
+              -0.0201,
+              0.3253
+            ],
+            "excludes_zero": false
+          }
+        ]
+      },
+      "by_category": {
+        "dermatopathology": {
+          "clip": {
+            "p": 0.25,
+            "hit": 1.0,
+            "recall": 0.25,
+            "mrr": 0.75,
+            "ndcg": 0.3144,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.8333,
+            "mrr": 0.75,
+            "ndcg": 0.7862,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.3,
+            "hit": 1.0,
+            "recall": 0.3333,
+            "mrr": 1.0,
+            "ndcg": 0.5484,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.8333,
+            "mrr": 1.0,
+            "ndcg": 0.8851,
+            "n_queries": 2
+          }
+        },
+        "gastrointestinal": {
+          "clip": {
+            "p": 0.35,
+            "hit": 1.0,
+            "recall": 0.316,
+            "mrr": 0.35,
+            "ndcg": 0.2296,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.65,
+            "hit": 1.0,
+            "recall": 0.5521,
+            "mrr": 0.75,
+            "ndcg": 0.6366,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.4,
+            "hit": 1.0,
+            "recall": 0.3472,
+            "mrr": 0.6,
+            "ndcg": 0.3249,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.5833,
+            "mrr": 0.75,
+            "ndcg": 0.6246,
+            "n_queries": 2
+          }
+        },
+        "genitourinary": {
+          "clip": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.1875,
+            "mrr": 0.1833,
+            "ndcg": 0.103,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.4,
+            "hit": 1.0,
+            "recall": 0.625,
+            "mrr": 0.3333,
+            "ndcg": 0.3516,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.15,
+            "hit": 1.0,
+            "recall": 0.25,
+            "mrr": 0.35,
+            "ndcg": 0.1426,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.45,
+            "hit": 1.0,
+            "recall": 0.8125,
+            "mrr": 1.0,
+            "ndcg": 0.8567,
+            "n_queries": 2
+          }
+        },
+        "pulmonary": {
+          "clip": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "clip+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          }
+        },
+        "soft tissue": {
+          "clip": {
+            "p": 0.15,
+            "hit": 0.5,
+            "recall": 0.1154,
+            "mrr": 0.1667,
+            "ndcg": 0.1163,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.7,
+            "hit": 1.0,
+            "recall": 0.6827,
+            "mrr": 1.0,
+            "ndcg": 0.787,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.15,
+            "hit": 0.5,
+            "recall": 0.1154,
+            "mrr": 0.1,
+            "ndcg": 0.1011,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.75,
+            "hit": 1.0,
+            "recall": 0.7212,
+            "mrr": 1.0,
+            "ndcg": 0.7224,
+            "n_queries": 2
+          }
+        }
+      }
+    },
+    "strict": {
+      "systems": {
+        "clip": {
+          "p": {
+            "mean": 0.05,
+            "ci": [
+              0.0167,
+              0.0833
+            ],
+            "n": 6
+          },
+          "hit": {
+            "mean": 0.5,
+            "ci": [
+              0.1667,
+              0.8333
+            ],
+            "n": 6
+          },
+          "recall": {
+            "mean": 0.1435,
+            "ci": [
+              0.0185,
+              0.2917
+            ],
+            "n": 6
+          },
+          "mrr": {
+            "mean": 0.0738,
+            "ci": [
+              0.0167,
+              0.1381
+            ],
+            "n": 6
+          },
+          "ndcg": {
+            "mean": 0.0706,
+            "ci": [
+              0.0113,
+              0.1387
+            ],
+            "n": 6
+          }
+        },
+        "quilt": {
+          "p": {
+            "mean": 0.2167,
+            "ci": [
+              0.0833,
+              0.3833
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1667,
+              "ci": [
+                0.05,
+                0.3167
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 0.8333,
+            "ci": [
+              0.5,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.3333,
+              "ci": [
+                0.0,
+                0.6667
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.6528,
+            "ci": [
+              0.3608,
+              0.9028
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5093,
+              "ci": [
+                0.1759,
+                0.8426
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.6389,
+            "ci": [
+              0.3056,
+              0.9167
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5651,
+              "ci": [
+                0.2484,
+                0.8595
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.572,
+            "ci": [
+              0.3126,
+              0.7916
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5014,
+              "ci": [
+                0.2598,
+                0.7349
+              ],
+              "excludes_zero": true
+            }
+          }
+        },
+        "clip+rerank": {
+          "p": {
+            "mean": 0.0667,
+            "ci": [
+              0.0333,
+              0.1
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.0167,
+              "ci": [
+                0.0,
+                0.05
+              ],
+              "excludes_zero": false
+            }
+          },
+          "hit": {
+            "mean": 0.6667,
+            "ci": [
+              0.3333,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1667,
+              "ci": [
+                0.0,
+                0.5
+              ],
+              "excludes_zero": false
+            }
+          },
+          "recall": {
+            "mean": 0.2269,
+            "ci": [
+              0.0556,
+              0.3935
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.0833,
+              "ci": [
+                0.0,
+                0.25
+              ],
+              "excludes_zero": false
+            }
+          },
+          "mrr": {
+            "mean": 0.3727,
+            "ci": [
+              0.0394,
+              0.706
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.2989,
+              "ci": [
+                -0.0356,
+                0.6447
+              ],
+              "excludes_zero": false
+            }
+          },
+          "ndcg": {
+            "mean": 0.1927,
+            "ci": [
+              0.0513,
+              0.3868
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1221,
+              "ci": [
+                -0.0145,
+                0.3344
+              ],
+              "excludes_zero": false
+            }
+          }
+        },
+        "quilt+rerank": {
+          "p": {
+            "mean": 0.2333,
+            "ci": [
+              0.1167,
+              0.3667
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.1833,
+              "ci": [
+                0.0833,
+                0.3
+              ],
+              "excludes_zero": true
+            }
+          },
+          "hit": {
+            "mean": 1.0,
+            "ci": [
+              1.0,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.5,
+              "ci": [
+                0.1667,
+                0.8333
+              ],
+              "excludes_zero": true
+            }
+          },
+          "recall": {
+            "mean": 0.8426,
+            "ci": [
+              0.6759,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.6991,
+              "ci": [
+                0.3981,
+                0.9583
+              ],
+              "excludes_zero": true
+            }
+          },
+          "mrr": {
+            "mean": 0.8889,
+            "ci": [
+              0.6667,
+              1.0
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.8151,
+              "ci": [
+                0.5619,
+                0.9833
+              ],
+              "excludes_zero": true
+            }
+          },
+          "ndcg": {
+            "mean": 0.7743,
+            "ci": [
+              0.5432,
+              0.9435
+            ],
+            "n": 6,
+            "diff_vs_first": {
+              "mean": 0.7037,
+              "ci": [
+                0.4108,
+                0.9217
+              ],
+              "excludes_zero": true
+            }
+          }
+        }
+      },
+      "n_queries_without_relevant": {
+        "p": 4,
+        "hit": 4,
+        "recall": 4,
+        "mrr": 4,
+        "ndcg": 4
+      },
+      "excluded_qids": {
+        "p": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "hit": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "recall": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "mrr": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ],
+        "ndcg": [
+          "q004",
+          "q008",
+          "q019",
+          "q020"
+        ]
+      },
+      "comparisons": {
+        "p": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.1667,
+            "ci": [
+              0.05,
+              0.3167
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0167,
+            "ci": [
+              0.0,
+              0.05
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.0167,
+            "ci": [
+              -0.0333,
+              0.0667
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "hit": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.3333,
+            "ci": [
+              0.0,
+              0.6667
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.1667,
+            "ci": [
+              0.0,
+              0.5
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.1667,
+            "ci": [
+              0.0,
+              0.5
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "recall": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.5093,
+            "ci": [
+              0.1759,
+              0.8426
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.0833,
+            "ci": [
+              0.0,
+              0.25
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.1898,
+            "ci": [
+              -0.037,
+              0.5231
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "mrr": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.5651,
+            "ci": [
+              0.2484,
+              0.8595
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.2989,
+            "ci": [
+              -0.0356,
+              0.6447
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.25,
+            "ci": [
+              -0.1667,
+              0.6667
+            ],
+            "excludes_zero": false
+          }
+        ],
+        "ndcg": [
+          {
+            "system": "quilt",
+            "baseline": "clip",
+            "mean": 0.5014,
+            "ci": [
+              0.2598,
+              0.7349
+            ],
+            "excludes_zero": true
+          },
+          {
+            "system": "clip+rerank",
+            "baseline": "clip",
+            "mean": 0.1221,
+            "ci": [
+              -0.0145,
+              0.3344
+            ],
+            "excludes_zero": false
+          },
+          {
+            "system": "quilt+rerank",
+            "baseline": "quilt",
+            "mean": 0.2023,
+            "ci": [
+              -0.0973,
+              0.5561
+            ],
+            "excludes_zero": false
+          }
+        ]
+      },
+      "by_category": {
+        "dermatopathology": {
+          "clip": {
+            "p": 0.0,
+            "hit": 0.0,
+            "recall": 0.0,
+            "mrr": 0.0,
+            "ndcg": 0.0,
+            "n_queries": 1
+          },
+          "quilt": {
+            "p": 0.2,
+            "hit": 1.0,
+            "recall": 1.0,
+            "mrr": 0.5,
+            "ndcg": 0.6509,
+            "n_queries": 1
+          },
+          "clip+rerank": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.5,
+            "mrr": 1.0,
+            "ndcg": 0.6131,
+            "n_queries": 1
+          },
+          "quilt+rerank": {
+            "p": 0.2,
+            "hit": 1.0,
+            "recall": 1.0,
+            "mrr": 1.0,
+            "ndcg": 0.9197,
+            "n_queries": 1
+          }
+        },
+        "gastrointestinal": {
+          "clip": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.1111,
+            "mrr": 0.1,
+            "ndcg": 0.0679,
+            "n_queries": 1
+          },
+          "quilt": {
+            "p": 0.6,
+            "hit": 1.0,
+            "recall": 0.6667,
+            "mrr": 1.0,
+            "ndcg": 0.6824,
+            "n_queries": 1
+          },
+          "clip+rerank": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.1111,
+            "mrr": 1.0,
+            "ndcg": 0.235,
+            "n_queries": 1
+          },
+          "quilt+rerank": {
+            "p": 0.5,
+            "hit": 1.0,
+            "recall": 0.5556,
+            "mrr": 1.0,
+            "ndcg": 0.598,
+            "n_queries": 1
+          }
+        },
+        "genitourinary": {
+          "clip": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.125,
+            "mrr": 0.1,
+            "ndcg": 0.0755,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.15,
+            "hit": 0.5,
+            "recall": 0.375,
+            "mrr": 0.1667,
+            "ndcg": 0.2426,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.125,
+            "mrr": 0.0625,
+            "ndcg": 0.0616,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.25,
+            "hit": 1.0,
+            "recall": 1.0,
+            "mrr": 1.0,
+            "ndcg": 0.9108,
+            "n_queries": 2
+          }
+        },
+        "pulmonary": {
+          "clip": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "clip+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          },
+          "quilt+rerank": {
+            "p": null,
+            "hit": null,
+            "recall": null,
+            "mrr": null,
+            "ndcg": null,
+            "n_queries": 0
+          }
+        },
+        "soft tissue": {
+          "clip": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.25,
+            "mrr": 0.0714,
+            "ndcg": 0.1022,
+            "n_queries": 2
+          },
+          "quilt": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.75,
+            "mrr": 1.0,
+            "ndcg": 0.8066,
+            "n_queries": 2
+          },
+          "clip+rerank": {
+            "p": 0.05,
+            "hit": 0.5,
+            "recall": 0.25,
+            "mrr": 0.0556,
+            "ndcg": 0.0923,
+            "n_queries": 2
+          },
+          "quilt+rerank": {
+            "p": 0.1,
+            "hit": 1.0,
+            "recall": 0.75,
+            "mrr": 0.6667,
+            "ndcg": 0.6533,
+            "n_queries": 2
+          }
+        }
+      }
+    }
+  },
+  "circularity": {
+    "spearman_rho": 0.212,
+    "n_pairs": 243,
+    "warn_threshold": 0.5,
+    "warning": null
+  },
+  "caveats": [
+    "QuiltNet held-out status of CSV val split: unverified (STATUS §7.8.3).",
+    "Judgments are pooled: unjudged images count as non-relevant (see the random control sample of the pool for how often this is wrong).",
+    "Annotators are not pathologists; grades are noisy (see the agreement report).",
+    "The golden set passed the 0.99 near-duplicate exclusion; it is not clean at the 0.95 criterion (ADR-0003)."
+  ]
+}
