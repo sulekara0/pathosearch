@@ -1,0 +1,183 @@
+{
+  "command": "uv run python scripts/analyze_source_groups.py --golden eval_data/golden_v0",
+  "inputs": {
+    "csv": "data/quilt_1M_lookup.csv",
+    "images_dir": "data/images/images_part_1",
+    "golden_corpus": "eval_data/golden_v0/corpus_manifest.jsonl",
+    "golden_candidates_ids": "artifacts/golden_v0_candidates/clip/ids.json",
+    "main_ids": "artifacts/clip/ids.json"
+  },
+  "csv": {
+    "unique_images": 653209,
+    "images": 653209,
+    "images_by_kind": {
+      "figure": 59371,
+      "none": 22463,
+      "tweet": 133511,
+      "video": 437864
+    },
+    "distinct_keys_by_kind": {
+      "figure": 29983,
+      "tweet": 53727,
+      "video": 4475
+    },
+    "split_by_source": {
+      "video": {
+        "groups": 4475,
+        "split_class": {
+          "train_only": 4435,
+          "val_only": 40
+        },
+        "mixed_examples": []
+      },
+      "tweet": {
+        "groups": 53727,
+        "split_class": {
+          "train_only": 52844,
+          "val_only": 883
+        },
+        "mixed_examples": []
+      },
+      "figure": {
+        "groups": 29983,
+        "split_class": {
+          "train_and_val": 1343,
+          "train_only": 28040,
+          "val_only": 600
+        },
+        "mixed_examples": [
+          "figure:000b265e-ee9a-43e4-ae77-06ea6c5432ca",
+          "figure:0053f67c-5144-440e-8998-38801d7bccd5",
+          "figure:007b9583-f959-40ea-9a5e-f22971bf3d59",
+          "figure:007f528e-94dc-4bbf-9694-ed0de37e346a",
+          "figure:007fbaf4-d817-46ea-9034-c0d9362c07c0"
+        ]
+      }
+    }
+  },
+  "disk": {
+    "images": 65322,
+    "images_by_kind": {
+      "figure": 5941,
+      "none": 2274,
+      "tweet": 13414,
+      "video": 43693
+    },
+    "distinct_keys_by_kind": {
+      "figure": 5433,
+      "tweet": 12064,
+      "video": 4104
+    },
+    "kind_by_subset": {
+      "laion": {
+        "none": 2274
+      },
+      "openpath": {
+        "tweet": 13414
+      },
+      "pubmed": {
+        "figure": 5941
+      },
+      "quilt": {
+        "video": 43693
+      }
+    }
+  },
+  "golden_candidates": {
+    "images": 928,
+    "images_by_kind": {
+      "figure": 175,
+      "none": 86,
+      "tweet": 210,
+      "video": 457
+    },
+    "distinct_keys_by_kind": {
+      "figure": 175,
+      "tweet": 191,
+      "video": 37
+    }
+  },
+  "golden": {
+    "images": 820,
+    "images_by_kind": {
+      "figure": 175,
+      "none": 86,
+      "tweet": 203,
+      "video": 356
+    },
+    "distinct_keys_by_kind": {
+      "figure": 175,
+      "tweet": 185,
+      "video": 37
+    }
+  },
+  "train_candidates": {
+    "images": 64369,
+    "images_by_kind": {
+      "figure": 5766,
+      "none": 2163,
+      "tweet": 13204,
+      "video": 43236
+    },
+    "distinct_keys_by_kind": {
+      "figure": 5289,
+      "tweet": 11873,
+      "video": 4067
+    },
+    "group_sizes": {
+      "figure": {
+        "groups": 5289,
+        "median": 1,
+        "max": 4
+      },
+      "tweet": {
+        "groups": 11873,
+        "median": 1,
+        "max": 4
+      },
+      "video": {
+        "groups": 4067,
+        "median": 6,
+        "max": 177
+      }
+    }
+  },
+  "train_sharing_golden_candidates": {
+    "train_images": 32,
+    "train_images_by_kind": {
+      "figure": 32
+    },
+    "distinct_keys_by_kind": {
+      "figure": 31
+    },
+    "train_images_in_main_corpus": 10,
+    "examples": [
+      "081d308e-b2b6-43e2-95c9-1ad9b7cbd1c5_1.jpg",
+      "08fcce31-f0b2-4593-a58c-4fdb4082f805.jpg",
+      "0efdd357-7308-4aeb-b8dc-b80ddec1de24_2.jpg",
+      "122aff8e-7927-482a-a150-21a779e903bf_0.jpg",
+      "1e1f8951-21d8-46d2-a75a-6a41649b1602_0.jpg"
+    ]
+  },
+  "train_sharing_golden": {
+    "train_images": 32,
+    "train_images_by_kind": {
+      "figure": 32
+    },
+    "distinct_keys_by_kind": {
+      "figure": 31
+    },
+    "train_images_in_main_corpus": 10,
+    "examples": [
+      "081d308e-b2b6-43e2-95c9-1ad9b7cbd1c5_1.jpg",
+      "08fcce31-f0b2-4593-a58c-4fdb4082f805.jpg",
+      "0efdd357-7308-4aeb-b8dc-b80ddec1de24_2.jpg",
+      "122aff8e-7927-482a-a150-21a779e903bf_0.jpg",
+      "1e1f8951-21d8-46d2-a75a-6a41649b1602_0.jpg"
+    ]
+  },
+  "main_corpus_sharing_golden": 46,
+  "golden_with_train_source_in_csv": {
+    "figure": 123
+  }
+}
