@@ -50,7 +50,7 @@ Komut: `uv run python scripts/analyze_train_captions.py --manifest eval_data/r4_
 
 ### 3. Ölçekler (iç içe)
 
-`scale_rank` = görsel adının `sha1(f"42:{ad}")` sırası. Ölçekler bu sıranın önekleridir: **10k = 10,000 · 30k = 30,000 · full = 35,868**. 10k ⊂ 30k ⊂ full.
+`scale_rank` = görsel adının `sha1(f"42:{ad}")` sırası. Ölçekler bu sıranın önekleridir: **10k = 10,000 · 30k = 30,000 · full = 35,868**. 10k ⊂ 30k ⊂ full. *(full: çalıştırılmadı, bkz. Ek 1)*
 
 ### 4. Eğitim ayarları (golden'a bakılarak ayarlanmadı)
 
@@ -66,19 +66,19 @@ Komut: `uv run python scripts/analyze_train_captions.py --manifest eval_data/r4_
 
 ### 5. Koşular ve seed'ler
 
-- **Planlanan:** `lora-10k-s0`, `lora-30k-s0`, `lora-full-s0` (eğitim seed'i 0).
+- **Planlanan:** `lora-10k-s0`, `lora-30k-s0`, `lora-full-s0` (eğitim seed'i 0). *(`lora-full-s0` çalıştırılmadı, bkz. Ek 1)*
 - **Zaman kalırsa:** `s1` ve `s2` (aynı üç ölçek, seed 1 ve 2). Koşulursa aynı protokolle raporlanır. Koşulmazsa R4 raporunda "seed varyansı ölçülmedi" sınırı olarak yazılır. s1/s2 sonuçları birincil karşılaştırmayı değiştirmez.
 
 ### 6. Değerlendirme
 
 - golden_v0, k=10. Birincil eşik lenient (ADR-0001), strict ikincil. Paired bootstrap n=1000, seed 42, %95 GA.
-- Systems: `clip, quilt, lora-10k-s0, lora-30k-s0, lora-full-s0` (koşulduysa s1/s2 de). Domain gate kapalı, rerank yok (rerank R5'in konusu).
+- Systems: `clip, quilt, lora-10k-s0, lora-30k-s0, lora-full-s0` (koşulduysa s1/s2 de). *(`lora-full-s0` çalıştırılmadı, bkz. Ek 1)* Domain gate kapalı, rerank yok (rerank R5'in konusu).
 
 ### 7. Birincil karşılaştırma (tek)
 
-**`lora-full-s0 − clip`, lenient nDCG@10, test split.** "Kazanç var" iddiası yalnızca bu farkın %95 GA'sı sıfırı dışlarsa yapılır. Diğer her şey **keşifsel**tir; çoklu karşılaştırma düzeltmesi uygulanmaz ve tek bir `*` kanıt sayılmaz:
+*(Ek 1 ile değişti: birincil artık `lora-30k-s0 − clip`; `lora-full-s0` çalıştırılmadı.)* **`lora-full-s0 − clip`, lenient nDCG@10, test split.** "Kazanç var" iddiası yalnızca bu farkın %95 GA'sı sıfırı dışlarsa yapılır. Diğer her şey **keşifsel**tir; çoklu karşılaştırma düzeltmesi uygulanmaz ve tek bir `*` kanıt sayılmaz:
 - `lora-10k-s0 − clip`, `lora-30k-s0 − clip` (ölçek eğrisi, yalnızca nokta tahmin olarak anlatılır)
-- `lora-full-s0 − quilt`, `quilt − clip`
+- `lora-full-s0 − quilt` *(çalıştırılmadı, bkz. Ek 1)*, `quilt − clip`
 - diğer metrikler ve strict eşik
 
 ### 8. Havuz genişletmesi (metriklerden önce)
@@ -92,7 +92,7 @@ Qrels clip/quilt (±rerank) sistemlerinden havuzlandı; LoRA'nın getirdiği yar
 
 ### 9. Keşifsel duyarlılık
 
-Aynı metrikler, golden görsellerinden eğitim kümesine (full) en yakın komşu cosine'i her iki encoder'da < 0.95 olan alt kümede de raporlanır. Bu bir kontrol, kanıt değildir.
+Aynı metrikler, golden görsellerinden eğitim kümesine (full; çalıştırılmadı, bkz. Ek 1: tam eğitim kümesi manifest'i) en yakın komşu cosine'i her iki encoder'da < 0.95 olan alt kümede de raporlanır. Bu bir kontrol, kanıt değildir.
 
 ### 10. Test split
 
@@ -110,3 +110,20 @@ Aynı metrikler, golden görsellerinden eğitim kümesine (full) en yakın komş
 - **Etiketler:** annotator'lar patolog değil, lenient kappa 0.62. Havuz genişletmesini yalnız A etiketler.
 - **GPU'da bit düzeyinde tekrar üretilebilirlik garanti edilmez.** CPU'da resume'un bit düzeyinde aynı olduğu testle doğrulandı (`tests/test_train_loop.py`).
 - Yalnızca metin→görsel ölçülür. Klinik geçerlilik iddiası yoktur.
+
+## Ek 1 (2026-10-26): `lora-full-s0` koşulmayacak
+
+2026-10-26 tarihli ek; golden dev/test sonuçları görülmeden yazıldı. Bu belgedeki "Zamanlama" ilkesi korunur: ek, hiçbir LoRA metriği görülmeden yapıldığı için sonuçlara bakılarak yapılmış bir değişiklik değildir.
+
+**Değişiklik:**
+- `lora-full-s0` koşulmayacak. Gerekçe süre ve kaynak: full (35,868) 30k'dan yalnızca %20 fazla veridir (35,868 / 30,000 ≈ 1.20) ve beklenen marjinal getiri küçüktür.
+- **Birincil karşılaştırma (7. madde)** `lora-30k-s0 − clip`, lenient nDCG@10, test split olarak değişir. Yöntem aynı: paired bootstrap n=1000, seed 42, %95 GA, tek birincil, diğer her şey keşifsel (çoklu karşılaştırma düzeltmesi yok).
+- 6. maddedeki systems listesi `clip, quilt, lora-10k-s0, lora-30k-s0` olur (koşulduysa s1/s2 de). 7. maddedeki `lora-full-s0 − quilt` keşifsel karşılaştırması düşer. 8. maddedeki havuz genişletmesi yalnızca `lora-10k-s0` ve `lora-30k-s0` için yapılır.
+
+**Değişmeyenler:** eğitim kümesi ve ölçek tanımı (3. madde, `full = 35,868` tanımı olarak kalır), eğitim ayarları, seed protokolü, 9. ve 10. madde.
+
+**İddia sınırı:** ölçek karşılaştırması yalnızca 10K ve 30K'dan ibarettir. İki nokta bir eğri değildir; "ölçekleme" (scaling) iddiası yapılmaz, 10K → 30K farkı yalnızca iki noktalı keşifsel bir gözlem olarak anlatılır.
+
+**Rapora yazılacak sınır:** R4 raporunun sınırlar bölümünde `lora-full-s0` koşusunun yokluğu açıkça yazılacak (süre ve kaynak nedeniyle koşulmadı; full ölçeği ölçülmedi).
+
+**İşaretlemeler:** `notebooks/r4_train_colab.ipynb` içindeki `train("full")` hücresi silinmedi, "NOT RUN" notuyla yorum satırı yapıldı. Bu ADR'deki ve `docs/ideas.md`'deki `full` referansları "çalıştırılmadı" diye işaretlendi, silinmedi.
