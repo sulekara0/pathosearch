@@ -1,0 +1,36 @@
+{
+  "model": "openai/clip-vit-base-patch32",
+  "lora": null,
+  "device": "cpu",
+  "amp": "off",
+  "n_val": 1929,
+  "caption_seed": 42,
+  "batch_size": 256,
+  "logit_scale": 100.00000762939453,
+  "val_loss": 8.10485553741455,
+  "i2t_r1": 0.01710730977356434,
+  "t2i_r1": 0.01866251975297928,
+  "i2t_r5": 0.0352514274418354,
+  "t2i_r5": 0.03628823161125183,
+  "seconds": 555.69,
+  "provenance": {
+    "git_sha": "d54df937817bedf414377ad97aceed97417b4802",
+    "dirty": false,
+    "command": "uv run python scripts/eval_val_baseline.py --manifest eval_data/r4_train_v0 --images-dir artifacts/r4_bundle/r4_train_v0_val/images --captions artifacts/r4_bundle/r4_train_v0_val/captions.jsonl",
+    "manifest": "eval_data/r4_train_v0",
+    "val_manifest_sha256": "fd5f54b34e5dcd24b445d5c71df4e18b2a8df56ec9139d9599cc7d0cb8f088e3",
+    "captions": "artifacts/r4_bundle/r4_train_v0_val/captions.jsonl",
+    "captions_sha256": "147181788db306794a65bbd5aa9cb130012ba470f317aba62d0d5755d48bc5e4",
+    "images_dir": "artifacts/r4_bundle/r4_train_v0_val/images",
+    "versions": {
+      "python": "3.13.7",
+      "torch": "2.14.1",
+      "transformers": "5.19.0",
+      "peft": "0.21.2",
+      "numpy": "2.5.4",
+      "pillow": "12.3.0",
+      "pathosearch": "0.1.0"
+    },
+    "created_utc": "2026-10-26T17:35:48+00:00"
+  }
+}
