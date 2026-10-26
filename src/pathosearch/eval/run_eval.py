@@ -246,6 +246,18 @@ def default_comparisons(systems: Sequence[str]) -> list[tuple[str, str]]:
     return pairs
 
 
+def judged_pairs(
+    qrels: Qrels, reference: Sequence[Judgment], qids: Collection[str]
+) -> dict[str, set[str]]:
+    """Pool coverage: graded pairs plus pairs the reference annotator marked unsure."""
+    wanted = set(qids)
+    judged: dict[str, set[str]] = {q: set(g) for q, g in qrels.items() if q in wanted}
+    for j in latest_judgments(reference).values():
+        if j.qid in wanted:
+            judged.setdefault(j.qid, set()).add(j.image)
+    return judged
+
+
 def judged_at_k(
     runs: Mapping[str, Mapping[str, Sequence[str]]],
     judged: Mapping[str, set[str]],
@@ -522,11 +534,7 @@ def run_eval(
     unseen_summary = summarize(
         score_runs(runs, unseen, k, excluded), names, categories, n_boot, seed, pairs
     )
-    # pool coverage: graded pairs plus pairs the reference annotator marked unsure
-    judged: dict[str, set[str]] = {q: set(g) for q, g in qrels.items()}
-    for j in latest_judgments(reference).values():
-        if j.qid in set(qids):
-            judged.setdefault(j.qid, set()).add(j.image)
+    judged = judged_pairs(qrels, reference, qids)
     config: dict[str, Any] = {
         "alpha": RERANK_ALPHA,
         "beta": RERANK_BETA,
