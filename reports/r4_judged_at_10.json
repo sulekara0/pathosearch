@@ -1,0 +1,125 @@
+{
+  "command": "uv run python scripts/r4_judged_at_k.py --golden eval_data/golden_v0 --adapter lora-10k-s0=artifacts/r4/runs/lora-10k-s0/adapter --adapter lora-30k-s0=artifacts/r4/runs/lora-30k-s0/adapter",
+  "git_sha": "dd26521",
+  "adapters": {
+    "lora-10k-s0": {
+      "dir": "artifacts/r4/runs/lora-10k-s0/adapter",
+      "base_model": "openai/clip-vit-base-patch32",
+      "epoch": 7,
+      "config_hash": "a5cadd39d30863f3",
+      "lora": {
+        "r": 16,
+        "alpha": 32,
+        "dropout": 0.1,
+        "targets": [
+          "q_proj",
+          "v_proj"
+        ]
+      },
+      "train_git_sha": null,
+      "train_dirty": null,
+      "best_val_loss": null,
+      "train_status": null
+    },
+    "lora-30k-s0": {
+      "dir": "artifacts/r4/runs/lora-30k-s0/adapter",
+      "base_model": "openai/clip-vit-base-patch32",
+      "epoch": 6,
+      "config_hash": "80f8cdb07a536818",
+      "lora": {
+        "r": 16,
+        "alpha": 32,
+        "dropout": 0.1,
+        "targets": [
+          "q_proj",
+          "v_proj"
+        ]
+      },
+      "train_git_sha": null,
+      "train_dirty": null,
+      "best_val_loss": null,
+      "train_status": null
+    }
+  },
+  "k": 10,
+  "splits": {
+    "dev": {
+      "systems": {
+        "lora-10k-s0": {
+          "judged_at_k": 0.26,
+          "pairs": 100,
+          "unjudged_pairs": 74,
+          "unjudged_by_query": {
+            "q003": 3,
+            "q004": 3,
+            "q007": 8,
+            "q008": 9,
+            "q011": 9,
+            "q012": 7,
+            "q013": 7,
+            "q016": 9,
+            "q019": 9,
+            "q020": 10
+          }
+        },
+        "lora-30k-s0": {
+          "judged_at_k": 0.25,
+          "pairs": 100,
+          "unjudged_pairs": 75,
+          "unjudged_by_query": {
+            "q003": 4,
+            "q004": 5,
+            "q007": 8,
+            "q008": 7,
+            "q011": 8,
+            "q012": 8,
+            "q013": 8,
+            "q016": 9,
+            "q019": 8,
+            "q020": 10
+          }
+        }
+      },
+      "unjudged_union": 123
+    },
+    "test": {
+      "systems": {
+        "lora-10k-s0": {
+          "judged_at_k": 0.26,
+          "pairs": 100,
+          "unjudged_pairs": 74,
+          "unjudged_by_query": {
+            "q001": 6,
+            "q002": 9,
+            "q005": 7,
+            "q006": 8,
+            "q009": 8,
+            "q010": 8,
+            "q014": 6,
+            "q015": 8,
+            "q017": 6,
+            "q018": 8
+          }
+        },
+        "lora-30k-s0": {
+          "judged_at_k": 0.29,
+          "pairs": 100,
+          "unjudged_pairs": 71,
+          "unjudged_by_query": {
+            "q001": 7,
+            "q002": 9,
+            "q005": 7,
+            "q006": 9,
+            "q009": 6,
+            "q010": 8,
+            "q014": 7,
+            "q015": 6,
+            "q017": 5,
+            "q018": 7
+          }
+        }
+      },
+      "unjudged_union": 117
+    }
+  }
+}
