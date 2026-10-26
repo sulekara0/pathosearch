@@ -1,6 +1,6 @@
 # golden_v0 sızıntı analizi: 928 aday (eleme ÖNCESİ)
 
-> Bu rapor 0.99 elemesinden önceki 928 görselli aday kümeyi anlatır. Eleme sonrası (820) rapor: [leakage_analysis_golden_v0.md](leakage_analysis_golden_v0.md). Dosya adları sonradan `_candidates928` eklenerek değişti; içindeki komut, o günkü 928'lik `golden_v0` manifestiyle çalıştırıldı. Çiftler: `leakage_pairs_golden_v0_candidates928.html`; ham sayılar: `leakage_analysis_golden_v0_candidates928.json`.
+> Bu rapor 0.99 elemesinden önceki 928 görselli aday kümeyi anlatır. Eleme sonrası (820) rapor: [leakage_analysis_golden_v0.md](leakage_analysis_golden_v0.md). Dosya adları sonradan `_candidates928` eklenerek değişti; içindeki komut, o günkü 928'lik `golden_v0` manifestiyle çalıştırıldı. Çiftler: `leakage_pairs_golden_v0_candidates928.html` (görsel içerdiği için yerelde üretilir, repoda yok); ham sayılar: `leakage_analysis_golden_v0_candidates928.json`.
 
 Komut: `uv run python scripts/leakage_analysis.py --golden eval_data/golden_v0` (seed 42, ham sayılar `leakage_analysis_golden_v0.json`, çiftler `leakage_pairs_golden_v0.html`).
 Ön koşul: `reports/leakage_golden_v0.json` (`scripts/leakage_report.py`, τ=0.95; 928 için üretilmiş sürümü commit `80386c1`'de). Bu analiz τ'yu ve sızıntı kodunu **değiştirmez**, yalnızca ölçer.

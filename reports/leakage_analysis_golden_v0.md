@@ -16,7 +16,7 @@ Manifest: `build_golden_corpus.py --rule val_only_on_disk --out eval_data/golden
 | ≥ 0.95 | 575 | 94 |
 | ≥ 0.99 / 0.999 / 0.9999 | 0 / 0 / 0 | 0 / 0 / 0 |
 
-0.99 üstü kalıntı yok. ≥ 0.9999 çift olmadığı için yan yana HTML üretilmedi (928'lik aday kümenin çift listesi: `leakage_pairs_golden_v0_candidates928.html`).
+0.99 üstü kalıntı yok. ≥ 0.9999 çift olmadığı için yan yana HTML üretilmedi (928'lik aday kümenin çift listesi: `leakage_pairs_golden_v0_candidates928.html`; görsel içerdiği için yerelde üretilir, repoda yok).
 Ana korpusa ≥ 0.95 olan ayrı görsel: CLIP 575, QuiltNet 94, birleşim 592, kesişim 77.
 
 ## 2. Referans: rastgele 820 ana korpus görseli → ana korpusun geri kalanı (kendi hariç)

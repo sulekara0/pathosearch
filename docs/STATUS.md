@@ -53,7 +53,7 @@ Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar
 | `app.py` (408 satır) | Streamlit UI + `search_pipeline` + artifact kontrolü (mantık UI'ya gömülü) |
 | `scripts/` | 18 dosya, ayrıntı §2 |
 | `inspect_quilt.py` | Tek seferlik keşif; sabit yollar `C:\Users\user\Downloads\...` (kullanıcı dizinine bağlı mutlak yol) |
-| `reports/` | 6 statik HTML (üçü karşılaştırma, üçü tek sorgu görseli) |
+| `reports/` | 6 statik HTML (üçü karşılaştırma, üçü tek sorgu görseli). **Not:** `comparison_v1_v2_v3.html` dışındakiler `data:image` ile gömülü Quilt-1M görselleri içerdiği için yerelde üretilir, repoda yok (bkz. §3 notu) |
 | `requirements.txt` | Sürümler `>=` ile açık, lock yok |
 | `.githooks/commit-msg`, `.claude/settings.json` | Atıf satırlarını temizleme |
 | `tests/`, `pyproject.toml`, CI, `uv.lock`, `LICENSE` | **Bulunamadı** |
@@ -83,6 +83,8 @@ Hardcode/hack özeti: `os.chdir` (app, `domain_gate`, `test_*`), `sys.path.inser
 
 ## 3. Raporların iddiaları
 
+> **Not (2026-10-26):** `comparison_64k.html`, `comparison_114k.html` ve `search_*.html` ×3 yerelde üretilir, repoda yok: `data:image` ile gömülü Quilt-1M görselleri içerdikleri için git takibinden çıkarıldı (`.gitignore`: `reports/*.html`). Repoda yalnız görsel içermeyen `comparison_v1_v2_v3.html` kalır. Aşağıdaki sayılar bu dosyaların takipten çıkarılmadan önceki içeriğinden okunmuştur; dosyalar git geçmişinde hâlâ duruyor.
+
 | Rapor | Ne iddia ediyor | Notlar |
 |---|---|---|
 | `comparison_64k.html` (2026-05-22) | 63 etiketli sorgu, K=10: P@10 CLIP **0.175** vs QuiltNet **0.395**; mAP 0.272/0.520; nDCG 0.172/0.410; gecikme 32.7/62.5 ms (CPU) | = V1 (rerank yok, unknown filtresi yok) |
@@ -96,7 +98,7 @@ Tutarsızlık: V3 JSON'unda QuiltNet 0.480 (56 kavram), `comparison_114k`'de 0.5
 
 **Kaynak**
 - Tek geçtiği yer: `app.py:235` (sidebar `help` metni). Kodda, JSON'da, raporda **0.609 hiç geçmiyor**. 0.609'un nasıl hesaplandığı **bulunamadı**. (Güncelleme: bitirme raporuna göre 0.609 V5b'dir, bkz. §7.9.2; ham çıktı ve komut repoda yok.)
-- **0.539**, `reports/comparison_114k.html`'de **QuiltNet'in rerank'siz P@10'u** olarak geçiyor. Yani "0.539" muhtemelen ham QuiltNet taban çizgisi, "0.609" ise rerank'li sonuç **(tahmin)**; rerank'li koşunun raporu/çıktısı repoda yok.
+- **0.539**, `reports/comparison_114k.html`'de (yerelde üretilir, repoda yok; §3 notu) **QuiltNet'in rerank'siz P@10'u** olarak geçiyor. Yani "0.539" muhtemelen ham QuiltNet taban çizgisi, "0.609" ise rerank'li sonuç **(tahmin)**; rerank'li koşunun raporu/çıktısı repoda yok.
 - `compare_models.py` rerank varsayılanı `α=.6, β=.4, pool=50`; uygulama `α=.75, β=.25, pool=topk×5`. Rapordaki/ iddiadaki sayının hangi ağırlıklarla çıktığı **bulunamadı**; uygulamadaki ayar bu sayıyla bağlanamıyor.
 - Komut, seed, config yok → CLAUDE.md'nin "tekrar üretilebilir komut + config + seed" kuralını karşılamıyor.
 

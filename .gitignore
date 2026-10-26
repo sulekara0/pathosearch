@@ -46,3 +46,7 @@ build/
 # Secrets / local config
 .env
 CLAUDE.local.md
+
+# HTML reports embed Quilt-1M images as data: URIs; generated locally, not committed
+reports/*.html
+!reports/comparison_v1_v2_v3.html
