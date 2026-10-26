@@ -145,3 +145,18 @@ def test_pool_round_trip_and_duplicate_rejected(tmp_path: Path) -> None:
     save_pool(path, [pool[0], pool[0]])
     with pytest.raises(ValueError, match="duplicate"):
         load_pool(path)
+
+
+def test_extend_pool_adds_only_unjudged_unpooled_after_existing_order() -> None:
+    from pathosearch.eval.pooling import SOURCE_R4_EXTENSION, PoolItem, extend_pool
+
+    pool = [PoolItem("q1", "i1", 0, "pooled", ("clip",)), PoolItem("q1", "i2", 1, "random", ())]
+    runs = {"x": {"q1": ["i1", "i3", "i4", "i5"]}, "y": {"q1": ["i3", "i6", "i1", "i9"]}}
+    judged = {"q1": {"i4"}}
+    new = extend_pool(pool, runs, judged, depth=3)
+    assert {it.image for it in new} == {"i3", "i6"}  # i1 pooled, i4 judged, i5/i9 beyond depth
+    assert sorted(it.order for it in new) == [2, 3]
+    assert {it.source for it in new} == {SOURCE_R4_EXTENSION}
+    assert next(it for it in new if it.image == "i3").systems == ("x", "y")
+    assert extend_pool(pool, runs, judged, depth=3) == new  # deterministic
+    assert extend_pool(pool + new, runs, judged, depth=3) == []  # idempotent

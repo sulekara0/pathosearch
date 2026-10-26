@@ -31,6 +31,7 @@ DEFAULT_OVERLAP_FRAC = 0.2
 DEFAULT_SEED = 42
 SOURCE_POOLED = "pooled"
 SOURCE_RANDOM = "random"
+SOURCE_R4_EXTENSION = "r4_extension"
 
 Runs = Mapping[str, Mapping[str, Sequence[str]]]  # system -> qid -> ranked image ids
 
@@ -89,6 +90,46 @@ def build_pool(
             image, source, systems = items[idx]
             pool.append(PoolItem(qid, image, order, source, systems))
     return pool
+
+
+def extend_pool(
+    pool: Sequence[PoolItem],
+    runs: Runs,
+    judged: Mapping[str, set[str]],
+    depth: int = DEFAULT_DEPTH,
+    source: str = SOURCE_R4_EXTENSION,
+    seed: int = DEFAULT_SEED,
+) -> list[PoolItem]:
+    """New pool items: top-``depth`` images of ``runs`` that are neither pooled nor judged.
+
+    Existing items keep their ``order``; new items of a query are shuffled among themselves
+    (seed + CRC32 of the qid, independent of the original draw) and ordered after the
+    existing ones, so a re-run with the same inputs gives the same result. Systems are kept
+    for later analysis only; annotators never see them.
+    """
+    if depth < 1:
+        raise ValueError("depth must be >= 1")
+    present = {(it.qid, it.image) for it in pool}
+    next_order: dict[str, int] = {}
+    for it in pool:
+        next_order[it.qid] = max(next_order.get(it.qid, 0), it.order + 1)
+    qids = sorted({qid for per_query in runs.values() for qid in per_query})
+    new: list[PoolItem] = []
+    for qid in qids:
+        retrieved_by: dict[str, set[str]] = {}
+        for system in sorted(runs):
+            for image in runs[system].get(qid, [])[:depth]:
+                if (qid, image) not in present and image not in judged.get(qid, set()):
+                    retrieved_by.setdefault(image, set()).add(system)
+        images = sorted(retrieved_by)
+        rng = query_rng(seed + 2, qid)
+        base = next_order.get(qid, 0)
+        for offset, idx in enumerate(rng.permutation(len(images))):
+            image = images[idx]
+            new.append(
+                PoolItem(qid, image, base + offset, source, tuple(sorted(retrieved_by[image])))
+            )
+    return new
 
 
 def overlap_subset(
