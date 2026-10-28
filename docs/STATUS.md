@@ -19,11 +19,11 @@ Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar
 | Eksik görsellerin nedeni: part-2/3 dosyalarının başka ortamda kalması | tahmin | rapor | §7.9.4 |
 | Çok-caption'lı görselde kullanılan caption: JSONL'daki son satır (seed'e bağlı) | doğrulandı | kod okuması | §7.6 (b) |
 | P@10 relevance tanımı: `pathology ∈ expected` (kategori düzeyi, ikili) | doğrulandı | kod okuması | §4 |
-| "0.539 → 0.609" = V4 → V5b; 0.539 rerank'siz QuiltNet, 0.609 V5b | rapordan aktarıldı | bitirme raporu (ham çıktı yok) | §7.9.2, §4 |
+| "0.539 → 0.609" = V4 → V5b; 0.539 rerank'siz QuiltNet, 0.609 V5b. **Güncelleme (2026-10-28):** golden_v0'da QuiltNet üzerinde rerank'in P@10 farkı dev'de de test'te de sıfırı içeriyor; ölçümler farklı olduğu için eski iddia ne doğrulandı ne çürütüldü ([R3 §3 (e)](r3_baseline.md#3-dev-bulgularının-testte-durumu)) | rapordan aktarıldı | bitirme raporu (ham çıktı yok) · güncel: `run_eval` komutu | §7.9.2, §4, [R3 §3](r3_baseline.md#3-dev-bulgularının-testte-durumu) |
 | V1–V7 sürüm tablosu (P@10) | rapordan aktarıldı | bitirme raporu (ham çıktı yok) | §7.9.1 |
 | `comparison_*.html` raporlarındaki P@10/mAP/nDCG değerleri | rapordan aktarıldı | `reports/*.html` | §3 |
 | "64,052 görsel" ifadesinin kaynağı: V1-V3'ün 64K alt kümeyle koşulması olabilir | tahmin | rapor | §7.9.3, §3 |
-| Dolaylı sızıntı: reranker caption sözcüklerine bakıyor, etiket aynı satırın kategorisi; γ=0 yalnız doğrudan sızıntıyı kapatır | tahmin (risk) | kod okuması + rapor | §4 risk 1, 10 |
+| Dolaylı sızıntı: reranker caption sözcüklerine bakıyor, etiket aynı satırın kategorisi; γ=0 yalnız doğrudan sızıntıyı kapatır. **Güncelleme (2026-10-28):** risk eski kategori etiketli ölçüm için geçerli; golden_v0'da relevance insan derecesi, döngüsellik kontrolü (Spearman grade–caption örtüşmesi) R3 ve R4 koşularında uyarı eşiğinin altında ([R3 §5](r3_baseline.md#5-kanıt-düzeyi-ve-sınırlar), [R4 §4.5](R4_report.md#45-diğer-kontroller)) | tahmin (risk) · güncel: golden_v0'da ölçüldü, uyarı yok | kod okuması + rapor · `run_eval` komutu | §4 risk 1, 10 |
 | QuiltNet bu görselleri eğitimde görmüş olabilir (korpus train); `val`'in eğitimde kullanılmadığı hiçbir kaynakta doğrulanmadı | tahmin (risk) | artifact okuması + makale | §7.2, §7.8.3, §4 risk 5, 9 |
 | CSV `val` = QuiltNet retrieval holdout'u (13,559 sayısal örtüşmesi) | tahmin | makale | §7.8.3 |
 | CSV split'i `quilt` videolarında ve openpath tweet'lerinde kaynak bazında (karışık grup 0); pubmed figürlerinde değil (1,343 karışık figür) | doğrulandı (anahtarlar dosya adından) | `analyze_source_groups` komutu | §7.10 |
@@ -36,8 +36,8 @@ Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar
 | V6 cross-encoder CPU'da sorgu başına ~26 sn; demo V5b ~200 ms | rapordan aktarıldı | bitirme raporu | §7.9.5 |
 | Görsel→Görsel modu nicel ölçülmemiş | rapordan aktarıldı | bitirme raporu | §7.9.5 |
 | FAISS indeksi Flat (dosya boyutu düz depolamayla uyumlu) | tahmin | artifact okuması (indeks açılmadı) | §7.5 |
-| `test_thresholds.py` ve `visualize_search.py` çalışmaz durumda | doğrulandı | kod okuması (çalıştırılmadı) | §2 |
-| Golden set, qrels, kaynak/video bazlı split, metrik testi, Recall@k/Hit@k/MRR, HNSW | bulunamadı | kod okuması | §5 |
+| `test_thresholds.py` ve `visualize_search.py` çalışmaz durumda. **Güncelleme (2026-10-28):** giderildi; `17541c5` ile `visualize_search` onarıldı (`tests/test_visualize_search.py`), `test_thresholds.py` silindi | doğrulandı (R0) · güncel: giderildi | kod okuması (çalıştırılmadı) · git geçmişi | §2 |
+| Golden set, qrels, kaynak/video bazlı split, metrik testi, Recall@k/Hit@k/MRR, HNSW. **Güncelleme (2026-10-28):** HNSW dışında hepsi var. Golden set `eval_data/golden_v0` (protokol [golden_set.md](golden_set.md)); qrels `qrels.tsv` (adjudication sonrası); Recall@k/Hit@k/MRR/graded nDCG `eval/metrics.py`, test `tests/test_metrics.py`; ölçümler [R3](r3_baseline.md), [R4](R4_report.md). Golden'ın dev/test bölünmesi **sorgu** düzeyinde (`eval/splits.py`); golden ile R4 eğitim kümesinin ayrımı **kaynak grubu** (video/tweet/figür) bazında ([R4 §2](R4_report.md#2-eğitim-kümesi-sızıntı-kontrolleri-ölçekler), §7.10). HNSW hâlâ bulunamadı | bulunamadı (R0) · güncel: HNSW dışında doğrulandı | kod okuması · dosya listesi | §5, [R3](r3_baseline.md), [R4](R4_report.md) |
 | "Literatürde eşdeğeri yok", "0.45-0.65 tipik aralık" iddiaları | bulunamadı (repoda doğrulama yok) | bitirme raporu | §7.9.6 (d), §4 risk 12 |
 | R4 eğitim kümesi: 35,868 train + 1,929 iç val, golden'dan kaynak grubu / cos ≥ 0.99 / caption eşitliğiyle ayrık; adayların %59'ı (embedding'i olanlar) | doğrulandı | `build_train_manifest` komutu | [R4 §2](R4_report.md#2-eğitim-kümesi-sızıntı-kontrolleri-ölçekler) |
 | R4 iç val kaybı 8.105 → 6.569 (10k) / 6.233 (30k); t2i R@5 0.036 → 0.066 / 0.090 (tek tohum) | doğrulandı | `train_lora` + `eval_val_baseline` komutları | [R4 §3](R4_report.md#3-eğitim-sonuçları) |
