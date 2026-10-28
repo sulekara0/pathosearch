@@ -6,7 +6,7 @@ Tarih: 2026-10-14 · Kapsam: `v0-prototype` etiketli kod (commit `d123df5` + `5e
 
 ## Güncel özet
 
-Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar; ayrıntı ve uyarılar ilgili bölümdedir. Durum değerleri: **doğrulandı** (repodaki kod/veriden doğrudan görüldü), **rapordan aktarıldı** (bitirme raporunda yazıyor, ham çıktı repoda yok, tekrar üretilemiyor), **tahmin** (çıkarım, doğrulanmadı), **bulunamadı** (repoda yok). Kaynak değerleri: `analyze_corpus` komutu (§7.8; tekrar üretilebilir), kod okuması, artifact okuması (komutsuz), rapor (§3 HTML raporları veya §7.9 bitirme raporu), makale.
+Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar; ayrıntı ve uyarılar ilgili bölümdedir. Durum değerleri: **doğrulandı** (repodaki kod/veriden doğrudan görüldü), **rapordan aktarıldı** (bitirme raporunda yazıyor, ham çıktı repoda yok, tekrar üretilemiyor), **tahmin** (çıkarım, doğrulanmadı), **bulunamadı** (repoda yok). Kaynak değerleri: `analyze_corpus` komutu (§7.8; tekrar üretilebilir), kod okuması, artifact okuması (komutsuz), rapor (§3 HTML raporları veya §7.9 bitirme raporu), makale, R4 komutları (`build_train_manifest`, `train_lora`, `eval_val_baseline`, `run_eval`; tekrar üretilebilir, ayrıntı ve komutlar [R4_report.md](R4_report.md)). R4 satırlarındaki sayılar raporlardan betikle aktarıldı; `*` = %95 GA sıfırı dışlıyor.
 
 | Bulgu | Durum | Kaynak | Bölüm |
 |---|---|---|---|
@@ -39,6 +39,13 @@ Aşağıdaki tablo belgenin sonraki bölümlerindeki bulguları tek yerde toplar
 | `test_thresholds.py` ve `visualize_search.py` çalışmaz durumda | doğrulandı | kod okuması (çalıştırılmadı) | §2 |
 | Golden set, qrels, kaynak/video bazlı split, metrik testi, Recall@k/Hit@k/MRR, HNSW | bulunamadı | kod okuması | §5 |
 | "Literatürde eşdeğeri yok", "0.45-0.65 tipik aralık" iddiaları | bulunamadı (repoda doğrulama yok) | bitirme raporu | §7.9.6 (d), §4 risk 12 |
+| R4 eğitim kümesi: 35,868 train + 1,929 iç val, golden'dan kaynak grubu / cos ≥ 0.99 / caption eşitliğiyle ayrık; adayların %59'ı (embedding'i olanlar) | doğrulandı | `build_train_manifest` komutu | [R4 §2](R4_report.md#2-eğitim-kümesi-sızıntı-kontrolleri-ölçekler) |
+| R4 iç val kaybı 8.105 → 6.569 (10k) / 6.233 (30k); t2i R@5 0.036 → 0.066 / 0.090 (tek tohum) | doğrulandı | `train_lora` + `eval_val_baseline` komutları | [R4 §3](R4_report.md#3-eğitim-sonuçları) |
+| Sıcaklık `forward` clamp hatası (başlangıçta gradyan 0) eğitimden önce düzeltildi (`10b7ab6`), regresyon testi var | doğrulandı | kod okuması + test | [R4 §3](R4_report.md#3-eğitim-sonuçları) |
+| R4 birincil (önceden kayıtlı): `lora-30k-s0 − clip` lenient nDCG@10 test -0.102 [-0.253, +0.045], sıfırı içeriyor; hipotez desteklenmedi | doğrulandı | `run_eval` komutu (test, bir kez) | [R4 §4.3](R4_report.md#43-birincil-karşılaştırma-sonucu) |
+| R4 keşifsel (test): `lora-10k-s0 − clip` nDCG@10 -0.209 [-0.337, -0.103]\*, `lora-30k-s0 − lora-10k-s0` +0.107 [+0.012, +0.203]\*; dev'de ikisi de sıfırı içeriyordu; düzeltmesiz | doğrulandı | `run_eval` komutu | [R4 §5](R4_report.md#5-dev-ve-test-tutarlılığı-lenient) |
+| İç val kazancının golden'a yansımama nedeni (caption/sorgu dağılım farkı, aynı-dağılım iç val, unutma) | tahmin (test edilmedi) | – | [R4 §6](R4_report.md#6-neden-test-edilmemiş-hipotezler) |
+| `lora-full-s0` koşulmadı; seed varyansı ölçülmedi; `r4_extension` (240 çift) yalnız A etiketledi | doğrulandı | ADR-0004 Ek 1, `pool.jsonl`, `A.jsonl` | [R4 §7](R4_report.md#7-sınırlar) |
 
 ## 0. Önce bilinmesi gerekenler
 
