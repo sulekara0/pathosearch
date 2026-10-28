@@ -166,9 +166,9 @@ Strict'te dev 6 sorgu (dışlanan: q004, q008, q019, q020), test 7 sorgu (dışl
 
 - **Hiçbir split'te LoRA, CLIP'ten iyi değil.** Dört metrik × iki LoRA sistemi × iki split'te, `lora − clip` farkının pozitif yönde sıfırı dışladığı hücre sayısı: 0. Birincil fark dev'de +0.003 [-0.096, +0.101], test'te -0.102 [-0.253, +0.045]. [ölçüldü, ayırt edilemedi]
 - **Negatif yönde sıfırı dışlayan LoRA − CLIP hücreleri:** dev'de yok. Test'te `lora-10k-s0 − clip`: P@10, Recall@10, MRR, nDCG@10; `lora-30k-s0 − clip`: P@10, Recall@10. [ölçüldü, sıfırı dışlıyor; keşifsel, düzeltmesiz]
-- **Test'te 10K belirgin kötü:** `lora-10k-s0 − clip` nDCG@10 test -0.209 [-0.337, -0.103]*, dev -0.003 [-0.085, +0.077]. Dev'deki "ayırt edilemedi" test'te negatif yönde sıfırı dışlayan bir farka döndü. [ölçüldü, sıfırı dışlıyor; keşifsel]
-- **30K − 10K:** nDCG@10 test +0.107 [+0.012, +0.203]* sıfırı dışlıyor, dev +0.006 [-0.053, +0.071] dışlamıyor. İki nokta bir eğri değildir; ölçekleme iddiası yapılmaz (Ek 1). [ölçüldü, sıfırı dışlıyor (yalnız test); keşifsel]
-- **QuiltNet referansı:** `quilt − clip` nDCG@10 dev +0.450 [+0.302, +0.598]*, test +0.214 [+0.009, +0.413]*; `lora-30k-s0 − quilt` dev -0.447 [-0.561, -0.338]*, test -0.316 [-0.524, -0.108]*. İki split'te de sıfırı dışlıyor. [ölçüldü, sıfırı dışlıyor; keşifsel; QuiltNet eğitim verisi belirsiz, §7]
+- **Test'te 10K belirgin kötü:** `lora-10k-s0 − clip` nDCG@10 test -0.209 [-0.337, -0.103]\*, dev -0.003 [-0.085, +0.077]. Dev'deki "ayırt edilemedi" test'te negatif yönde sıfırı dışlayan bir farka döndü. [ölçüldü, sıfırı dışlıyor; keşifsel]
+- **30K − 10K:** nDCG@10 test +0.107 [+0.012, +0.203]\* sıfırı dışlıyor, dev +0.006 [-0.053, +0.071] dışlamıyor. İki nokta bir eğri değildir; ölçekleme iddiası yapılmaz (Ek 1). [ölçüldü, sıfırı dışlıyor (yalnız test); keşifsel]
+- **QuiltNet referansı:** `quilt − clip` nDCG@10 dev +0.450 [+0.302, +0.598]\*, test +0.214 [+0.009, +0.413]\*; `lora-30k-s0 − quilt` dev -0.447 [-0.561, -0.338]\*, test -0.316 [-0.524, -0.108]\*. İki split'te de sıfırı dışlıyor. [ölçüldü, sıfırı dışlıyor; keşifsel; QuiltNet eğitim verisi belirsiz, §7]
 - **Dev yorumu ile karşılaştırma ([r4_dev_findings.md](r4_dev_findings.md)):** (a) birincil fark "gösterilemedi" test'te de geçerli. (b) dev'de sıfırı içeren `lora-10k-s0 − clip` ve `lora-30k-s0 − lora-10k-s0` test'te sıfırı dışlıyor; yani (b) test'te tekrarlanmadı. (c) QuiltNet'in önde olması test'te de geçerli. [kayıt]
 
 ## 6. Neden? Test edilmemiş hipotezler
