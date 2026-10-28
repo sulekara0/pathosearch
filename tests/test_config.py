@@ -2,7 +2,14 @@ from pathlib import Path
 
 import pytest
 
-from pathosearch.config import load_settings, read_dotenv, require_dir, require_file
+from pathosearch.config import (
+    load_api_settings,
+    load_settings,
+    read_dotenv,
+    require_dir,
+    require_file,
+)
+from pathosearch.domain_gate import DEFAULT_THRESHOLD
 from pathosearch.errors import DataNotFoundError
 
 
@@ -77,3 +84,15 @@ def test_csv_path_default_and_override() -> None:
         load_settings({"PATHOSEARCH_DATA_DIR": "x"}).csv_path == Path("x") / "quilt_1M_lookup.csv"
     )
     assert load_settings({"PATHOSEARCH_CSV_PATH": "q.csv"}).csv_path == Path("q.csv")
+
+
+def test_api_gate_threshold_default_matches_domain_gate() -> None:
+    assert load_api_settings({}).gate_threshold == DEFAULT_THRESHOLD == 0.80
+
+
+def test_api_gate_threshold_override_and_validation() -> None:
+    assert load_api_settings({"PATHOSEARCH_GATE_THRESHOLD": "0.75"}).gate_threshold == 0.75
+    with pytest.raises(ValueError):
+        load_api_settings({"PATHOSEARCH_GATE_THRESHOLD": "1.5"})
+    with pytest.raises(ValueError):
+        load_api_settings({"PATHOSEARCH_GATE_THRESHOLD": "abc"})

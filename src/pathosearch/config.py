@@ -11,6 +11,9 @@ Variables:
     PATHOSEARCH_IMAGES_DIR     image corpus                (default: <data>/images)
     PATHOSEARCH_CAPTIONS_PATH  captions JSONL              (default: <data>/captions_quilt.jsonl)
     PATHOSEARCH_CSV_PATH       Quilt-1M lookup CSV         (default: <data>/quilt_1M_lookup.csv)
+
+API service (``load_api_settings``):
+    PATHOSEARCH_GATE_THRESHOLD domain gate threshold       (default: 0.80, uncalibrated)
 """
 
 from __future__ import annotations
@@ -27,6 +30,10 @@ ENV_ARTIFACTS_DIR = "PATHOSEARCH_ARTIFACTS_DIR"
 ENV_IMAGES_DIR = "PATHOSEARCH_IMAGES_DIR"
 ENV_CAPTIONS_PATH = "PATHOSEARCH_CAPTIONS_PATH"
 ENV_CSV_PATH = "PATHOSEARCH_CSV_PATH"
+ENV_GATE_THRESHOLD = "PATHOSEARCH_GATE_THRESHOLD"
+
+# Same value as domain_gate.DEFAULT_THRESHOLD; chosen by hand, not calibrated (ADR-0005).
+DEFAULT_GATE_THRESHOLD = 0.80
 
 
 @dataclass(frozen=True)
@@ -70,6 +77,22 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
     )
     csv_path = Path(env[ENV_CSV_PATH]) if ENV_CSV_PATH in env else data_dir / "quilt_1M_lookup.csv"
     return Settings(data_dir, artifacts_dir, images_dir, captions_path, csv_path)
+
+
+@dataclass(frozen=True)
+class ApiSettings:
+    gate_threshold: float
+
+
+def load_api_settings(env: Mapping[str, str] | None = None) -> ApiSettings:
+    """Build API service settings from ``env`` (default: ``.env`` overlaid by os.environ)."""
+    if env is None:
+        env = {**read_dotenv(Path(".env")), **os.environ}
+    raw = env.get(ENV_GATE_THRESHOLD)
+    threshold = DEFAULT_GATE_THRESHOLD if raw is None else float(raw)
+    if not 0.0 < threshold <= 1.0:
+        raise ValueError(f"{ENV_GATE_THRESHOLD} must be in (0, 1], got {threshold}")
+    return ApiSettings(gate_threshold=threshold)
 
 
 def require_dir(path: Path, hint: str = "") -> Path:
