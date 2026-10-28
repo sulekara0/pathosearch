@@ -62,15 +62,22 @@ def _paths(art_dir: str):
 # ---------------------------------------------------------------------------
 
 
+def load_ids(art_dir: str) -> list[str]:
+    """Read ``ids.json`` only. Serving needs ids, not the embeddings matrix."""
+    p = _paths(art_dir)
+    if not p["ids"].exists():
+        raise FileNotFoundError(f"IDs not found: {p['ids']}")
+    ids: list[str] = json.loads(p["ids"].read_text(encoding="utf-8"))
+    return ids
+
+
 def load_embeddings(art_dir: str) -> tuple[np.ndarray, list[str]]:
     p = _paths(art_dir)
     if not p["emb"].exists():
         raise FileNotFoundError(f"Embeddings not found: {p['emb']}")
-    if not p["ids"].exists():
-        raise FileNotFoundError(f"IDs not found: {p['ids']}")
+    ids = load_ids(art_dir)
 
     embs = np.load(p["emb"]).astype(np.float32)
-    ids: list[str] = json.loads(p["ids"].read_text(encoding="utf-8"))
 
     if len(ids) != embs.shape[0]:
         raise ValueError(f"ids length ({len(ids)}) != embeddings rows ({embs.shape[0]})")

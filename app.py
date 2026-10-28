@@ -64,10 +64,10 @@ def load_domain_gate() -> DomainGate:
 
 @st.cache_resource(show_spinner="Index yükleniyor…")
 def load_index_data(art_dir: str) -> tuple:
-    from pathosearch.faiss_search import load_captions, load_embeddings, load_index
+    from pathosearch.faiss_search import load_captions, load_ids, load_index
 
     index, metric = load_index(art_dir)
-    _, ids = load_embeddings(art_dir)
+    ids = load_ids(art_dir)
     cap_map: dict[str, dict] = load_captions(CAPTIONS_PATH)
     return index, metric, ids, cap_map
 

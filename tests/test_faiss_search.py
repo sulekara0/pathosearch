@@ -3,8 +3,15 @@ from pathlib import Path
 
 import faiss
 import numpy as np
+import pytest
 
-from pathosearch.faiss_search import _build_index, _save_index, load_embeddings, load_index
+from pathosearch.faiss_search import (
+    _build_index,
+    _save_index,
+    load_embeddings,
+    load_ids,
+    load_index,
+)
 
 
 def _write_artifacts(art_dir: Path, n: int = 20, d: int = 8) -> np.ndarray:
@@ -42,3 +49,16 @@ def test_load_index_reads_files_written_by_faiss_write_index(tmp_path: Path) -> 
 
     assert metric == "l2"
     assert index.ntotal == 20
+
+
+def test_load_ids_does_not_need_embeddings(tmp_path: Path) -> None:
+    art = tmp_path / "art"
+    _write_artifacts(art)
+    (art / "embeddings.npy").unlink()
+
+    assert load_ids(str(art)) == [f"img_{i}.jpg" for i in range(20)]
+
+
+def test_load_ids_missing_file_raises(tmp_path: Path) -> None:
+    with pytest.raises(FileNotFoundError, match="IDs not found"):
+        load_ids(str(tmp_path))
